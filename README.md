@@ -1,17 +1,12 @@
-# Travel Companion Beta · Antalya 0.6.0
+# Travel Companion Antalya Beta 0.6.2 — iOS/PWA Fix
 
-Ez a build már nem teszt/placeholder jellegű, hanem valós antalyai tartalmat használ:
-- valós útvonalváz 2026.08.25–09.01.
-- valós POI-k
-- online betöltött képek (Wikipedia / fotó fallback)
-- traveler intel / hidden gem szekció
-- PWA-kompatibilis alapcsomag
+Javítások:
+- iPhone dinamikus viewport kezelése (`100dvh` + VisualViewport)
+- bottom sheet fixen az alsó élhez kötve
+- csukott állapot 86 px, nem nyílik ki induláskor
+- PWA manifest: standalone, scope és start_url javítva
+- régi service-worker cache automatikus törlése
+- a Travel Companion logó lent marad
 
-## Fő fókusz most
-- tartalommal feltöltött béta tesztelése
-- napokra bontott útvonal és POI-ellenőrzés
-- térképes áttekintés
-- bottom sheet működés ellenőrzése telefonon
-
-## Megjegyzés
-A képek internetkapcsolat mellett töltődnek be. Ez most szándékos, hogy gyorsan legyen valós vizuális tartalom placeholder nélkül.
+GitHub Pages feltöltésnél a fájlokat a repository gyökerébe töltsd.
+Fontos iPhone-on: a régi főképernyős ikont töröld, Safari-ban nyisd meg az új oldalt, majd Share → Add to Home Screen. Így az új manifesttel standalone módban indul.
