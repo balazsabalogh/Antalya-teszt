@@ -2,290 +2,66 @@
 <html lang="hu">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<meta name="theme-color" content="#12171d">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#0f1419">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="format-detection" content="telephone=no">
 <meta name="apple-mobile-web-app-title" content="Travel Companion">
-<title>Travel Companion · Antalya Beta</title>
+<meta name="format-detection" content="telephone=no">
+<title>Travel Companion · Antalya Beta 0.7</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="apple-touch-icon" href="./apple-touch-icon.png">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<style>
-*{box-sizing:border-box}
-html{margin:0;width:100%;height:100%;height:100dvh;overflow:hidden;background:#0f1419}
-body{position:fixed;inset:0;margin:0;width:100%;height:100%;height:100dvh;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#0f1419;color:#f4f6f7;-webkit-text-size-adjust:100%;overscroll-behavior:none;touch-action:manipulation}
-#map{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;height:100dvh!important;margin:0}
-:root{--bg:#10151b;--panel:rgba(18,23,29,.92);--panel-2:rgba(22,28,35,.88);--line:rgba(255,255,255,.11);--txt:#f2f4f5;--muted:#a7b0b8;--accent:#c92f3a;--accent-2:#f2f2f2;--accent-3:#b32833;--shadow:0 14px 32px rgba(0,0,0,.32);--safe-top:env(safe-area-inset-top);--safe-bottom:env(safe-area-inset-bottom);--sheet-h:86px;--sheet-p:0;--sheet-peek:86px;--app-vh:100dvh;}
-body.light{--bg:#edf0f2;--panel:rgba(236,240,243,.94);--panel-2:rgba(244,246,248,.88);--line:rgba(24,31,38,.10);--txt:#18202a;--muted:#68717a;--shadow:0 14px 32px rgba(25,35,45,.12)}
-#map{position:fixed;inset:0;z-index:1;background:#d3d8d5} .leaflet-control-zoom{display:none} .leaflet-tile-pane{filter:saturate(.74) brightness(1.01) contrast(.97)} body.light .leaflet-tile-pane{filter:saturate(.82) brightness(1.12) contrast(1.03)}
-.topbar{position:fixed;z-index:1000;left:12px;right:12px;top:calc(var(--safe-top) + 8px);pointer-events:none;display:flex;justify-content:center}
-.noticebar{display:none;pointer-events:auto;min-height:40px;max-width:calc(100vw - 24px);padding:10px 14px;border-radius:14px;background:var(--panel);border:1px solid var(--line);box-shadow:var(--shadow);backdrop-filter:blur(14px);align-items:center;gap:10px;font-size:13px;color:var(--txt)}
-.noticebar.show{display:flex} .noticebar b{font-size:13px} .noticebar span{font-size:12px;color:var(--muted)} .noticebar button{margin-left:auto;border:0;background:#ffffff12;color:inherit;width:30px;height:30px;border-radius:10px}
-.logo{position:fixed;z-index:1200;left:50%;transform:translateX(-50%);bottom:calc(var(--safe-bottom) + 8px);width:66px;height:66px;border:0;background:transparent;display:grid;place-items:center;transition:transform .2s ease}
-.logo:active{transform:translateX(-50%) scale(.96)} .logo-inner{position:relative;width:66px;height:66px;border-radius:50%;background:url('./logo-tr.png') center/contain no-repeat} .logo-count{position:absolute;right:4px;top:2px;min-width:18px;height:18px;padding:0 4px;border-radius:999px;background:var(--accent);color:#fff;font-size:10px;font-weight:800;display:grid;place-items:center;box-shadow:0 3px 10px rgba(0,0,0,.25)}
-.map-fabs{position:fixed;z-index:950;right:14px;bottom:calc(var(--sheet-h) + 16px);display:grid;gap:10px;transition:bottom .2s ease} .fab{width:48px;height:48px;border:1px solid var(--line);border-radius:50%;background:var(--panel);box-shadow:var(--shadow);backdrop-filter:blur(12px);color:var(--txt);font-size:21px;display:grid;place-items:center}
-.sheet{position:fixed!important;z-index:1100;inset:auto 0 0 0!important;top:auto!important;left:0!important;right:0!important;bottom:0!important;width:100%;height:var(--sheet-h);max-height:calc(100dvh - 6px);background:var(--panel);border-top:1px solid var(--line);box-shadow:0 -16px 36px rgba(0,0,0,.32);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);overflow:hidden;transition:height .28s cubic-bezier(.19,.82,.28,1);padding-bottom:var(--safe-bottom);border-top-left-radius:24px;border-top-right-radius:24px;transform:translate3d(0,0,0);will-change:height}
-.sheet.dragging{transition:none} .dragzone{position:absolute;left:0;right:0;top:0;height:44px;z-index:4;touch-action:none} .handle{position:absolute;left:50%;transform:translateX(-50%);top:8px;width:42px;height:4px;border-radius:999px;background:rgba(255,255,255,.38)} body.light .handle{background:rgba(20,25,31,.24)}
-.peek{position:absolute;left:12px;right:12px;top:18px;height:54px;display:flex;align-items:center;gap:10px} .peek strong{font-size:14px} .peek span{display:block;font-size:11px;color:var(--muted);margin-top:2px} .peek .hero-thumb{width:46px;height:46px;border-radius:12px;background:#2c3137;border:1px solid var(--line);overflow:hidden;display:grid;place-items:center} .peek .hero-thumb img{width:100%;height:100%;object-fit:cover} .peek .mini-actions{margin-left:auto;display:flex;gap:8px} .mini-chip{height:32px;padding:0 10px;border-radius:999px;background:var(--panel-2);border:1px solid var(--line);display:flex;align-items:center;gap:6px;font-size:11px;color:var(--txt)}
-.content{position:absolute;left:0;right:0;top:78px;bottom:0;overflow:auto;padding:0 14px 96px;opacity:0;transform:translateY(16px);pointer-events:none;transition:opacity .16s ease, transform .16s ease} .sheet.open .content{opacity:1;transform:translateY(0);pointer-events:auto}
-.daystrip{display:flex;gap:8px;overflow-x:auto;padding:4px 0 10px;scrollbar-width:none} .daystrip::-webkit-scrollbar{display:none} .daypill{flex:0 0 auto;min-width:94px;padding:11px 12px;border-radius:16px;background:rgba(255,255,255,.04);border:1px solid var(--line);display:flex;flex-direction:column;gap:3px;color:var(--txt)} body.light .daypill{background:rgba(255,255,255,.56)} .daypill.active{background:linear-gradient(180deg, rgba(201,47,58,.20), rgba(201,47,58,.08));border-color:rgba(201,47,58,.55)} .daypill b{font-size:12px} .daypill span{font-size:10px;color:var(--muted)}
-.summary{padding:14px;border-radius:18px;background:rgba(255,255,255,.04);border:1px solid var(--line)} body.light .summary{background:rgba(255,255,255,.55)} .summary h2{margin:0 0 6px;font-size:19px} .summary p{margin:0 0 8px;font-size:13px;line-height:1.4;color:var(--muted)} .meta{display:flex;flex-wrap:wrap;gap:8px} .meta .tag{padding:6px 9px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.05);font-size:11px}
-.segmented{display:flex;gap:8px;padding:12px 0 8px} .seg{flex:1;border:1px solid var(--line);background:rgba(255,255,255,.04);padding:10px;border-radius:12px;color:var(--txt);font-weight:700} .seg.active{background:rgba(201,47,58,.16);border-color:rgba(201,47,58,.55)}
-.panel{display:none} .panel.active{display:block}
-.poi-list{display:grid;gap:12px;padding-top:4px} .poi-card{display:grid;grid-template-columns:84px 1fr;gap:12px;padding:10px;border-radius:18px;background:rgba(255,255,255,.04);border:1px solid var(--line)} body.light .poi-card{background:rgba(255,255,255,.55)} .poi-card img{width:84px;height:84px;border-radius:14px;object-fit:cover;background:#2b3137} .poi-card .ph{width:84px;height:84px;border-radius:14px;background:#2b3137;color:#fff;display:grid;place-items:center;font-size:25px}
-.poi-top{display:flex;align-items:flex-start;gap:10px} .poi-num{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:#1c2229;color:#fff;font-size:12px;font-weight:800} body.light .poi-num{background:#222933} .poi-head b{font-size:14px;display:block} .poi-head span{font-size:11px;color:var(--muted)} .poi-body{font-size:12px;line-height:1.4;color:var(--muted);margin-top:6px} .badge-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px} .badge{padding:5px 8px;border-radius:999px;background:rgba(201,47,58,.14);border:1px solid rgba(201,47,58,.32);font-size:10px}
-.intel-list,.gem-list,.prep-list{display:grid;gap:10px;padding-top:6px} .intel-item,.gem-item,.prep-item{padding:12px 14px;border-radius:16px;background:rgba(255,255,255,.04);border:1px solid var(--line);font-size:13px;line-height:1.4} body.light .intel-item, body.light .gem-item, body.light .prep-item{background:rgba(255,255,255,.55)} .gem-item b{display:block;margin-bottom:4px} .gem-item span{font-size:12px;color:var(--muted)}
-.legend{display:flex;flex-wrap:wrap;gap:8px;padding:10px 0 4px} .legend .tag{padding:7px 10px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid var(--line);font-size:11px}
-.bottom-tabs{position:absolute;left:0;right:0;bottom:0;height:72px;padding:0 16px var(--safe-bottom);display:none;align-items:flex-start;justify-content:space-between;background:linear-gradient(180deg, rgba(16,21,27,0), rgba(16,21,27,.94) 28%, rgba(16,21,27,.98) 100%);border-top:1px solid var(--line)} body.light .bottom-tabs{background:linear-gradient(180deg, rgba(236,240,243,0), rgba(236,240,243,.94) 28%, rgba(236,240,243,.98) 100%)} .sheet.mid .bottom-tabs, .sheet.full .bottom-tabs{display:flex} .tabbtn{padding-top:10px;border:0;background:none;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:4px;font-size:18px;flex:1} .tabbtn span{font-size:10px} .tabbtn.active{color:var(--txt)}
-.marker{position:relative;width:48px;height:62px} .marker .pin{position:absolute;left:4px;top:8px;width:40px;height:40px;border-radius:50%;background:linear-gradient(180deg, rgba(38,45,54,.98), rgba(20,24,29,.96));border:1px solid rgba(255,255,255,.08);box-shadow:0 8px 16px rgba(0,0,0,.20)} .marker .ring{position:absolute;inset:-2px;border-radius:50%;border:3px solid var(--day);opacity:.96} .marker .num{position:absolute;inset:0;display:grid;place-items:center;font-weight:800;color:#fff;font-size:16px} .marker .cat{position:absolute;top:-3px;left:50%;transform:translateX(-50%);width:20px;height:20px;border-radius:50%;display:grid;place-items:center;background:var(--day);color:#fff;font-size:11px;border:2px solid rgba(17,22,27,.96)} .marker .tip{position:absolute;top:42px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:8px solid transparent;border-right:8px solid transparent;border-top:14px solid rgba(255,255,255,.96)}
-body.light .marker .pin{background:linear-gradient(180deg, rgba(247,249,250,.98), rgba(230,235,239,.96));border-color:rgba(22,28,35,.08)} body.light .marker .num{color:#11161b} body.light .marker .cat{border-color:#fff} body.light .marker .tip{border-top-color:#fff}
-.small-map-note{font-size:11px;color:var(--muted);padding:10px 2px 0}
-.settings-panel{display:grid;gap:12px;padding-top:6px}.settings-card{padding:14px;border-radius:16px;background:rgba(255,255,255,.04);border:1px solid var(--line)} body.light .settings-card{background:rgba(255,255,255,.55)} .settings-card h3{margin:0 0 10px;font-size:14px}.settings-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:8px 0;font-size:13px}.settings-choices{display:flex;gap:8px;flex-wrap:wrap}.choice{padding:9px 12px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.05);font-size:12px;color:var(--txt)} .choice.active{background:rgba(201,47,58,.14);border-color:rgba(201,47,58,.48)}
-@media (min-width:760px){ .sheet{left:50%;transform:translateX(-50%);max-width:480px;border-top-left-radius:20px;border-top-right-radius:20px} .topbar{left:50%;right:auto;transform:translateX(-50%)} }
-</style>
+<link rel="stylesheet" href="./app.css">
 </head>
-<body class="app-shell">
-<div id="map"></div>
-<div class="topbar"><div id="noticebar" class="noticebar"><b id="noticeTitle">Companion</b><span id="noticeText"></span><button id="noticeClose">×</button></div></div>
-<div id="mapFabs" class="map-fabs"><button class="fab" id="locBtn">◎</button><button class="fab" id="fitBtn">⌖</button></div>
-<button id="logoBtn" class="logo" aria-label="Companion logó"><div class="logo-inner"></div><div id="logoCount" class="logo-count">1</div></button>
-<section id="sheet" class="sheet">
-  <div id="dragzone" class="dragzone"><div class="handle"></div></div>
-  <div class="peek">
-    <div class="hero-thumb" id="peekThumb"><span>✦</span></div>
-    <div><strong id="peekTitle">Antalya Beta</strong><span id="peekSub">Húzd fel az útitervhez</span></div>
-    <div class="mini-actions"><div class="mini-chip" id="peekDay">1. nap</div><div class="mini-chip" id="peekPace">laza</div></div>
-  </div>
-  <div class="content">
-    <div class="daystrip" id="dayStrip"></div>
-    <section class="summary">
-      <h2 id="dayTitle">1. nap</h2>
-      <p id="daySummary"></p>
-      <div class="meta"><div class="tag" id="dayMetaPace"></div><div class="tag" id="dayMetaTransport"></div><div class="tag" id="dayMetaHero"></div></div>
-      <div class="small-map-note">Bázis: Suite Laguna Otel · Érkezés: 08.25. 20:25 · Hazautazás: 09.01. 21:10</div>
-    </section>
-    <div class="segmented">
-      <button class="seg active" data-panel="route">Útiterv</button>
-      <button class="seg" data-panel="guide">Útikönyv</button>
-      <button class="seg" data-panel="intel">Intel</button>
-      <button class="seg" data-panel="settings">Beáll.</button>
-    </div>
-    <section class="panel active" id="panel-route">
-      <div class="poi-list" id="poiList"></div>
-      <div class="legend"><div class="tag">A térképen az aktuális nap útvonala erős, a többi halvány.</div></div>
-    </section>
-    <section class="panel" id="panel-guide">
-      <div class="prep-list" id="prepList"></div>
-      <div style="height:8px"></div>
-      <div class="gem-list" id="gemList"></div>
-    </section>
-    <section class="panel" id="panel-intel">
-      <div class="intel-list" id="intelList"></div>
-    </section>
-    <section class="panel" id="panel-settings">
-      <div class="settings-panel">
-        <div class="settings-card">
-          <h3>Téma</h3>
-          <div class="settings-choices" id="themeChoices">
-            <button class="choice" data-theme="auto">Automatikus</button>
-            <button class="choice" data-theme="dark">Sötét</button>
-            <button class="choice" data-theme="light">Világos</button>
-          </div>
-          <div class="settings-row"><span>Sötét mód naplemente után automatikusan</span><span id="themeStateLabel">aktív</span></div>
-        </div>
-        <div class="settings-card">
-          <h3>Offline mód</h3>
-          <div style="font-size:13px;color:var(--muted);line-height:1.45">A már betöltött napok, útvonalak és tartalmak offline is elérhetőek maradnak. Új helyek keresése és a sonar élő ajánlatai internetet igényelnek.</div>
-        </div>
-      </div>
+<body class="theme-dark">
+<div id="app">
+  <div id="map"></div>
+  <div id="offlineMap" class="offline-map" aria-hidden="true"></div>
+
+  <div class="notification-zone">
+    <button id="notifStrip" class="notif-strip hidden" aria-label="Értesítések lehúzása">
+      <span class="notif-dot"></span><span class="notif-copy"><b id="notifStripTitle"></b><small id="notifStripText"></small></span><span class="chev">⌄</span>
+    </button>
+    <section id="notifDrawer" class="notif-drawer">
+      <div class="drawer-handle"></div>
+      <div class="drawer-head"><div><b>Értesítések</b><small id="notifCountText"></small></div><button id="notifClose" class="iconbtn">⌃</button></div>
+      <div id="notifList" class="notif-list"></div>
     </section>
   </div>
-  <nav class="bottom-tabs">
-    <button class="tabbtn active" data-panel="route">⌁<span>Útvonal</span></button>
-    <button class="tabbtn" data-panel="guide">☰<span>Guide</span></button>
-    <button class="tabbtn" data-panel="intel">⚠<span>Intel</span></button>
-    <button class="tabbtn" data-panel="settings">⚙<span>Beáll.</span></button>
+
+  <div id="mapControls" class="map-controls">
+    <button id="locateBtn" class="map-btn" title="Saját pozíció">◎</button>
+    <button id="fitRouteBtn" class="map-btn" title="Útvonal középre">⌖</button>
+  </div>
+
+  <div id="sonarPulse" class="sonar-pulse"><i></i><i></i><i></i></div>
+
+  <section id="sheet" class="sheet state-closed" aria-live="polite">
+    <div id="sheetDrag" class="sheet-drag"><span></span></div>
+    <div id="sheetBody" class="sheet-body"></div>
+    <nav id="expandedNav" class="expanded-nav hidden"></nav>
+  </section>
+
+  <nav id="mainNav" class="main-nav">
+    <button class="main-tab" data-main="itinerary" id="mainItinerary"><span class="ico">⌁</span><b>Útiterv</b></button>
+    <button class="main-tab" data-main="days" id="mainDays"><span class="ico">▦</span><b>Napok</b></button>
+    <div class="logo-gap"></div>
+    <button class="main-tab" data-main="sonar" id="mainSonar"><span class="ico sonar-ico">◉</span><b>Sonar</b></button>
+    <button class="main-tab" data-main="navigation" id="mainNavigation"><span class="ico">➤</span><b>Navigáció</b></button>
   </nav>
-</section>
+  <button id="companionLogo" class="companion-logo" aria-label="Travel Companion"><img src="./assets/logo-tr.png" alt=""><span id="logoBadge" class="logo-badge hidden">0</span></button>
 
+  <div id="toast" class="toast"></div>
+  <div id="holdMenu" class="hold-menu hidden"></div>
+
+  <section id="fullOverlay" class="full-overlay hidden">
+    <div class="overlay-head"><button id="overlayBack" class="iconbtn">‹</button><div><b id="overlayTitle"></b><small id="overlaySubtitle"></small></div><button id="overlayClose" class="iconbtn">×</button></div>
+    <div id="overlayBody" class="overlay-body"></div>
+  </section>
+</div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script>
-const TRIP = {"name": "Antalya Beta", "country": "Törökország", "city": "Antalya", "hotel": "Suite Laguna Otel", "arrival": "2026-08-25 20:25", "departure": "2026-09-01 21:10"};
-const DAYS = [{"id": 1, "date": "08.25.", "title": "Érkezés · laza este", "pace": 1, "transport": "autó", "hero": "Suite Laguna Otel", "summary": "Leszállás után hotel, gyors bolt, könnyű vacsora, korai pihenés.", "core": ["Suite Laguna Otel"], "optional": ["Migros Jet", "Akra old town night walk"], "sonar": ["késői kaja", "bolt", "gyógyszertár", "ATM"], "prep": ["repülőtéri transzfer / autó átvétel", "ivóvíz a szobába", "másnapi strandcucc kikészítése"]}, {"id": 2, "date": "08.26.", "title": "Konyaaltı · laza strandnap", "pace": 2, "transport": "busz / séta", "hero": "Konyaaltı Beach", "summary": "Nyugodt strandnap, beach park, naplemente az Atatürk Parkban.", "core": ["Konyaaltı Beach", "Beach Park", "Atatürk Parkı"], "optional": ["Antalya Aquarium"], "sonar": ["reggeli", "kávé", "ebéd", "WC", "bolt", "esti ital"], "prep": ["strandcipő ajánlott a köves partszakasz miatt", "sok víz", "naptej"]}, {"id": 3, "date": "08.27.", "title": "Kaleiçi · történelmi Antalya", "pace": 3, "transport": "busz / séta", "hero": "Kaleiçi", "summary": "Óváros, kapuk, minaret, marina és esti sétás hangulat.", "core": ["Antalya Museum", "Hadrian's Gate", "Kaleiçi", "Old City Marina", "Karaalioğlu Park"], "optional": ["Yivli Minare", "Hıdırlık Tower", "Mermerli Beach"], "sonar": ["kávé", "desszert", "WC", "helyi kaja", "bár", "bolt"], "prep": ["jobb korábban indulni a meleg miatt", "kényelmes cipő"]}, {"id": 4, "date": "08.28.", "title": "Lara · strand + Düden", "pace": 2, "transport": "autó", "hero": "Lara Beach", "summary": "Strandolás, híres sziklaparti vízesés, este Sandland.", "core": ["Lara Beach", "Lower Düden Waterfall", "Sandland"], "optional": [], "sonar": ["reggeli", "ebéd", "WC", "bolt", "kávé", "vacsora"], "prep": ["naplementére jó a Düden", "Sandlandhoz esti hangulat passzol"]}, {"id": 5, "date": "08.29.", "title": "Perge + Kurşunlu", "pace": 4, "transport": "autó", "hero": "Perge Ancient City", "summary": "Korai indulás, régészeti nap, utána hűsítő vízesés.", "core": ["Perge Ancient City", "Kurşunlu Waterfall"], "optional": ["East Basilica"], "sonar": ["víz", "WC", "kávé", "ebéd"], "prep": ["korai indulás", "sapka", "naptej", "sok víz", "jegyellenőrzés előző nap"]}, {"id": 6, "date": "08.30.", "title": "Flex nap", "pace": 2, "transport": "autó / busz", "hero": "Atatürk Parkı", "summary": "Tempó szerint újra strand, aquarium vagy lazább városi kör.", "core": ["Atatürk Parkı"], "optional": ["Konyaaltı Beach", "Antalya Aquarium", "Kaleiçi"], "sonar": ["amit kihagytatok", "kávé", "desszert", "bár"], "prep": ["ez a nap maradjon szabadon mozgatható"]}, {"id": 7, "date": "08.31.", "title": "Phaselis · companion pick", "pace": 3, "transport": "autó", "hero": "Phaselis Ancient City", "summary": "Római romok és tenger egy helyen, ez az egyik legerősebb nap.", "core": ["Phaselis Ancient City"], "optional": ["Tekirova", "Ulupınar"], "sonar": ["reggeli", "strand", "ebéd", "WC"], "prep": ["korai indulás", "úszós cucc és strandtörölköző", "jegyellenőrzés előző nap"]}, {"id": 8, "date": "09.01.", "title": "Utolsó fél nap + haza", "pace": 1, "transport": "autó", "hero": "Kaleiçi", "summary": "Checkout után könnyű program, csomagmegőrzés, reptérre indulás.", "core": ["Suite Laguna Otel", "Kaleiçi"], "optional": ["Atatürk Parkı", "Marina"], "sonar": ["könnyű ebéd", "kávé", "utolsó bolt"], "prep": ["reptérre indulás előtt bőven hagyjatok időt"]}];
-const POIS = {"Suite Laguna Otel": {"lat": 36.8917, "lon": 30.6907, "type": "hotel", "icon": "⌂", "wiki": null, "query": "Suite Laguna hotel Antalya exterior", "why": "Bázis a teljes hétre, közel a központhoz.", "practical": "Érkezés után ez legyen az első pin."}, "Konyaaltı Beach": {"lat": 36.8609, "lon": 30.6376, "type": "beach", "icon": "◔", "wiki": "Konyaaltı", "query": "Konyaalti Beach Antalya", "why": "A város legkézenfekvőbb strandja, jó első teljes napra.", "practical": "Köves-kavicsos partszakasz, strandcipő jól jöhet."}, "Beach Park": {"lat": 36.8786, "lon": 30.6649, "type": "park", "icon": "⌘", "wiki": null, "query": "Beach Park Antalya", "why": "Jó átmenet strand és városi séta között.", "practical": "Ebéd / kávé opciók miatt is jó megálló."}, "Atatürk Parkı": {"lat": 36.8883, "lon": 30.6925, "type": "park", "icon": "✦", "wiki": "Atatürk Parkı (Antalya)", "query": "Ataturk Parki Antalya", "why": "Naplementére és laza esti sétára erős.", "practical": "Szép kilátás a tengerpartra."}, "Antalya Aquarium": {"lat": 36.8788, "lon": 30.6663, "type": "attraction", "icon": "◉", "wiki": "Antalya Aquarium", "query": "Antalya Aquarium", "why": "Jó B-terv melegben vagy fél napra.", "practical": "Ár-érték változó lehet, előre nézd meg a jegyet."}, "Antalya Museum": {"lat": 36.8921, "lon": 30.6894, "type": "museum", "icon": "▣", "wiki": "Antalya Museum", "query": "Antalya Museum", "why": "Erős bevezetés a régió történelmébe.", "practical": "A történelmi nap elé nagyon jól passzol."}, "Hadrian's Gate": {"lat": 36.884, "lon": 30.7078, "type": "historic", "icon": "⌬", "wiki": "Hadrian's Gate", "query": "Hadrian Gate Antalya", "why": "Antalya egyik legismertebb kapuja és jó belépőpont Kaleiçibe.", "practical": "Kora délelőtt kellemesebb."}, "Kaleiçi": {"lat": 36.8844, "lon": 30.7056, "type": "historic", "icon": "✣", "wiki": "Kaleiçi", "query": "Kaleici Antalya", "why": "Hangulatos kis utcák, régi házak, esti élet.", "practical": "Felfelé-lefelé kis utcák, kényelmes cipő kell."}, "Old City Marina": {"lat": 36.8818, "lon": 30.7044, "type": "marina", "icon": "≈", "wiki": null, "query": "Antalya old marina", "why": "Fotós megálló és esti sétahely.", "practical": "Hőségben lejjebb megy a levegő, de naplementére remek."}, "Karaalioğlu Park": {"lat": 36.8789, "lon": 30.7058, "type": "park", "icon": "✦", "wiki": "Karaalioglu Park", "query": "Karaalioglu Park Antalya", "why": "Szellősebb, zöldebb lezárása az óvárosi napnak.", "practical": "Jó pihenőpont este is."}, "Yivli Minare": {"lat": 36.8874, "lon": 30.7056, "type": "historic", "icon": "⟡", "wiki": "Yivli Minaret", "query": "Yivli Minare Antalya", "why": "Ikonikus városi jelkép.", "practical": "Kaleiçi körrel együtt érdemes nézni."}, "Hıdırlık Tower": {"lat": 36.8792, "lon": 30.7047, "type": "historic", "icon": "⟐", "wiki": "Hıdırlık Tower", "query": "Hidirlik Tower Antalya", "why": "Kellemes kilátós pont, fotóhely.", "practical": "Rövid megállóként tökéletes."}, "Mermerli Beach": {"lat": 36.8812, "lon": 30.7075, "type": "beach", "icon": "◔", "wiki": "Mermerli Beach", "query": "Mermerli beach Antalya", "why": "Óvárosi mini strand, ha gyors csobbanás kell.", "practical": "Kisebb, kompakt megálló."}, "Lara Beach": {"lat": 36.8441, "lon": 30.7952, "type": "beach", "icon": "◔", "wiki": "Lara Beach", "query": "Lara Beach Antalya", "why": "Homokosabb strandélmény.", "practical": "Erősen napsütéses partszakasz."}, "Lower Düden Waterfall": {"lat": 36.8564, "lon": 30.7826, "type": "waterfall", "icon": "◍", "wiki": "Düden Waterfalls", "query": "Lower Duden Waterfall Antalya", "why": "Az egyik legjobb klasszikus antalyai látvány.", "practical": "Fentről és hajóról is látványos, de fentről most elég."}, "Sandland": {"lat": 36.8442, "lon": 30.7957, "type": "attraction", "icon": "△", "wiki": "Sandland", "query": "Sandland Antalya", "why": "Esti, könnyed programnak jó.", "practical": "Naplemente után hangulatosabb."}, "Perge Ancient City": {"lat": 36.9588, "lon": 30.8537, "type": "ancient", "icon": "⌘", "wiki": "Perga", "query": "Perge Ancient City Antalya", "why": "Az egyik legfontosabb antik hely a környéken.", "practical": "Korán menjetek a hőség miatt, jegyet ellenőrizzetek előre."}, "East Basilica": {"lat": 36.9593, "lon": 30.8544, "type": "ancient", "icon": "▣", "wiki": null, "query": "Perge east basilica", "why": "Ha már ott vagytok, rövid extra kanyar.", "practical": "Csak ha marad energia és idő."}, "Kurşunlu Waterfall": {"lat": 37.0017, "lon": 30.8499, "type": "waterfall", "icon": "◍", "wiki": "Kurşunlu Waterfall Nature Park", "query": "Kursunlu Waterfall Antalya", "why": "Jó lehűlés a régészeti nap után.", "practical": "Nyáron visszafogottabb vízhozam is lehet, de a környezet kellemes."}, "Phaselis Ancient City": {"lat": 36.5257, "lon": 30.5528, "type": "ancient", "icon": "⌘", "wiki": "Phaselis", "query": "Phaselis Antalya", "why": "Romok + strand együtt, nagyon erős kombó.", "practical": "Ez a teljes utazás egyik top napja."}, "Tekirova": {"lat": 36.5019, "lon": 30.5288, "type": "town", "icon": "⋄", "wiki": "Tekirova", "query": "Tekirova Antalya", "why": "Ráhúzható közeli megálló.", "practical": "Csak ha marad idő."}, "Ulupınar": {"lat": 36.4482, "lon": 30.4619, "type": "food", "icon": "☕", "wiki": "Ulupınar, Kemer", "query": "Ulupinar Antalya river restaurants", "why": "Helyi tipp patakparti ebédhez.", "practical": "Autós napra jó extra."}, "Migros Jet": {"lat": 36.8922, "lon": 30.6921, "type": "shop", "icon": "▤", "wiki": null, "query": "Migros Jet Antalya", "why": "Gyors víz / snack / alapbevásárlás.", "practical": "Az első estére hasznos."}, "Sişçi Volkan": {"lat": 36.8887, "lon": 30.6988, "type": "food", "icon": "☕", "wiki": null, "query": "Sisci Volkan Antalya", "why": "Helyi tipp köfte + piyaz vonalon.", "practical": "Nem csicsa, hanem lokális jelleg."}, "Doğu Garajı Kent Pide": {"lat": 36.8936, "lon": 30.7115, "type": "food", "icon": "☕", "wiki": null, "query": "Dogu Garaji Kent Pide Antalya", "why": "Egyszerű, jó helyi opció.", "practical": "Kaleiçi naphoz is beleférhet."}, "Akdeniz Dondurma": {"lat": 36.8854, "lon": 30.7048, "type": "dessert", "icon": "◌", "wiki": null, "query": "Akdeniz Dondurma Antalya", "why": "Édességmegálló.", "practical": "Fagyi / profiterol jellegű zárásnak jó."}, "Can Can Pide": {"lat": 36.8858, "lon": 30.7112, "type": "food", "icon": "☕", "wiki": null, "query": "Can Can Pide Antalya", "why": "Pide vonalon hidden gem jelleg.", "practical": "Olcsóbb, lazább étkezésre jó."}, "Çıtır Balık": {"lat": 36.8837, "lon": 30.7043, "type": "food", "icon": "☕", "wiki": null, "query": "Citir Balik Antalya", "why": "Halas opció, ha mégis tennétek kivételt.", "practical": "Turistásabb környezetben is működhet."}, "Fırıncı Dede": {"lat": 36.8928, "lon": 30.6971, "type": "breakfast", "icon": "☕", "wiki": null, "query": "Firinci Dede Antalya", "why": "Reggeli/pékáru pont.", "practical": "Korai indulós napokon jó fogás."}, "Waterhill": {"lat": 36.8738, "lon": 30.6763, "type": "attraction", "icon": "◉", "wiki": null, "query": "Aqualand Antalya or water hill", "why": "Flex napos vízi B-terv.", "practical": "Csak ha kifejezetten ilyen programot akartok."}, "Akra old town night walk": {"lat": 36.88, "lon": 30.705, "type": "walk", "icon": "≈", "wiki": null, "query": "Antalya old town night walk", "why": "Érkezős este rövid átmozgatásnak jó.", "practical": "Ha még marad energiátok."}, "Marina": {"lat": 36.8818, "lon": 30.7044, "type": "marina", "icon": "≈", "wiki": null, "query": "Antalya marina", "why": "Utolsó napi laza séta.", "practical": "Könnyű, rövid programként jó."}};
-const HIDDEN_GEMS = [{"name": "Hamitbey Plajı", "tag": "💎 Rejtett gyöngyszem", "note": "Kevésbé mainstream partszakasz."}, {"name": "Ulupınar", "tag": "🧭 Helyiek tippje", "note": "Patakparti éttermek, kellemes autós kitérő."}, {"name": "Göynük Canyon", "tag": "🧭 Helyiek tippje", "note": "Ha extrább természetes kitérő kellene máskor."}, {"name": "Şişçi Volkan", "tag": "🧭 Helyiek tippje", "note": "Köfte + piyaz."}, {"name": "Doğu Garajı Kent Pide", "tag": "🧭 Helyiek tippje", "note": "Pide vonal."}, {"name": "Akdeniz Dondurma", "tag": "✨ Companion Pick", "note": "Édesszájú zárásra."}, {"name": "Can Can Pide", "tag": "💎 Rejtett gyöngyszem", "note": "Lazább, egyszerűbb hely."}];
-const TRAVELER_INTEL = ["Taxi vagy fuvar előtt tisztázd az árat / mérőt.", "Kártyás fizetésnél TRY / TL devizát válassz.", "Ár nélküli beach clubnál vagy étlapnál előre kérdezd meg a teljes árat.", "Autóbérlésnél átvételkor körbevideó + fotó minden sérülésről.", "Régészeti helyeket reggelre időzítsd az augusztusi hőség miatt.", "Palackos víz mindig legyen nálatok.", "Perge / Phaselis / múzeumok: előző este ellenőrizd a nyitvatartást és a belépőt."];
-const DAY_COLORS = ['#c92f3a','#2a7de1','#27996d','#dd8736','#8a56df','#cbab35','#18a6a4','#cc5d89'];
-let currentDay = 0;
-let currentPanel = 'route';
-let currentSheet = 'peek';
-let themeMode = localStorage.getItem('tc_theme_mode') || 'dark';
-const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-document.documentElement.classList.toggle('standalone', isStandalone);
-
-
-const map = L.map('map', {zoomControl:false, attributionControl:false}).setView([36.887, 30.705], 12);
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom:19}).addTo(map);
-
-const markersLayer = L.layerGroup().addTo(map);
-let routeLine = null;
-
-function paceLabel(v){ return ['nagyon laza','laza','közepes','veretősebb','intenzív'][Math.max(0, Math.min(4, v-1))] || 'közepes'; }
-function getDayColor(i){ return DAY_COLORS[i % DAY_COLORS.length]; }
-function getPlacesForDay(day){ return (day.core || []).concat(day.optional || []).filter(n => POIS[n]); }
-function heroName(day){ return day.hero || (day.core && day.core[0]) || 'Antalya'; }
-function categoryColor(type){ const map = {hotel:'#7d8590', beach:'#2a7de1', park:'#27996d', attraction:'#cc5c3e', museum:'#7a56d3', historic:'#c92f3a', marina:'#18a6a4', waterfall:'#30a7d2', ancient:'#c29d31', town:'#9a6b56', shop:'#667080', food:'#cb6e34', dessert:'#b75a8c', breakfast:'#b88e28', walk:'#647ee3'}; return map[type] || '#c92f3a'; }
-function makeMarker(dayColor, poi, number){
-  const catColor = categoryColor(poi.type);
-  const num = number ? `<div class="num">${number}</div>` : '';
-  return L.divIcon({
-    className:'',
-    iconSize:[48,62],
-    iconAnchor:[24,60],
-    html:`<div class="marker" style="--day:${dayColor}"><div class="pin"><div class="ring"></div>${num}</div><div class="cat" style="background:${catColor}">${poi.icon || '•'}</div><div class="tip"></div></div>`
-  });
-}
-function focusBounds(coords){ if(!coords.length) return; const b = L.latLngBounds(coords); map.fitBounds(b.pad(0.22), {animate:true}); }
-function setNotification(title, text){ const box=document.getElementById('noticebar'); document.getElementById('noticeTitle').textContent=title; document.getElementById('noticeText').textContent=text; box.classList.add('show'); document.getElementById('logoCount').textContent='1'; }
-function clearNotification(){ document.getElementById('noticebar').classList.remove('show'); document.getElementById('logoCount').textContent=''; }
-
-document.getElementById('noticeClose').addEventListener('click', clearNotification);
-
-function renderMap(){
-  markersLayer.clearLayers();
-  if(routeLine) { map.removeLayer(routeLine); routeLine = null; }
-  const day = DAYS[currentDay];
-  const dayColor = getDayColor(currentDay);
-  const names = getPlacesForDay(day);
-  const coords = [];
-  names.forEach((name, idx) => {
-    const poi = POIS[name]; if(!poi) return;
-    const ll = [poi.lat, poi.lon]; coords.push(ll);
-    const strong = idx < (day.core || []).length;
-    const marker = L.marker(ll, {icon: makeMarker(dayColor, poi, strong ? idx+1 : '')}).addTo(markersLayer);
-    marker.on('click', () => {
-      const coreIndex = (day.core || []).indexOf(name);
-      if(coreIndex >= 0) { document.querySelector(`[data-name="${CSS.escape(name)}"]`)?.scrollIntoView({behavior:'smooth', block:'center'}); }
-      openSheet('mid');
-      setNotification(name, poi.why || 'Koppints a részletekhez.');
-    });
-  });
-  if(coords.length > 1) { routeLine = L.polyline(coords, {color: dayColor, weight: 5, opacity: .82, lineCap:'round'}).addTo(map); }
-  focusBounds(coords.length ? coords : [[36.887,30.705]]);
-}
-
-async function loadWiki(title){
-  if(!title) return null;
-  const key = 'tc_wiki_' + title;
-  const cached = sessionStorage.getItem(key);
-  if(cached) { try{return JSON.parse(cached)}catch(e){} }
-  try {
-    const res = await fetch('https://en.wikipedia.org/api/rest_v1/page/summary/' + encodeURIComponent(title));
-    if(!res.ok) throw new Error('wiki');
-    const data = await res.json();
-    const pack = {img: data.thumbnail?.source || null, extract: data.extract || ''};
-    sessionStorage.setItem(key, JSON.stringify(pack));
-    return pack;
-  } catch(e) { return null; }
-}
-function fallbackPhoto(query){ return 'https://source.unsplash.com/featured/300x300/?' + encodeURIComponent(query || 'Antalya'); }
-async function renderPoiCard(name, idx, core=true){
-  const poi = POIS[name]; if(!poi) return '';
-  const wiki = await loadWiki(poi.wiki);
-  const img = wiki?.img || fallbackPhoto(poi.query);
-  const extract = wiki?.extract || poi.why || '';
-  const badge = core ? '<div class="badge">fő pont</div>' : '<div class="badge">opcionális</div>';
-  return `<article class="poi-card" data-name="${name}">
-      <img loading="lazy" src="${img}" alt="${name}" onerror="this.outerHTML='<div class=\'ph\'>${poi.icon||'✦'}</div>'">
-      <div>
-        <div class="poi-top"><div class="poi-num">${core ? idx+1 : '＋'}</div><div class="poi-head"><b>${name}</b><span>${poi.practical || ''}</span></div></div>
-        <div class="poi-body">${extract}</div>
-        <div class="badge-row">${badge}<div class="badge">${poi.type}</div></div>
-      </div>
-    </article>`;
-}
-async function renderDay(){
-  const day = DAYS[currentDay];
-  const color = getDayColor(currentDay);
-  document.documentElement.style.setProperty('--accent', color);
-  document.getElementById('peekTitle').textContent = heroName(day);
-  document.getElementById('peekSub').textContent = day.summary;
-  document.getElementById('peekDay').textContent = `${day.id}. nap`;
-  document.getElementById('peekPace').textContent = paceLabel(day.pace);
-  document.getElementById('dayTitle').textContent = `${day.id}. nap · ${day.title}`;
-  document.getElementById('daySummary').textContent = day.summary;
-  document.getElementById('dayMetaPace').textContent = 'Tempó: ' + paceLabel(day.pace);
-  document.getElementById('dayMetaTransport').textContent = 'Közlekedés: ' + day.transport;
-  document.getElementById('dayMetaHero').textContent = 'Fő fókusz: ' + heroName(day);
-  document.getElementById('peekThumb').innerHTML = '<img alt="" src="' + fallbackPhoto((POIS[heroName(day)]?.query) || heroName(day)) + '">';
-
-  document.getElementById('dayStrip').innerHTML = DAYS.map((d,i)=>`<button class="daypill ${i===currentDay?'active':''}" data-day="${i}"><b>${d.id}. nap</b><span>${d.date} · ${d.title.split('·')[0].trim()}</span></button>`).join('');
-  document.querySelectorAll('.daypill').forEach(btn=>btn.addEventListener('click',()=>{currentDay=+btn.dataset.day; renderDay(); renderMap();}));
-
-  const coreCards = await Promise.all((day.core || []).filter(n=>POIS[n]).map((name,idx)=>renderPoiCard(name, idx, true)));
-  const optCards = await Promise.all((day.optional || []).filter(n=>POIS[n]).map((name,idx)=>renderPoiCard(name, idx, false)));
-  document.getElementById('poiList').innerHTML = coreCards.join('') + (optCards.length ? `<div class="legend"><div class="tag">Opcionális bővítések</div></div>${optCards.join('')}` : '') + `<div class="legend">${(day.sonar||[]).map(s=>`<div class="tag">sonar: ${s}</div>`).join('')}</div>`;
-
-  document.getElementById('prepList').innerHTML = `<div class="prep-item"><b>Nap előtti teendők</b><div style="height:6px"></div>${(day.prep || ['nincs extra teendő']).map(x=>`• ${x}`).join('<br>')}</div>`;
-  document.getElementById('gemList').innerHTML = HIDDEN_GEMS.map(g=>`<div class="gem-item"><b>${g.tag} · ${g.name}</b><span>${g.note}</span></div>`).join('');
-  document.getElementById('intelList').innerHTML = TRAVELER_INTEL.map(x=>`<div class="intel-item">${x}</div>`).join('');
-}
-
-function setPanel(name){ currentPanel = name; document.querySelectorAll('.seg, .tabbtn').forEach(b=>b.classList.toggle('active', b.dataset.panel===name)); document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active', p.id==='panel-'+name)); }
-document.querySelectorAll('.seg,.tabbtn').forEach(b=>b.addEventListener('click',()=>setPanel(b.dataset.panel)));
-
-const sheet = document.getElementById('sheet');
-const SHEET_PEEK = 86;
-const viewportH = () => Math.round(window.visualViewport?.height || document.documentElement.clientHeight || window.innerHeight);
-const SHEET_ONE = () => Math.round(viewportH() * 0.34);
-const SHEET_TWO = () => Math.round(viewportH() * 0.62);
-const SHEET_FULL = () => Math.max(SHEET_PEEK, viewportH() - 6);
-function openSheet(mode){ currentSheet = mode; sheet.classList.remove('peek','mid','full'); sheet.classList.add(mode, 'open'); const H = {peek:SHEET_PEEK, mid:SHEET_ONE(), full:SHEET_TWO()}[mode] ?? SHEET_PEEK; document.documentElement.style.setProperty('--sheet-h', H+'px'); updateFabOffset(); }
-function closeSheet(){ currentSheet = 'peek'; sheet.classList.remove('mid','full','open'); sheet.classList.add('peek'); document.documentElement.style.setProperty('--sheet-h', SHEET_PEEK + 'px'); updateFabOffset(); }
-function updateFabOffset(){ const h = getComputedStyle(document.documentElement).getPropertyValue('--sheet-h').trim(); document.getElementById('mapFabs').style.bottom = `calc(${h} + 16px)`; }
-closeSheet();
-
-let startY=0,startH=76,dragging=false;
-const drag = document.getElementById('dragzone');
-function pointerDown(y){ dragging=true; startY=y; startH=parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--sheet-h')); sheet.classList.add('dragging'); }
-function pointerMove(y){ if(!dragging) return; const dy = startY - y; const h = Math.max(SHEET_PEEK, Math.min(SHEET_FULL(), startH + dy)); document.documentElement.style.setProperty('--sheet-h', h+'px'); updateFabOffset(); }
-function pointerUp(){ if(!dragging) return; dragging=false; sheet.classList.remove('dragging'); const h = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--sheet-h')); const one = SHEET_ONE(), two = SHEET_TWO(), full = SHEET_FULL(); if(h < (SHEET_PEEK + one)/2) closeSheet(); else if(h < (one + two)/2) openSheet('mid'); else if(h < (two + full)/2) openSheet('full'); else { currentSheet='full'; sheet.classList.remove('peek','mid'); sheet.classList.add('full','open'); document.documentElement.style.setProperty('--sheet-h', full + 'px'); updateFabOffset(); } }
-drag.addEventListener('pointerdown',e=>{pointerDown(e.clientY); e.preventDefault();}); window.addEventListener('pointermove',e=>pointerMove(e.clientY), {passive:false}); window.addEventListener('pointerup', pointerUp);
-document.getElementById('logoBtn').addEventListener('click', ()=> currentSheet==='peek' ? openSheet('mid') : closeSheet());
-document.getElementById('logoBtn').addEventListener('contextmenu', e=>{ e.preventDefault(); setNotification('Sonar', 'Itt később jöhetnek a környékbeli tippek és rejtett gyöngyszemek.'); });
-map.on('click', ()=>{ if(currentSheet!=='peek') closeSheet(); });
-
-function applyTheme(mode){
-  const hour = new Date().getHours();
-  const autoDark = hour >= 20 || hour < 7;
-  const resolved = mode === 'auto' ? (autoDark ? 'dark' : 'light') : mode;
-  document.body.classList.toggle('light', resolved === 'light');
-  document.getElementById('themeStateLabel').textContent = mode === 'auto' ? (autoDark ? 'automatikus · sötét' : 'automatikus · világos') : (resolved === 'dark' ? 'kézi · sötét' : 'kézi · világos');
-  document.querySelectorAll('#themeChoices .choice').forEach(btn => btn.classList.toggle('active', btn.dataset.theme === mode));
-  themeMode = mode;
-  localStorage.setItem('tc_theme_mode', mode);
-}
-document.querySelectorAll('#themeChoices .choice').forEach(btn=>btn.addEventListener('click', ()=>applyTheme(btn.dataset.theme)));
-
-document.getElementById('locBtn').addEventListener('click', ()=>{ navigator.geolocation?.getCurrentPosition(pos=>map.setView([pos.coords.latitude,pos.coords.longitude], 14)); });
-document.getElementById('fitBtn').addEventListener('click', renderMap);
-function syncViewport(){
-  const vh = viewportH();
-  document.documentElement.style.setProperty('--app-vh', vh + 'px');
-  if(currentSheet === 'peek') document.documentElement.style.setProperty('--sheet-h', SHEET_PEEK + 'px');
-  else if(currentSheet === 'mid') document.documentElement.style.setProperty('--sheet-h', SHEET_ONE() + 'px');
-  else if(currentSheet === 'full') document.documentElement.style.setProperty('--sheet-h', SHEET_TWO() + 'px');
-  updateFabOffset();
-  setTimeout(()=>map.invalidateSize(false), 30);
-}
-window.visualViewport?.addEventListener('resize', syncViewport);
-window.visualViewport?.addEventListener('scroll', syncViewport);
-window.addEventListener('orientationchange', ()=>setTimeout(syncViewport,150));
-
-
-(async function init(){ syncViewport(); applyTheme(themeMode); await renderDay(); renderMap(); setPanel('route'); setNotification('Antalya Beta kész', 'Valós helyekkel és online képekkel tölti a kártyákat.'); if('serviceWorker' in navigator){ try{ await navigator.serviceWorker.register('./service-worker.js'); }catch(e){} } })();
-</script>
-</body></html>
+<script src="./app.js"></script>
+</body>
+</html>

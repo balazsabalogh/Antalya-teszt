@@ -1,17 +1,20 @@
-const CACHE = 'tc-antalyabeta-v062';
-const CORE = ['./','./index.html','./manifest.webmanifest','./logo-tr.png','./icon-192.png','./icon-512.png','./apple-touch-icon.png','./ANTALYA_CONTENT.json'];
-self.addEventListener('install', e => e.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting())));
-self.addEventListener('activate', e => e.waitUntil(Promise.all([
-  self.clients.claim(),
-  caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k))))
-])));
-self.addEventListener('fetch', e => {
-  if(e.request.method !== 'GET') return;
-  e.respondWith(caches.match(e.request).then(hit => hit || fetch(e.request).then(resp => {
-    if(resp && resp.ok){ const copy=resp.clone(); caches.open(CACHE).then(c=>c.put(e.request,copy)).catch(()=>{}); }
-    return resp;
-  }).catch(()=>{
-    if(e.request.mode === 'navigate') return caches.match('./index.html');
-    return caches.match(e.request);
-  })));
+const CACHE='tc-antalya-070-master';
+const CORE=[
+'./','./index.html','./app.css','./app.js','./manifest.webmanifest','./apple-touch-icon.png','./icon-192.png','./icon-512.png','./assets/logo-tr.png','./assets/offline-map.svg',
+'./assets/photos/hadrian.jpg','./assets/photos/konyaalti.jpg','./assets/photos/duden.png','./assets/photos/perge.jpg','./assets/photos/kursunlu.jpg','./assets/photos/phaselis.jpg'
+];
+self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting())));
+self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
+self.addEventListener('fetch',e=>{
+ if(e.request.method!=='GET') return;
+ const u=new URL(e.request.url);
+ const isTile=u.hostname.includes('basemaps.cartocdn.com');
+ const isLib=u.hostname.includes('unpkg.com');
+ if(isTile||isLib){
+   e.respondWith(caches.open(CACHE).then(async c=>{
+     const hit=await c.match(e.request); if(hit) return hit;
+     try{const r=await fetch(e.request); if(r&&r.ok||r.type==='opaque') c.put(e.request,r.clone()); return r;}catch(err){return hit||Response.error();}
+   }));return;
+ }
+ e.respondWith(caches.match(e.request).then(hit=>hit||fetch(e.request).then(r=>{const copy=r.clone();caches.open(CACHE).then(c=>c.put(e.request,copy)).catch(()=>{});return r}).catch(()=>caches.match('./index.html'))));
 });
