@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900">
+<rect width="1200" height="900" fill="#111820"/>
+<path d="M0 0h1200v480c-150 5-240 35-360 55-145 23-235 6-360 38-126 33-256 85-480 82z" fill="#18232b"/>
+<path d="M0 650c205 2 360-55 493-82 119-24 215-13 358-36 125-20 221-50 349-52v420H0z" fill="#0b2733"/>
+<g stroke="#2b3842" stroke-width="2" opacity=".7" fill="none">
+<path d="M80 220C330 300 540 305 1110 220"/><path d="M100 350C380 400 650 395 1120 330"/><path d="M90 470C360 490 650 475 1100 420"/><path d="M180 90C245 260 260 430 300 660"/><path d="M420 70C440 250 450 420 490 610"/><path d="M650 70C650 230 650 390 690 560"/><path d="M880 80C850 250 850 390 900 525"/>
+</g>
+<g fill="#70808b" font-family="system-ui, sans-serif" font-size="20" opacity=".75">
+<text x="455" y="410">ANTALYA</text><text x="120" y="350">Konyaaltı</text><text x="790" y="390">Muratpaşa</text><text x="875" y="555">Lara</text>
+</g>
+<text x="460" y="770" fill="#315363" font-size="34" font-family="system-ui,sans-serif">Földközi-tenger · offline útvonalnézet</text>
+</svg>
