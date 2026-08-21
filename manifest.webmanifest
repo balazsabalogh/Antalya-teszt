@@ -1,0 +1,9 @@
+{
+  "name": "Travel Companion Antalya Beta",
+  "short_name": "Companion",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#10151b",
+  "theme_color": "#12171d",
+  "icons": []
+}
