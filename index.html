@@ -10,23 +10,23 @@
 <meta name="apple-mobile-web-app-title" content="Travel Companion">
 <title>Travel Companion · Antalya Beta</title>
 <link rel="manifest" href="./manifest.webmanifest">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
 *{box-sizing:border-box} html,body,#map{height:100%;margin:0} body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;overflow:hidden;background:#0f1419;color:#f4f6f7;-webkit-text-size-adjust:100%;overscroll-behavior:none}
-:root{--bg:#10151b;--panel:rgba(18,23,29,.92);--panel-2:rgba(22,28,35,.88);--line:rgba(255,255,255,.11);--txt:#f2f4f5;--muted:#a7b0b8;--accent:#c92f3a;--accent-2:#f2f2f2;--accent-3:#b32833;--shadow:0 14px 32px rgba(0,0,0,.32);--safe-top:env(safe-area-inset-top);--safe-bottom:env(safe-area-inset-bottom);--sheet-h:76px;--sheet-p:0;}
-body.light{--bg:#ece7df;--panel:rgba(244,240,235,.92);--panel-2:rgba(248,245,241,.86);--line:rgba(18,23,29,.11);--txt:#14181d;--muted:#68717a;--shadow:0 14px 32px rgba(25,35,45,.12)}
-#map{position:fixed;inset:0;z-index:1;background:#d3d8d5} .leaflet-control-zoom{display:none} .leaflet-tile-pane{filter:saturate(.68) brightness(.95) contrast(.94)} body.light .leaflet-tile-pane{filter:saturate(.62) brightness(1.05) contrast(.9)}
+:root{--bg:#10151b;--panel:rgba(18,23,29,.92);--panel-2:rgba(22,28,35,.88);--line:rgba(255,255,255,.11);--txt:#f2f4f5;--muted:#a7b0b8;--accent:#c92f3a;--accent-2:#f2f2f2;--accent-3:#b32833;--shadow:0 14px 32px rgba(0,0,0,.32);--safe-top:env(safe-area-inset-top);--safe-bottom:env(safe-area-inset-bottom);--sheet-h:86px;--sheet-p:0;--sheet-peek:86px;}
+body.light{--bg:#edf0f2;--panel:rgba(236,240,243,.94);--panel-2:rgba(244,246,248,.88);--line:rgba(24,31,38,.10);--txt:#18202a;--muted:#68717a;--shadow:0 14px 32px rgba(25,35,45,.12)}
+#map{position:fixed;inset:0;z-index:1;background:#d3d8d5} .leaflet-control-zoom{display:none} .leaflet-tile-pane{filter:saturate(.74) brightness(1.01) contrast(.97)} body.light .leaflet-tile-pane{filter:saturate(.82) brightness(1.12) contrast(1.03)}
 .topbar{position:fixed;z-index:1000;left:12px;right:12px;top:calc(var(--safe-top) + 8px);pointer-events:none;display:flex;justify-content:center}
 .noticebar{display:none;pointer-events:auto;min-height:40px;max-width:calc(100vw - 24px);padding:10px 14px;border-radius:14px;background:var(--panel);border:1px solid var(--line);box-shadow:var(--shadow);backdrop-filter:blur(14px);align-items:center;gap:10px;font-size:13px;color:var(--txt)}
 .noticebar.show{display:flex} .noticebar b{font-size:13px} .noticebar span{font-size:12px;color:var(--muted)} .noticebar button{margin-left:auto;border:0;background:#ffffff12;color:inherit;width:30px;height:30px;border-radius:10px}
-.logo{position:fixed;z-index:1200;left:50%;transform:translateX(-50%);bottom:calc(var(--safe-bottom) + 12px);width:58px;height:58px;border-radius:50%;background:rgba(10,14,18,.92);border:1px solid rgba(255,255,255,.12);box-shadow:0 10px 24px rgba(0,0,0,.35);display:grid;place-items:center;backdrop-filter:blur(14px);transition:transform .2s ease} body.light .logo{background:rgba(249,247,244,.95);border-color:rgba(20,26,32,.1)}
-.logo:active{transform:translateX(-50%) scale(.96)} .logo-inner{position:relative;width:38px;height:38px;border-radius:50%;background:conic-gradient(from -90deg,var(--accent) 0 33.333%, #fff 33.333% 66.666%, #d93a46 66.666% 100%);box-shadow:inset 0 0 0 3px rgba(0,0,0,.28)} body.light .logo-inner{box-shadow:inset 0 0 0 3px rgba(255,255,255,.55), 0 0 0 1px rgba(0,0,0,.05)}
-.logo-inner:before{content:"";position:absolute;inset:7px;border-radius:50%;background:radial-gradient(circle at 60% 35%, rgba(255,255,255,.95), rgba(255,255,255,.22) 42%, rgba(255,255,255,.08) 43%, rgba(255,255,255,0) 44%), radial-gradient(circle at 50% 55%, rgba(72,149,112,.92), rgba(28,73,59,.92));opacity:.96} .logo-count{position:absolute;right:-3px;top:-3px;min-width:18px;height:18px;padding:0 4px;border-radius:999px;background:var(--accent);color:#fff;font-size:10px;font-weight:800;display:grid;place-items:center}
-.map-fabs{position:fixed;z-index:950;right:14px;bottom:calc(var(--sheet-h) + 16px);display:grid;gap:10px;transition:bottom .2s ease} .fab{width:46px;height:46px;border:1px solid var(--line);border-radius:50%;background:var(--panel);box-shadow:var(--shadow);backdrop-filter:blur(12px);color:var(--txt);font-size:21px;display:grid;place-items:center}
-.sheet{position:fixed;z-index:1100;left:0;right:0;bottom:0;height:var(--sheet-h);background:var(--panel);border-top:1px solid var(--line);box-shadow:0 -16px 36px rgba(0,0,0,.32);backdrop-filter:blur(18px);overflow:hidden;transition:height .28s cubic-bezier(.19,.82,.28,1);padding-bottom:var(--safe-bottom)}
+.logo{position:fixed;z-index:1200;left:50%;transform:translateX(-50%);bottom:calc(var(--safe-bottom) + 10px);width:66px;height:66px;border:0;background:transparent;display:grid;place-items:center;transition:transform .2s ease}
+.logo:active{transform:translateX(-50%) scale(.96)} .logo-inner{position:relative;width:66px;height:66px;border-radius:50%;background:url('./logo-tr.png') center/contain no-repeat} .logo-count{position:absolute;right:4px;top:2px;min-width:18px;height:18px;padding:0 4px;border-radius:999px;background:var(--accent);color:#fff;font-size:10px;font-weight:800;display:grid;place-items:center;box-shadow:0 3px 10px rgba(0,0,0,.25)}
+.map-fabs{position:fixed;z-index:950;right:14px;bottom:calc(var(--sheet-h) + 16px);display:grid;gap:10px;transition:bottom .2s ease} .fab{width:48px;height:48px;border:1px solid var(--line);border-radius:50%;background:var(--panel);box-shadow:var(--shadow);backdrop-filter:blur(12px);color:var(--txt);font-size:21px;display:grid;place-items:center}
+.sheet{position:fixed;z-index:1100;left:0;right:0;bottom:0;height:var(--sheet-h);background:var(--panel);border-top:1px solid var(--line);box-shadow:0 -16px 36px rgba(0,0,0,.32);backdrop-filter:blur(18px);overflow:hidden;transition:height .28s cubic-bezier(.19,.82,.28,1);padding-bottom:var(--safe-bottom);border-top-left-radius:24px;border-top-right-radius:24px}
 .sheet.dragging{transition:none} .dragzone{position:absolute;left:0;right:0;top:0;height:44px;z-index:4;touch-action:none} .handle{position:absolute;left:50%;transform:translateX(-50%);top:8px;width:42px;height:4px;border-radius:999px;background:rgba(255,255,255,.38)} body.light .handle{background:rgba(20,25,31,.24)}
-.peek{position:absolute;left:12px;right:12px;top:14px;height:50px;display:flex;align-items:center;gap:10px} .peek strong{font-size:14px} .peek span{display:block;font-size:11px;color:var(--muted);margin-top:2px} .peek .hero-thumb{width:46px;height:46px;border-radius:12px;background:#2c3137;border:1px solid var(--line);overflow:hidden;display:grid;place-items:center} .peek .hero-thumb img{width:100%;height:100%;object-fit:cover} .peek .mini-actions{margin-left:auto;display:flex;gap:8px} .mini-chip{height:32px;padding:0 10px;border-radius:999px;background:var(--panel-2);border:1px solid var(--line);display:flex;align-items:center;gap:6px;font-size:11px;color:var(--txt)}
-.content{position:absolute;left:0;right:0;top:64px;bottom:0;overflow:auto;padding:0 14px 88px;opacity:0;transform:translateY(16px);pointer-events:none;transition:opacity .16s ease, transform .16s ease} .sheet.open .content{opacity:1;transform:translateY(0);pointer-events:auto}
+.peek{position:absolute;left:12px;right:12px;top:18px;height:54px;display:flex;align-items:center;gap:10px} .peek strong{font-size:14px} .peek span{display:block;font-size:11px;color:var(--muted);margin-top:2px} .peek .hero-thumb{width:46px;height:46px;border-radius:12px;background:#2c3137;border:1px solid var(--line);overflow:hidden;display:grid;place-items:center} .peek .hero-thumb img{width:100%;height:100%;object-fit:cover} .peek .mini-actions{margin-left:auto;display:flex;gap:8px} .mini-chip{height:32px;padding:0 10px;border-radius:999px;background:var(--panel-2);border:1px solid var(--line);display:flex;align-items:center;gap:6px;font-size:11px;color:var(--txt)}
+.content{position:absolute;left:0;right:0;top:78px;bottom:0;overflow:auto;padding:0 14px 96px;opacity:0;transform:translateY(16px);pointer-events:none;transition:opacity .16s ease, transform .16s ease} .sheet.open .content{opacity:1;transform:translateY(0);pointer-events:auto}
 .daystrip{display:flex;gap:8px;overflow-x:auto;padding:4px 0 10px;scrollbar-width:none} .daystrip::-webkit-scrollbar{display:none} .daypill{flex:0 0 auto;min-width:94px;padding:11px 12px;border-radius:16px;background:rgba(255,255,255,.04);border:1px solid var(--line);display:flex;flex-direction:column;gap:3px;color:var(--txt)} body.light .daypill{background:rgba(255,255,255,.56)} .daypill.active{background:linear-gradient(180deg, rgba(201,47,58,.20), rgba(201,47,58,.08));border-color:rgba(201,47,58,.55)} .daypill b{font-size:12px} .daypill span{font-size:10px;color:var(--muted)}
 .summary{padding:14px;border-radius:18px;background:rgba(255,255,255,.04);border:1px solid var(--line)} body.light .summary{background:rgba(255,255,255,.55)} .summary h2{margin:0 0 6px;font-size:19px} .summary p{margin:0 0 8px;font-size:13px;line-height:1.4;color:var(--muted)} .meta{display:flex;flex-wrap:wrap;gap:8px} .meta .tag{padding:6px 9px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.05);font-size:11px}
 .segmented{display:flex;gap:8px;padding:12px 0 8px} .seg{flex:1;border:1px solid var(--line);background:rgba(255,255,255,.04);padding:10px;border-radius:12px;color:var(--txt);font-weight:700} .seg.active{background:rgba(201,47,58,.16);border-color:rgba(201,47,58,.55)}
@@ -35,25 +35,24 @@ body.light{--bg:#ece7df;--panel:rgba(244,240,235,.92);--panel-2:rgba(248,245,241
 .poi-top{display:flex;align-items:flex-start;gap:10px} .poi-num{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:#1c2229;color:#fff;font-size:12px;font-weight:800} body.light .poi-num{background:#222933} .poi-head b{font-size:14px;display:block} .poi-head span{font-size:11px;color:var(--muted)} .poi-body{font-size:12px;line-height:1.4;color:var(--muted);margin-top:6px} .badge-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px} .badge{padding:5px 8px;border-radius:999px;background:rgba(201,47,58,.14);border:1px solid rgba(201,47,58,.32);font-size:10px}
 .intel-list,.gem-list,.prep-list{display:grid;gap:10px;padding-top:6px} .intel-item,.gem-item,.prep-item{padding:12px 14px;border-radius:16px;background:rgba(255,255,255,.04);border:1px solid var(--line);font-size:13px;line-height:1.4} body.light .intel-item, body.light .gem-item, body.light .prep-item{background:rgba(255,255,255,.55)} .gem-item b{display:block;margin-bottom:4px} .gem-item span{font-size:12px;color:var(--muted)}
 .legend{display:flex;flex-wrap:wrap;gap:8px;padding:10px 0 4px} .legend .tag{padding:7px 10px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid var(--line);font-size:11px}
-.bottom-tabs{position:absolute;left:0;right:0;bottom:0;height:70px;padding-bottom:var(--safe-bottom);display:none;align-items:flex-start;justify-content:space-around;background:linear-gradient(180deg, rgba(16,21,27,0), rgba(16,21,27,.94) 28%, rgba(16,21,27,.98) 100%);border-top:1px solid var(--line)} body.light .bottom-tabs{background:linear-gradient(180deg, rgba(236,231,223,0), rgba(236,231,223,.94) 28%, rgba(236,231,223,.98) 100%)} .sheet.mid .bottom-tabs, .sheet.full .bottom-tabs{display:flex} .tabbtn{padding-top:10px;border:0;background:none;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:4px;font-size:18px} .tabbtn span{font-size:10px} .tabbtn.active{color:var(--txt)}
-.marker{position:relative;width:48px;height:62px} .marker .pin{position:absolute;left:4px;top:8px;width:40px;height:40px;border-radius:50%;background:rgba(14,18,23,.9);box-shadow:0 8px 16px rgba(0,0,0,.28)} .marker .ring{position:absolute;inset:-2px;border-radius:50%;border:3px solid var(--day);opacity:.96} .marker .num{position:absolute;inset:0;display:grid;place-items:center;font-weight:800;color:#fff;font-size:16px} .marker .cat{position:absolute;top:-3px;left:50%;transform:translateX(-50%);width:20px;height:20px;border-radius:50%;display:grid;place-items:center;background:var(--day);color:#fff;font-size:11px;border:2px solid rgba(12,16,20,.9)} .marker .tip{position:absolute;top:42px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:8px solid transparent;border-right:8px solid transparent;border-top:14px solid rgba(255,255,255,.94)}
-body.light .marker .pin{background:rgba(255,255,255,.94)} body.light .marker .num{color:#11161b} body.light .marker .cat{border-color:#fff} body.light .marker .tip{border-top-color:#fff}
+.bottom-tabs{position:absolute;left:0;right:0;bottom:0;height:72px;padding:0 16px var(--safe-bottom);display:none;align-items:flex-start;justify-content:space-between;background:linear-gradient(180deg, rgba(16,21,27,0), rgba(16,21,27,.94) 28%, rgba(16,21,27,.98) 100%);border-top:1px solid var(--line)} body.light .bottom-tabs{background:linear-gradient(180deg, rgba(236,240,243,0), rgba(236,240,243,.94) 28%, rgba(236,240,243,.98) 100%)} .sheet.mid .bottom-tabs, .sheet.full .bottom-tabs{display:flex} .tabbtn{padding-top:10px;border:0;background:none;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:4px;font-size:18px;flex:1} .tabbtn span{font-size:10px} .tabbtn.active{color:var(--txt)}
+.marker{position:relative;width:48px;height:62px} .marker .pin{position:absolute;left:4px;top:8px;width:40px;height:40px;border-radius:50%;background:linear-gradient(180deg, rgba(38,45,54,.98), rgba(20,24,29,.96));border:1px solid rgba(255,255,255,.08);box-shadow:0 8px 16px rgba(0,0,0,.20)} .marker .ring{position:absolute;inset:-2px;border-radius:50%;border:3px solid var(--day);opacity:.96} .marker .num{position:absolute;inset:0;display:grid;place-items:center;font-weight:800;color:#fff;font-size:16px} .marker .cat{position:absolute;top:-3px;left:50%;transform:translateX(-50%);width:20px;height:20px;border-radius:50%;display:grid;place-items:center;background:var(--day);color:#fff;font-size:11px;border:2px solid rgba(17,22,27,.96)} .marker .tip{position:absolute;top:42px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:8px solid transparent;border-right:8px solid transparent;border-top:14px solid rgba(255,255,255,.96)}
+body.light .marker .pin{background:linear-gradient(180deg, rgba(247,249,250,.98), rgba(230,235,239,.96));border-color:rgba(22,28,35,.08)} body.light .marker .num{color:#11161b} body.light .marker .cat{border-color:#fff} body.light .marker .tip{border-top-color:#fff}
 .small-map-note{font-size:11px;color:var(--muted);padding:10px 2px 0}
-.theme-toggle{position:fixed;z-index:940;left:14px;bottom:calc(var(--sheet-h) + 16px);width:46px;height:46px;border:1px solid var(--line);border-radius:50%;background:var(--panel);box-shadow:var(--shadow);display:grid;place-items:center;color:var(--txt)}
+.settings-panel{display:grid;gap:12px;padding-top:6px}.settings-card{padding:14px;border-radius:16px;background:rgba(255,255,255,.04);border:1px solid var(--line)} body.light .settings-card{background:rgba(255,255,255,.55)} .settings-card h3{margin:0 0 10px;font-size:14px}.settings-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:8px 0;font-size:13px}.settings-choices{display:flex;gap:8px;flex-wrap:wrap}.choice{padding:9px 12px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.05);font-size:12px;color:var(--txt)} .choice.active{background:rgba(201,47,58,.14);border-color:rgba(201,47,58,.48)}
 @media (min-width:760px){ .sheet{left:50%;transform:translateX(-50%);max-width:480px;border-top-left-radius:20px;border-top-right-radius:20px} .topbar{left:50%;right:auto;transform:translateX(-50%)} }
 </style>
 </head>
 <body>
 <div id="map"></div>
 <div class="topbar"><div id="noticebar" class="noticebar"><b id="noticeTitle">Companion</b><span id="noticeText"></span><button id="noticeClose">×</button></div></div>
-<button id="themeToggle" class="theme-toggle" aria-label="Téma váltása">◐</button>
 <div id="mapFabs" class="map-fabs"><button class="fab" id="locBtn">◎</button><button class="fab" id="fitBtn">⌖</button></div>
-<button id="logoBtn" class="logo" aria-label="Companion logó"><div class="logo-inner"></div><div id="logoCount" class="logo-count">3</div></button>
+<button id="logoBtn" class="logo" aria-label="Companion logó"><div class="logo-inner"></div><div id="logoCount" class="logo-count">1</div></button>
 <section id="sheet" class="sheet">
   <div id="dragzone" class="dragzone"><div class="handle"></div></div>
   <div class="peek">
     <div class="hero-thumb" id="peekThumb"><span>✦</span></div>
-    <div><strong id="peekTitle">Antalya Beta</strong><span id="peekSub">Húzd fel a napi útitervhez</span></div>
+    <div><strong id="peekTitle">Antalya Beta</strong><span id="peekSub">Húzd fel az útitervhez</span></div>
     <div class="mini-actions"><div class="mini-chip" id="peekDay">1. nap</div><div class="mini-chip" id="peekPace">laza</div></div>
   </div>
   <div class="content">
@@ -68,6 +67,7 @@ body.light .marker .pin{background:rgba(255,255,255,.94)} body.light .marker .nu
       <button class="seg active" data-panel="route">Útiterv</button>
       <button class="seg" data-panel="guide">Útikönyv</button>
       <button class="seg" data-panel="intel">Intel</button>
+      <button class="seg" data-panel="settings">Beáll.</button>
     </div>
     <section class="panel active" id="panel-route">
       <div class="poi-list" id="poiList"></div>
@@ -81,11 +81,29 @@ body.light .marker .pin{background:rgba(255,255,255,.94)} body.light .marker .nu
     <section class="panel" id="panel-intel">
       <div class="intel-list" id="intelList"></div>
     </section>
+    <section class="panel" id="panel-settings">
+      <div class="settings-panel">
+        <div class="settings-card">
+          <h3>Téma</h3>
+          <div class="settings-choices" id="themeChoices">
+            <button class="choice" data-theme="auto">Automatikus</button>
+            <button class="choice" data-theme="dark">Sötét</button>
+            <button class="choice" data-theme="light">Világos</button>
+          </div>
+          <div class="settings-row"><span>Sötét mód naplemente után automatikusan</span><span id="themeStateLabel">aktív</span></div>
+        </div>
+        <div class="settings-card">
+          <h3>Offline mód</h3>
+          <div style="font-size:13px;color:var(--muted);line-height:1.45">A már betöltött napok, útvonalak és tartalmak offline is elérhetőek maradnak. Új helyek keresése és a sonar élő ajánlatai internetet igényelnek.</div>
+        </div>
+      </div>
+    </section>
   </div>
   <nav class="bottom-tabs">
     <button class="tabbtn active" data-panel="route">⌁<span>Útvonal</span></button>
     <button class="tabbtn" data-panel="guide">☰<span>Guide</span></button>
     <button class="tabbtn" data-panel="intel">⚠<span>Intel</span></button>
+    <button class="tabbtn" data-panel="settings">⚙<span>Beáll.</span></button>
   </nav>
 </section>
 
@@ -100,6 +118,7 @@ const DAY_COLORS = ['#c92f3a','#2a7de1','#27996d','#dd8736','#8a56df','#cbab35',
 let currentDay = 0;
 let currentPanel = 'route';
 let currentSheet = 'peek';
+let themeMode = localStorage.getItem('tc_theme_mode') || 'dark';
 
 const map = L.map('map', {zoomControl:false, attributionControl:false}).setView([36.887, 30.705], 12);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom:19}).addTo(map);
@@ -212,26 +231,40 @@ function setPanel(name){ currentPanel = name; document.querySelectorAll('.seg, .
 document.querySelectorAll('.seg,.tabbtn').forEach(b=>b.addEventListener('click',()=>setPanel(b.dataset.panel)));
 
 const sheet = document.getElementById('sheet');
-function openSheet(mode){ currentSheet = mode; sheet.classList.remove('peek','mid','full'); sheet.classList.add(mode, 'open'); const H = {peek:76, mid:window.innerHeight*.45, full:window.innerHeight - ((window.visualViewport?.offsetTop)||0) - 8}[mode]; document.documentElement.style.setProperty('--sheet-h', H+'px'); updateFabOffset(); }
-function closeSheet(){ currentSheet = 'peek'; sheet.classList.remove('mid','full','open'); sheet.classList.add('peek'); document.documentElement.style.setProperty('--sheet-h', '76px'); updateFabOffset(); }
-function updateFabOffset(){ const h = getComputedStyle(document.documentElement).getPropertyValue('--sheet-h').trim(); document.getElementById('mapFabs').style.bottom = `calc(${h} + 16px)`; document.getElementById('themeToggle').style.bottom = `calc(${h} + 16px)`; }
+const SHEET_PEEK = 86;
+const SHEET_ONE = () => Math.round(window.innerHeight * 0.34);
+const SHEET_TWO = () => Math.round(window.innerHeight * 0.62);
+const SHEET_FULL = () => window.innerHeight - ((window.visualViewport?.offsetTop)||0) - 10;
+function openSheet(mode){ currentSheet = mode; sheet.classList.remove('peek','mid','full'); sheet.classList.add(mode, 'open'); const H = {peek:SHEET_PEEK, mid:SHEET_ONE(), full:SHEET_TWO()}[mode] ?? SHEET_PEEK; document.documentElement.style.setProperty('--sheet-h', H+'px'); updateFabOffset(); }
+function closeSheet(){ currentSheet = 'peek'; sheet.classList.remove('mid','full','open'); sheet.classList.add('peek'); document.documentElement.style.setProperty('--sheet-h', SHEET_PEEK + 'px'); updateFabOffset(); }
+function updateFabOffset(){ const h = getComputedStyle(document.documentElement).getPropertyValue('--sheet-h').trim(); document.getElementById('mapFabs').style.bottom = `calc(${h} + 16px)`; }
 closeSheet();
 
 let startY=0,startH=76,dragging=false;
 const drag = document.getElementById('dragzone');
 function pointerDown(y){ dragging=true; startY=y; startH=parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--sheet-h')); sheet.classList.add('dragging'); }
-function pointerMove(y){ if(!dragging) return; const dy = startY - y; const h = Math.max(76, Math.min(window.innerHeight-8, startH + dy)); document.documentElement.style.setProperty('--sheet-h', h+'px'); updateFabOffset(); }
-function pointerUp(){ if(!dragging) return; dragging=false; sheet.classList.remove('dragging'); const h = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--sheet-h')); const full = window.innerHeight-8, mid = window.innerHeight*.45; if(h < 140) closeSheet(); else if(h < (mid+full)/2) openSheet('mid'); else openSheet('full'); }
+function pointerMove(y){ if(!dragging) return; const dy = startY - y; const h = Math.max(SHEET_PEEK, Math.min(SHEET_FULL(), startH + dy)); document.documentElement.style.setProperty('--sheet-h', h+'px'); updateFabOffset(); }
+function pointerUp(){ if(!dragging) return; dragging=false; sheet.classList.remove('dragging'); const h = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--sheet-h')); const one = SHEET_ONE(), two = SHEET_TWO(), full = SHEET_FULL(); if(h < (SHEET_PEEK + one)/2) closeSheet(); else if(h < (one + two)/2) openSheet('mid'); else if(h < (two + full)/2) openSheet('full'); else { currentSheet='full'; sheet.classList.remove('peek','mid'); sheet.classList.add('full','open'); document.documentElement.style.setProperty('--sheet-h', full + 'px'); updateFabOffset(); } }
 drag.addEventListener('pointerdown',e=>{pointerDown(e.clientY); e.preventDefault();}); window.addEventListener('pointermove',e=>pointerMove(e.clientY), {passive:false}); window.addEventListener('pointerup', pointerUp);
 document.getElementById('logoBtn').addEventListener('click', ()=> currentSheet==='peek' ? openSheet('mid') : closeSheet());
 document.getElementById('logoBtn').addEventListener('contextmenu', e=>{ e.preventDefault(); setNotification('Sonar', 'Itt később jöhetnek a környékbeli tippek és rejtett gyöngyszemek.'); });
 map.on('click', ()=>{ if(currentSheet!=='peek') closeSheet(); });
 
-const THEMES = ['dark','light']; let themeIndex = 0; document.getElementById('themeToggle').addEventListener('click',()=>{ themeIndex = (themeIndex+1)%THEMES.length; document.body.classList.toggle('light', THEMES[themeIndex]==='light'); });
+function applyTheme(mode){
+  const hour = new Date().getHours();
+  const autoDark = hour >= 20 || hour < 7;
+  const resolved = mode === 'auto' ? (autoDark ? 'dark' : 'light') : mode;
+  document.body.classList.toggle('light', resolved === 'light');
+  document.getElementById('themeStateLabel').textContent = mode === 'auto' ? (autoDark ? 'automatikus · sötét' : 'automatikus · világos') : (resolved === 'dark' ? 'kézi · sötét' : 'kézi · világos');
+  document.querySelectorAll('#themeChoices .choice').forEach(btn => btn.classList.toggle('active', btn.dataset.theme === mode));
+  themeMode = mode;
+  localStorage.setItem('tc_theme_mode', mode);
+}
+document.querySelectorAll('#themeChoices .choice').forEach(btn=>btn.addEventListener('click', ()=>applyTheme(btn.dataset.theme)));
 
 document.getElementById('locBtn').addEventListener('click', ()=>{ navigator.geolocation?.getCurrentPosition(pos=>map.setView([pos.coords.latitude,pos.coords.longitude], 14)); });
 document.getElementById('fitBtn').addEventListener('click', renderMap);
 
-(async function init(){ await renderDay(); renderMap(); setPanel('route'); setNotification('Antalya Beta kész', 'Valós helyekkel és online képekkel tölti a kártyákat.'); if('serviceWorker' in navigator){ try{ await navigator.serviceWorker.register('./service-worker.js'); }catch(e){} } })();
+(async function init(){ applyTheme(themeMode); await renderDay(); renderMap(); setPanel('route'); setNotification('Antalya Beta kész', 'Valós helyekkel és online képekkel tölti a kártyákat.'); if('serviceWorker' in navigator){ try{ await navigator.serviceWorker.register('./service-worker.js'); }catch(e){} } })();
 </script>
 </body></html>
