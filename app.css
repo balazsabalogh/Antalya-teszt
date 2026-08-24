@@ -304,99 +304,227 @@ body.theme-dark{background:#071827;color:var(--text)}
 .sonar-marker.selected{transform:scale(1.08);animation:selectedFloat075 3.2s ease-in-out infinite!important;transform-origin:50% 70%}
 .sheet-close-all{position:absolute;right:12px;top:calc(var(--safe-top) + 8px);z-index:60;width:40px;height:40px;border-radius:14px;border:1px solid rgba(255,255,255,.14);background:rgba(8,28,46,.90);font-size:22px;color:#fff;box-shadow:var(--shadow)}
 
-/* 0.7.6 — responsive interaction + photo pass */
-:root{--panel:#0b2236;--panel2:#102f49;--panel3:#173b58;--line:rgba(184,211,232,.16);--muted:#9fb4c4;--text:#f4f8fb}
-.trip-test-badge{display:none!important}
+/* 0.7.6 — polish + Antalya content pass */
 
-/* Companion emblem: the PNG itself owns the shape; no CSS halo. */
-.companion-logo{background:transparent!important;border:0!important;box-shadow:none!important;filter:drop-shadow(0 7px 12px rgba(2,12,22,.30))!important}
-.companion-logo img{background:transparent!important}
+/* Notifications no longer look draggable: close with the arrow only. */
+.drawer-handle{display:none!important}
 
-/* Selected marker only moves; inactive route markers stay perfectly still. */
-.tc-marker{animation:none!important;translate:0 0!important}
-.tc-marker .body{background:linear-gradient(150deg,rgba(31,76,103,.98),rgba(12,42,63,.98))!important}
-.tc-marker.selected{transform:scale(1.08)!important;animation:selectedFloat076 3.4s ease-in-out infinite!important;z-index:50}
-.tc-marker.selected .body{background:linear-gradient(150deg,#2c6687,#153b56)!important;animation:selectedHalo076 1.9s ease-in-out infinite!important}
-@keyframes selectedFloat076{0%,100%{translate:0 0}50%{translate:0 -2.5px}}
-@keyframes selectedHalo076{0%,100%{box-shadow:0 0 0 3px color-mix(in srgb,var(--mday) 24%,transparent),0 8px 18px rgba(0,0,0,.23)}50%{box-shadow:0 0 0 8px color-mix(in srgb,var(--mday) 4%,transparent),0 9px 19px rgba(0,0,0,.26)}}
-.sonar-marker{animation:none!important}
-.sonar-marker.selected{animation:selectedFloat076 3.4s ease-in-out infinite!important;transform:scale(1.08)}
+/* Active navigation item: subtle but instantly legible. Settings uses the same inactive color as peers. */
+.main-tab,.exp-tab{position:relative;isolation:isolate}
+.exp-tab.settings{color:#a8bac9!important}
+.main-tab .ico,.main-tab b,.exp-tab>span,.exp-tab>small{position:relative;z-index:2}
+.main-tab.active,.exp-tab.active{color:#f8fbff!important}
+.main-tab.active:before,.exp-tab.active:before{
+  content:"";position:absolute;z-index:1;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:46px;height:42px;border-radius:15px;
+  background:linear-gradient(180deg,rgba(84,157,213,.20),rgba(62,126,181,.10));
+  border:1px solid rgba(145,201,239,.18);
+  box-shadow:0 0 0 1px rgba(6,21,34,.12),0 5px 16px rgba(11,54,86,.18),inset 0 1px rgba(255,255,255,.06)
+}
+.exp-tab.active:before{width:48px;height:44px;border-radius:14px}
+.main-tab.active svg,.exp-tab.active svg{filter:drop-shadow(0 0 4px rgba(144,204,245,.22))}
 
-/* Sheet: iPhone-like touch target, fixed bottom rail, no clipping. */
-.sheet{background:rgba(8,31,49,.975)!important}
-.sheet-drag{height:58px!important;z-index:55!important;touch-action:none!important}
-.sheet-drag span{top:10px!important;width:44px;height:4px;background:rgba(188,207,220,.48)!important}
-.sheet-step-back{position:absolute;z-index:58;left:12px;top:7px;width:37px;height:37px;border-radius:13px;border:1px solid var(--line);background:rgba(17,54,81,.92);color:#d9e8f2;font-size:20px;display:grid;place-items:center}
-.sheet-body{top:31px!important;bottom:calc(58px + var(--safe-bottom))!important;padding:0 14px 8px!important}
-.expanded-nav{height:calc(58px + var(--safe-bottom))!important;background:#071f32!important;padding:2px 8px calc(var(--safe-bottom) + 2px)!important}
-.sheet.state-mini .sheet-body{bottom:calc(58px + var(--safe-bottom))!important;overflow:hidden!important}
-.sheet.state-mini .mini-card{min-height:72px;margin:0!important}
-.sheet.state-one .sheet-body,.sheet.state-two .sheet-body{overflow-y:auto}
-.sheet.fullscreen{top:0!important;height:100dvh!important;border-radius:0!important;border-top:0!important}
-.sheet.fullscreen .sheet-body{top:calc(var(--safe-top) + 26px)!important}
-.sheet.fullscreen .sheet-step-back{display:none!important}
-.sheet-close-all,.guide-close{top:calc(var(--safe-top) + 7px)!important}
+/* Route markers: classic teardrop pin, day-colour body, fixed next target, animated selection only. */
+.tc-marker{width:52px;height:66px!important;animation:none!important;translate:0 0!important;transform-origin:50% 82%;will-change:transform,translate}
+.tc-marker .body{
+  left:9px!important;top:14px!important;width:36px!important;height:36px!important;
+  border-radius:50% 50% 50% 7px!important;
+  transform:rotate(-45deg);
+  background:var(--mday)!important;
+  border:3px solid rgba(247,250,252,.92)!important;
+  box-shadow:0 7px 14px rgba(4,19,31,.30)!important
+}
+.tc-marker .num{transform:rotate(45deg);font-size:16px!important;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.32)}
+.tc-marker .cat{
+  top:0!important;width:22px!important;height:22px!important;
+  background:#edf4f7!important;color:#10263a!important;
+  border:2px solid var(--mday)!important;box-shadow:0 3px 8px rgba(3,20,32,.20)
+}
+.tc-marker .tip{display:none!important}
+.tc-marker.next:not(.selected){transform:scale(1.14)!important;z-index:28;animation:none!important}
+.tc-marker.next:not(.selected) .body{animation:none!important;box-shadow:0 8px 18px rgba(4,19,31,.34)!important}
+.tc-marker.selected{transform:scale(1.18)!important;z-index:45;animation:selectedMarker076 2.2s ease-in-out infinite!important}
+.tc-marker.selected .body{background:var(--mday)!important;animation:selectedHalo076 1.65s ease-in-out infinite!important}
+@keyframes selectedMarker076{0%,100%{translate:0 0}50%{translate:0 -4px}}
+@keyframes selectedHalo076{0%,100%{box-shadow:0 0 0 3px color-mix(in srgb,var(--mday) 24%,transparent),0 8px 18px rgba(4,19,31,.30)}50%{box-shadow:0 0 0 9px color-mix(in srgb,var(--mday) 4%,transparent),0 10px 20px rgba(4,19,31,.33)}}
 
-/* Actions are a discoverable horizontal rail. */
-.actions.action-carousel{padding-right:18%!important;scroll-snap-type:x proximity}
-.action-carousel .action{flex:0 0 31%;min-width:106px}
-.action-carousel:after{content:'›';flex:0 0 18px;display:grid;place-items:center;font-size:25px;color:#7e9bb0}
+/* Navigation swipe: the entire revealed surface turns red/green. */
+.nav-banner{isolation:isolate;background:transparent!important}
+.nav-banner-card{border-radius:inherit;background:rgba(8,28,46,.97)!important;will-change:transform}
+.nav-swipe-action{
+  inset:0!important;width:100%!important;height:100%!important;
+  z-index:1;opacity:0!important;visibility:hidden;
+  padding:0 18px!important;border-radius:inherit;
+  transition:opacity .10s ease!important
+}
+.nav-swipe-action.nav-dismiss{justify-content:flex-start;background:#a9343e!important}
+.nav-swipe-action.nav-next{justify-content:flex-end;background:#268257!important}
+.nav-banner.swipe-left .nav-dismiss,.nav-banner.swipe-right .nav-next{opacity:1!important;visibility:visible}
+.nav-banner.swipe-left .nav-next,.nav-banner.swipe-right .nav-dismiss{opacity:0!important;visibility:hidden}
 
-/* Filters: fully readable, horizontal, functional state. */
-.filters{gap:12px!important;padding:2px 4px 14px!important;overflow-x:auto!important}
-.filter{min-width:54px!important;font-size:10px!important}
-.filter i{width:42px!important;height:42px!important}
-.filter:not(.active){opacity:.48}
-.filter.active{opacity:1;color:#fff}
-.sonar-radius{display:flex!important;gap:7px;overflow-x:auto;padding-bottom:8px}
-.sonar-radius .choice{flex:0 0 auto}
+/* Compact day picker: rounded as one object and easier upward swipe target. */
+.days-compact-panel{border-radius:22px!important;padding-top:0!important;overflow:hidden}
+.days-compact-handle{height:44px!important;cursor:grab;touch-action:none}
+.days-compact-handle span{width:52px!important;height:5px!important}
+.days-compact-track{overscroll-behavior-x:contain;overscroll-behavior-y:none}
+.day-compact-card{touch-action:pan-x}
 
-/* Messenger-style actions: right swipe reveals LEFT green context; left swipe reveals RIGHT red dismiss. */
-.notif-action.context,.sonar-action.context{left:0!important;right:auto!important;background:#277b55!important;color:white}
-.notif-action.dismiss,.sonar-action.dismiss{right:0!important;left:auto!important;background:#8b313b!important;color:white}
-.notif-swipe.to-right .notif-action.context,.sonar-result.to-right .sonar-action.context{opacity:1!important}
-.notif-swipe.to-left .notif-action.dismiss,.sonar-result.to-left .sonar-action.dismiss{opacity:1!important}
-.notif-swipe.to-left .notif-action.context,.notif-swipe.to-right .notif-action.dismiss,.sonar-result.to-left .sonar-action.context,.sonar-result.to-right .sonar-action.dismiss{opacity:.15!important}
+/* Expanded day picker: every card has exactly the same viewport-sized frame. */
+.full-overlay.days-mode{padding-top:calc(var(--safe-top) + 58px)!important;padding-bottom:calc(var(--safe-bottom) + 58px)!important}
+.days-mode .overlay-body{overflow:hidden!important}
+.days-mode .day-carousel-wrap{
+  width:100%;height:calc(100dvh - var(--safe-top) - var(--safe-bottom) - 116px);
+  min-height:0;display:flex;flex-direction:column;justify-content:stretch;overflow:hidden
+}
+.days-handle-zone{height:44px;flex:0 0 44px;display:grid;place-items:center;touch-action:none;cursor:grab}
+.days-handle-zone .days-handle{display:block;width:52px;height:5px;border-radius:6px;background:rgba(206,220,230,.48)}
+.days-mode .day-carousel{
+  flex:1;min-height:0;align-items:stretch;overflow-x:auto!important;overflow-y:hidden!important;
+  padding:0 9vw 2px!important;gap:12px;scroll-snap-type:x mandatory;overscroll-behavior-x:contain;overscroll-behavior-y:none
+}
+.days-mode .day-card{
+  flex:0 0 82vw;min-width:82vw!important;height:100%!important;max-height:none!important;
+  align-self:stretch;display:flex;flex-direction:column;overflow:hidden!important;
+  border-radius:22px!important;scroll-snap-align:center;scroll-snap-stop:always
+}
+.days-mode .day-card .hero{flex:0 0 min(31vh,245px);height:auto!important}
+.days-mode .day-card .day-content{
+  flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;
+  padding-bottom:10px!important
+}
+.days-mode .day-choose{position:sticky;bottom:0;z-index:5;box-shadow:0 -8px 18px rgba(9,31,50,.62)}
+.days-mode .day-indicator{flex:0 0 24px;height:24px!important}
 
-/* Navigation: only top card + compact dock. */
-.nav-banner{left:14px!important;right:14px!important;overflow:hidden!important}
-.nav-banner-card{grid-template-columns:40px 1fr 34px!important;padding:10px 10px!important}
-.nav-hide{display:grid!important;width:32px!important;height:32px!important;place-items:center;border-radius:11px!important;border:1px solid var(--line)!important;background:#173b58!important;color:#eef7fc!important;font-size:18px}
-.nav-swipe-action.nav-next{left:0!important;right:auto!important;background:#277b55!important}
-.nav-swipe-action.nav-dismiss{right:0!important;left:auto!important;background:#8b313b!important}
-.nav-banner.swipe-right .nav-next,.nav-banner.swipe-left .nav-dismiss{opacity:1!important}
-.nav-banner.swipe-left .nav-next,.nav-banner.swipe-right .nav-dismiss{opacity:.15!important}
+/* Filters: horizontal again, one tap, category-colour state. */
+.filters{justify-content:flex-start!important;overflow-x:auto!important;overflow-y:hidden!important;gap:12px!important;padding:1px 6px 12px!important;scroll-snap-type:x proximity;overscroll-behavior-x:contain}
+.filter{flex:0 0 auto!important;min-width:54px!important;transform:none!important;color:#9db2c2;scroll-snap-align:start}
+.filter i{width:42px!important;height:42px!important;border:2px solid rgba(184,211,232,.15)!important;background:#173853!important;transition:.14s ease}
+.filter.active{color:#fff!important;font-weight:700}
+.filter.active i{
+  outline:none!important;background:color-mix(in srgb,var(--filter-color) 32%,#173853)!important;
+  border-color:var(--filter-color)!important;
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--filter-color) 16%,transparent),0 5px 12px rgba(4,18,29,.18)
+}
 
-/* Compact panels and dock visually join; dock itself never moves. */
-.main-nav{bottom:calc(var(--safe-bottom) + 8px)!important}
-.full-overlay.days-compact .overlay-body{bottom:calc(var(--safe-bottom) + 74px)!important}
-.days-compact-panel{margin:0 10px!important;border-radius:22px 22px 0 0!important;border-bottom:0!important;background:rgba(8,31,49,.965)!important;padding:7px 0 6px!important;box-shadow:0 -12px 30px rgba(2,12,22,.20)!important}
-.days-compact-handle{height:22px!important}
-.days-compact-track{padding:0 7vw!important;gap:9px!important}
-.day-compact-card{flex:0 0 82vw!important;height:154px!important;border:2px solid rgba(184,211,232,.28)!important;border-radius:18px!important}
-.days-compact-panel .day-indicator{padding:7px 0 1px!important}
-
-/* Full Days = one fixed large panel, only its card rail moves horizontally. */
-.full-overlay.days-mode{padding:calc(var(--safe-top) + 14px) 10px calc(var(--safe-bottom) + 58px)!important;pointer-events:none;background:transparent!important}
-.full-overlay.days-mode .overlay-body{padding:0!important;overflow:hidden!important;display:block!important;pointer-events:auto}
-.days-mode .day-carousel-wrap{position:relative;height:calc(100dvh - var(--safe-top) - var(--safe-bottom) - 88px);background:rgba(8,31,49,.97);border:1px solid rgba(184,211,232,.20);border-radius:24px;box-shadow:0 18px 44px rgba(2,12,22,.28);padding:12px 0 30px;overflow:hidden}
-.days-mode .day-carousel{height:100%;display:flex;align-items:stretch;overflow-x:auto!important;overflow-y:hidden!important;padding:0 6vw!important;gap:10px!important;scroll-snap-type:x mandatory!important}
-.days-mode .day-card{flex:0 0 86vw!important;min-width:86vw!important;max-height:none!important;height:100%!important;border:2px solid rgba(184,211,232,.28)!important;border-radius:20px!important;overflow-y:auto!important;overflow-x:hidden!important;scroll-snap-align:center!important;background:#0d2a43!important}
-.days-mode .day-card .hero{height:min(31vh,245px)!important;min-height:190px}
-.days-mode .day-indicator{position:absolute;left:50%;bottom:9px;transform:translateX(-50%);z-index:8}
-.days-close{position:absolute;right:10px;top:10px;z-index:20;width:38px;height:38px;border-radius:13px;border:1px solid var(--line);background:rgba(7,31,49,.90);color:#fff;font-size:21px}
-
-/* Photo-first: no broken glyph, better badges and cards. */
-.photo-wrap{background:linear-gradient(145deg,#285b78,#10334d)!important}
-.photo-wrap img{width:100%;height:100%;object-fit:cover;display:block}
-.photo-badge{position:absolute;right:6px;bottom:6px;padding:3px 6px;border-radius:8px;background:rgba(4,24,39,.72)!important;color:#dbe9f2;font-size:8px}
-.guide-gallery{grid-template-columns:1.35fr 1fr!important;gap:8px!important}
-.guide-gallery img{border:1px solid rgba(184,211,232,.18)}
-.beta-status small{display:block;color:var(--muted);margin-top:5px}
+/* New guide gallery uses image wrappers so online real photos can hydrate + cache. */
+.guide-gallery>.photo-wrap{display:block;width:100%;height:100%;border-radius:13px;overflow:hidden;min-width:0;min-height:0}
+.guide-gallery>.photo-wrap:first-child{grid-row:1/3}
+.guide-gallery>.photo-wrap img{width:100%;height:100%;object-fit:cover;border-radius:0!important}
+.guide-gallery>.photo-wrap .photo-badge{font-size:8px}
 
 @media(min-width:720px){
- .day-compact-card{flex-basis:360px!important}
- .days-compact-track{padding-left:calc((100vw - 360px)/2)!important;padding-right:calc((100vw - 360px)/2)!important}
- .days-mode .day-card{flex-basis:370px!important;min-width:370px!important}
- .days-mode .day-carousel{padding-left:calc((100% - 370px)/2)!important;padding-right:calc((100% - 370px)/2)!important}
+ .days-mode .day-card{flex-basis:350px!important;min-width:350px!important}
+}
+
+/* 0.7.7 — LIVE TEST: unified dock, true half panels, editable itinerary, robust photos */
+:root{--compact-nav-h:52px;--expanded-nav-h:52px}
+
+/* The compact dock sits closer to the bottom; all attached palettes touch it. */
+.main-nav{bottom:calc(var(--safe-bottom) + 2px)!important;height:52px!important}
+.companion-logo{bottom:max(0px,calc(var(--safe-bottom) - 8px))!important}
+.main-nav.joined-panel{border-radius:0 0 22px 22px!important;border-top-color:rgba(184,211,232,.08)!important}
+.hold-menu.wide,.hold-menu.quick{
+  left:10px!important;right:10px!important;bottom:calc(var(--safe-bottom) + 53px)!important;
+  border-radius:22px 22px 0 0!important;border-bottom:0!important;
+  background:rgba(9,31,50,.975)!important;padding:10px!important;box-shadow:0 -12px 28px rgba(2,12,22,.26)!important
+}
+.hold-menu.wide button{min-height:62px!important}.hold-menu.quick button{min-height:64px!important}
+
+/* Every sheet is one continuous surface with its panel nav; compact means exactly one card + dock. */
+.expanded-nav{height:calc(var(--expanded-nav-h) + var(--safe-bottom))!important;padding:1px 8px calc(var(--safe-bottom) + 1px)!important}
+.sheet-body{bottom:calc(var(--expanded-nav-h) + var(--safe-bottom))!important;padding-bottom:6px!important}
+.sheet.state-mini{height:calc(200px + var(--safe-bottom))!important;border-radius:22px 22px 0 0!important}
+.sheet.state-mini .sheet-body{top:28px!important;bottom:calc(var(--expanded-nav-h) + var(--safe-bottom))!important;padding:0 12px 8px!important;overflow:hidden!important}
+.sheet.state-mini .mini-card{height:108px!important;min-height:108px!important;margin:0!important;padding:10px!important;grid-template-columns:72px minmax(0,1fr) 36px!important}
+.sheet.state-mini .mini-card .photo-wrap,.sheet.state-mini .mini-card img{width:72px!important;height:72px!important;border-radius:14px!important}
+.sheet.state-mini .mini-card .title{font-size:16px!important}.sheet.state-mini .mini-card .sub{font-size:10.5px!important}
+.sheet.state-mini .mini-card .expand{width:36px!important;height:36px!important}
+
+/* Half views really are half views, leaving enough map to understand filtering/navigation. */
+.sheet.view-sonar.state-two,.sheet.view-route.state-two{border-radius:24px 24px 0 0!important}
+.sheet.view-sonar .sheet-body,.sheet.view-route .sheet-body{top:35px!important;padding:0 14px 8px!important}
+.sheet.view-sonar .sheet-drag,.sheet.view-route .sheet-drag{height:42px!important}
+.map-controls.hidden-by-sheet{opacity:0!important}
+
+/* Sonar: title + radius share the first row; filters and results stay compact. */
+.sonar-heading-row{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin:0 0 8px}
+.sonar-heading-row h2{font-size:18px;margin:0;white-space:nowrap}.sonar-heading-row small{display:block;color:var(--muted);font-size:10px;margin-top:2px}
+.sonar-heading-row .sonar-radius{display:flex;flex-wrap:nowrap;gap:4px;margin:0;overflow-x:auto;max-width:60%;scrollbar-width:none}
+.sonar-heading-row .sonar-radius::-webkit-scrollbar{display:none}
+.sonar-heading-row .sonar-radius .choice{min-width:auto;padding:7px 9px;font-size:10px;border-radius:11px;white-space:nowrap}
+.sonar-filters{margin:0!important;padding:0 2px 7px!important;gap:9px!important}
+.sonar-filters .filter{min-width:48px!important;font-size:9px!important}.sonar-filters .filter i{width:39px!important;height:39px!important}
+.sonar-results{margin-top:4px!important;gap:6px!important;padding-bottom:4px!important}
+.sonar-result-card{grid-template-columns:58px 1fr 16px!important;padding:7px!important;min-height:72px!important}
+.sonar-result-card .photo-wrap,.sonar-result-card img{width:58px!important;height:56px!important;border-radius:10px!important}
+.sonar-empty{font-size:11px;color:var(--muted)}
+
+/* Filter colours are identical to their marker category; OFF is graphite. */
+.filter{color:#8fa4b5!important;font-weight:600!important}
+.filter i{background:#0d2538!important;border-color:#294055!important;color:#9fb3c2!important;box-shadow:none!important}
+.filter.active{color:#f7fbff!important}
+.filter.active i{background:color-mix(in srgb,var(--filter-color) 46%,#102a43)!important;border-color:var(--filter-color)!important;color:#fff!important;box-shadow:0 0 0 2px color-mix(in srgb,var(--filter-color) 20%,transparent),0 5px 12px rgba(2,15,25,.22)!important}
+
+/* Strong, consistent active menu state. */
+.main-tab.active,.exp-tab.active{color:#fff!important}
+.main-tab.active:before,.exp-tab.active:before{background:rgba(72,145,201,.28)!important;border-color:rgba(148,208,247,.34)!important;box-shadow:0 0 0 1px rgba(106,181,235,.14),0 4px 14px rgba(36,117,177,.25)!important}
+.main-tab.active svg,.exp-tab.active svg{stroke:#fff!important;filter:drop-shadow(0 0 5px rgba(115,194,244,.42))!important}
+.exp-tab.settings:not(.active){color:#a8bac9!important}
+.companion-logo.active{filter:drop-shadow(0 0 9px rgba(83,174,235,.58)) drop-shadow(0 7px 12px rgba(2,12,22,.34))!important}
+.companion-logo.settings-active{filter:drop-shadow(0 0 9px rgba(218,174,77,.48)) drop-shadow(0 7px 12px rgba(2,12,22,.34))!important}
+.logo-dual-hint{position:absolute;right:-1px;bottom:2px;width:27px;height:27px;border-radius:50%;overflow:hidden;border:2px solid #dfe9ef;background:#102a43;box-shadow:0 3px 8px rgba(0,0,0,.34);display:grid;grid-template-columns:1fr 1fr;z-index:10}
+.logo-dual-hint i{display:grid;place-items:center;overflow:hidden}.logo-dual-hint i:first-child{background:#173f61}.logo-dual-hint i:last-child{background:#233247}.logo-dual-hint svg{width:14px;height:14px;stroke:#f5f8fb;fill:none;stroke-width:1.8}
+
+/* Navigation quick palette physically grows out of the compact dock. */
+.hold-menu.wide+*{} /* keeps selector stable on Safari */
+
+/* Compact day picker also grows directly out of the dock. */
+.full-overlay.days-compact .overlay-body{bottom:calc(var(--safe-bottom) + 53px)!important}
+.days-compact-panel{margin:0 10px!important;border-radius:22px 22px 0 0!important;border-bottom:0!important;padding-bottom:5px!important;background:rgba(9,31,50,.975)!important}
+.days-compact-handle{height:34px!important}.days-compact-handle span{width:46px!important;height:4px!important}
+.day-compact-card{height:142px!important}
+
+/* Large day view: a true fullscreen content mode, not a card floating on the map. */
+.full-overlay.days-mode{inset:0!important;background:#071827!important;padding:0!important;pointer-events:auto!important;z-index:2200!important}
+.full-overlay.days-mode .overlay-head{display:flex!important;position:absolute!important;left:0;right:0;top:0;height:calc(var(--safe-top) + 56px);padding:calc(var(--safe-top) + 8px) 14px 8px;z-index:40;background:linear-gradient(180deg,rgba(7,24,39,.98),rgba(7,24,39,.88),transparent)!important;border:0!important}
+.full-overlay.days-mode .overlay-head>div{visibility:hidden}.full-overlay.days-mode #overlayBack{visibility:hidden!important}.full-overlay.days-mode #overlayClose{margin-left:auto!important;width:40px;height:40px;border-radius:14px!important;background:rgba(12,40,61,.94)!important;border:1px solid rgba(184,211,232,.18)!important}
+.full-overlay.days-mode .overlay-body{position:absolute!important;inset:0 0 calc(var(--expanded-nav-h) + var(--safe-bottom)) 0!important;padding:calc(var(--safe-top) + 54px) 0 0!important;background:#071827!important;display:flex!important;justify-content:stretch!important}
+.full-overlay.days-mode .day-carousel-wrap{height:100%!important;width:100%!important;display:flex!important;flex-direction:column!important}
+.full-overlay.days-mode .days-handle-zone{display:none!important}
+.full-overlay.days-mode .day-carousel{flex:1!important;min-height:0!important;padding:0 5vw 4px!important;gap:10px!important;align-items:stretch!important}
+.full-overlay.days-mode .day-card{flex:0 0 90vw!important;min-width:90vw!important;height:100%!important;max-height:none!important;border-radius:22px!important;background:#0b2034!important}
+.full-overlay.days-mode .day-card .hero{flex:0 0 min(32vh,260px)!important}
+.full-overlay.days-mode .day-card .day-content{padding-bottom:12px!important}
+.full-overlay.days-mode .day-indicator{height:24px!important;flex:0 0 24px!important}
+.full-overlay.days-mode .overlay-nav{display:grid!important;height:calc(var(--expanded-nav-h) + var(--safe-bottom))!important;padding-bottom:var(--safe-bottom)!important}
+
+/* All top-level full windows use one top-right X. */
+.full-overlay.standard-full{background:#071827!important;z-index:2200!important}
+.full-overlay.standard-full .overlay-head{padding-top:calc(var(--safe-top) + 8px)!important;min-height:calc(var(--safe-top) + 58px)!important;background:#0b2034!important;border-bottom:1px solid rgba(184,211,232,.12)!important}
+.full-overlay.standard-full #overlayBack{display:none!important}.full-overlay.standard-full #overlayClose{margin-left:auto!important;width:40px!important;height:40px!important;border-radius:14px!important}
+.full-overlay.standard-full .overlay-body{padding-top:10px!important}
+.sheet.fullscreen .sheet-close-all{right:12px!important;top:calc(var(--safe-top) + 8px)!important}.sheet.fullscreen .sheet-close-all~.sheet-close-all{display:none!important}
+
+/* Itinerary half panel = full editor. Cards are slightly thicker and touch-reorderable. */
+.route-editor{padding-bottom:8px}.route-day-switch{touch-action:pan-y;min-height:47px;margin-bottom:8px!important;padding-right:2px}
+.route-day-switch h2{font-size:17px!important}.route-day-switch small{font-size:9px!important;display:block;max-width:58vw;line-height:1.25}
+.route-editor .head-actions .choice{padding:6px 8px;font-size:9px}
+.full-planner{gap:7px!important}
+.planner-card{min-height:84px!important;grid-template-columns:24px 72px minmax(0,1fr) 32px!important;padding:10px!important;border-radius:15px!important;touch-action:pan-y}
+.planner-card .photo-wrap,.planner-card img{width:72px!important;height:64px!important;border-radius:11px!important}
+.planner-card b{font-size:13px!important}.planner-card small{font-size:9.5px!important}.planner-transfer{color:#7fa0b8!important;margin-top:3px!important}
+.planner-card .drag{width:32px;height:50px;border:0;border-radius:10px;background:#173853;color:#a9c0d1;font-size:18px;touch-action:none;cursor:grab}
+.planner-card.reordering{opacity:.9;transform:scale(1.02);z-index:30;box-shadow:0 10px 22px rgba(0,0,0,.34);border-color:#4c8ac0}
+.route-add-row{display:grid;grid-template-columns:1fr 1fr;gap:7px;position:sticky;bottom:0;padding-top:8px;background:linear-gradient(180deg,transparent,#0b2034 28%)}
+.add-stop{min-height:45px!important;border-radius:13px!important;font-size:12px!important}.add-stop.secondary{background:#173853!important;border-color:#315571!important}
+.saved-add-list{display:grid;gap:8px}.saved-add-card{border:1px solid var(--line);background:#102a43;color:#fff;border-radius:15px;padding:8px;display:grid;grid-template-columns:62px 1fr 30px;gap:9px;align-items:center;text-align:left}
+.saved-add-card .photo-wrap,.saved-add-card img{width:62px;height:56px;border-radius:10px}.saved-add-card b{display:block;font-size:12px}.saved-add-card small{display:block;font-size:9px;color:var(--muted);margin-top:3px}.saved-add-card i{font-style:normal;font-size:20px;color:#75c79a}
+.add-help{font-size:11px;color:var(--muted);line-height:1.4;margin:3px 0 10px}
+
+/* Broken remote images are never visible: local Antalya/category photo stays underneath/fallback. */
+.photo-wrap{background:#173853!important}.photo-wrap img{background:#173853;color:transparent!important;font-size:0!important}
+
+@media(max-width:390px){
+ .sonar-heading-row{gap:5px}.sonar-heading-row h2{font-size:16px}.sonar-heading-row .sonar-radius{max-width:62%}.sonar-heading-row .sonar-radius .choice{padding:6px 7px;font-size:9px}
+ .planner-card{grid-template-columns:22px 64px minmax(0,1fr) 30px!important}.planner-card .photo-wrap,.planner-card img{width:64px!important;height:60px!important}
 }
