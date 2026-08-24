@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Travel Companion">
 <meta name="format-detection" content="telephone=no">
-<title>Travel Companion · Antalya Beta 0.7.1</title>
+<title>Travel Companion · Antalya Beta 0.7.2</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="apple-touch-icon" href="./apple-touch-icon.png">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
@@ -47,11 +47,11 @@
   </section>
 
   <nav id="mainNav" class="main-nav">
-    <button class="main-tab" data-main="itinerary" id="mainItinerary"><span class="ico">⌁</span><b>Útiterv</b></button>
-    <button class="main-tab" data-main="days" id="mainDays"><span class="ico">▦</span><b>Napok</b></button>
+    <button class="main-tab" data-main="itinerary" id="mainItinerary" aria-label="Útiterv"><span class="ico">⌁</span><b>Útiterv</b></button>
+    <button class="main-tab" data-main="days" id="mainDays" aria-label="Napok"><span class="ico">▦</span><b>Napok</b></button>
     <div class="logo-gap"></div>
-    <button class="main-tab" data-main="sonar" id="mainSonar"><span class="ico sonar-ico">◉</span><b>Sonar</b></button>
-    <button class="main-tab" data-main="navigation" id="mainNavigation"><span class="ico">➤</span><b>Navigáció</b></button>
+    <button class="main-tab main-notif" data-main="notifications" id="mainNotifications" aria-label="Értesítések"><span class="ico">♢</span><span id="mainNotifBadge" class="main-notif-badge hidden">0</span><b>Értesítések</b></button>
+    <button class="main-tab" data-main="navigation" id="mainNavigation" aria-label="Navigáció"><span class="ico">➤</span><b>Navigáció</b></button>
   </nav>
   <button id="companionLogo" class="companion-logo" aria-label="Travel Companion"><img src="./assets/logo-tr.png" alt=""><span id="logoBadge" class="logo-badge hidden">0</span></button>
 

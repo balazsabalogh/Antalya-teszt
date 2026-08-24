@@ -1,4 +1,4 @@
-# Travel Companion · Antalya Beta 0.7.1
+# Travel Companion · Antalya Beta 0.7.2
 
 Telefonos teszt alapján javított build.
 
@@ -16,3 +16,15 @@ Fő változások:
 - Wikipedia képek és térképcsempék cache-elhetők a service workerrel
 
 A teljes turn-by-turn routing továbbra sem kész; a navigáció Companion követő mód.
+
+
+## 0.7.2 frissítés
+- kompakt ikon-only fő dock; a Companion logó megtartott mérettel középvonalra igazítva
+- a logo rövid nyomásra Sonar PING, hosszan teljes Sonar mód
+- Sonar találatok 60 mp-ig élnek; kijelölt találatnál az időzítő megáll, lekattintás után újraindul
+- értesítések kerültek a korábbi Sonar főgomb helyére, badge-dzsel; swipe kezelés
+- Info Mini mellett a kompakt dock megmarad, a logo eltűnik; 1/3 felett a fő dock és térképgombok eltűnnek
+- kijelölt marker nagyobb és pulzál
+- Napok valódi térképre lebegő carousel, pozícióindikátorral
+- világosabb, kartografikusabb dark map megjelenés
+- online úthálózat-követő útvonal geometria (OSRM fallbackkel)
