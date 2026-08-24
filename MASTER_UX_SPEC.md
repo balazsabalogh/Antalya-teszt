@@ -39,3 +39,16 @@ Egy projekt, egy ország (Törökország), egy utazás (Antalya). Nincs projekt-
 - Sonar PING: találatok 60 mp-ig élnek; kijelölt találat nem jár le; kijelölés megszüntetése után új 60 mp indul.
 - Értesítésből megnyitott tartalom mindig részletesebb/nagyobb állapotban nyílik.
 - Messenger-szerű swipe: a kártya mozog, a művelet mögötte jelenik meg; nincs állandó fele piros/fele zöld háttér.
+
+## 0.7.5 field-test refinements (locked for this build)
+- Same main-function button toggles its opened view closed where applicable.
+- Itinerary: short press opens persistent 2×2 quick actions; long press opens the large itinerary sheet. Itinerary uses only large + fullscreen snap states.
+- Navigation: short press starts/continues or hides/shows the UI without deleting navigation state. Long press opens persistent navigation choices. Top navigation card: right swipe = next destination, left swipe = hide UI only.
+- Notifications: right swipe = contextual positive action, left swipe = dismiss. Closing the expanded notification drawer hides the compact top strip until a new notification arrives or the bell is opened again.
+- POI: full expansion is the Guide, not an enlarged duplicate info card. Guide is image-led and fullscreen.
+- POI action rail: Guide, Navigation, Seen, Favorite, Add/Remove, Share; horizontal scroll with visible peek.
+- Marker motion only on the selected marker.
+- Sonar results persist 60 seconds; selected result suspends expiry, deselection restarts 60 seconds.
+- Days compact carousel has its own panel, working position indicator and pull-up transition to large photo cards.
+- Fullscreen panels touch the display top and include a direct close action.
+- Itinerary snapshots: max 10 local versions; automatic before destructive/structural changes plus manual save.

@@ -1,24 +1,22 @@
-# Travel Companion · Antalya Beta 0.7.4
+# Travel Companion · Antalya Beta 0.7.5
 
-Ez a build a 0.7.3 telefonos tesztje és a 2026-08-24-i UX/design finomítások alapján készült.
+Field-test refinement build based on the locked Antalya UX.
 
-## Fő változások
-- kékes/navy Companion vizuális rendszer, finom török piros accenttel
-- jóváhagyott fémes török Companion embléma a dockban
-- új, színes földgömbös app ikon
-- finoman lebegő markerek, kijelölt marker nagyobb és pulzál
-- rövid nyomás = kompakt művelet, hosszú nyomás = kibővített kezelőfelület
-- navigáció: nincs alsó panel; csak felső navigációs kártya + kompakt dock
-- hosszú Navigáció: 6 választható gyorsművelet
-- Napok: rövid nyomás kompakt fotós választó, hosszú nyomás nagy fotós carousel
-- Sonar: nincs duplikált PING doboz; 60 mp-es találat-megőrzés, kijelöléskor időzítő szünetel
-- Sonar nagy nézet: egymás alatti kártyák Messenger-szerű swipe kezeléssel
-- értesítések: balra eltüntetés, jobbra kapcsolódó tartalom; értesítésből mindig nagyobb nézet nyílik
-- útvonal online állapotban OSM-alapú routing szolgáltatással próbál utcákat követni
-- POI-képek: a csomagban lévő valódi fotó azonnal; egyébként helyi kategória-fallback, online pedig Wikipedia/Wikimedia thumbnail, ha elérhető
+## This build focuses on
+- marker selection: only the active marker subtly floats/pulses; darker navy marker interiors
+- POI sheet: compact → detailed → fullscreen Guide, with a horizontal action carousel
+- working nearby category filters
+- itinerary: quick 2×2 menu on short press, large sheet on long press, then fullscreen planner
+- planner backup: up to 10 local snapshots + manual save / latest restore
+- navigation: no bottom sheet, persistent state, show/hide toggle, swipe next/hide on the top card
+- notifications: Messenger-style swipe (right contextual action, left dismiss), close hides the top strip
+- days: compact photo carousel in a real panel, working position dots, pull-up to large photo carousel
+- Sonar: 60-second result persistence; selected Sonar POI pauses expiry
+- fullscreen panels: no map strip at top and a one-tap close button
+- richer offline presentation: local photos for known POIs and redesigned SVG category fallbacks without missing-glyph icons
+- blue/navy Companion visual skin retained; Turkey remains a subtle accent rather than recoloring the whole UI
 
-## Offline
-Az útiterv, POI-adatok, Guide-szöveg, helyi fotók/fallbackek offline elérhetők. A korábban megnyitott térképcsempéket a service worker cache-eli. Új online POI-k, friss nyitvatartások és online routing internetet igényelnek.
-
-## Ismert béta-korlát
-A tömegközlekedési UI már szakaszos közlekedést jelez, de Antalya élő GTFS/GTFS-RT szolgáltatása még nincs teljesen bekötve; ezért ne tekintsd élő járatinformációnak.
+## Still beta / not complete
+- live Antalya public-transport feeds are not yet integrated
+- online road routing depends on network availability; offline route geometry falls back to cached/preloaded state
+- only the POIs with bundled source photos have exact offline photos; other POIs use explicit category artwork rather than a misleading photo

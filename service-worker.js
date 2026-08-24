@@ -1,4 +1,4 @@
-const CACHE='tc-antalya-074-blue-country-skin';
+const CACHE='tc-antalya-075-field-test-refine';
 const CORE=[
 './','./index.html','./app.css','./app.js','./manifest.webmanifest','./apple-touch-icon.png','./icon-192.png','./icon-512.png','./assets/logo-tr.png','./assets/app-icon-day.png','./assets/offline-map.svg',
 './assets/photos/hadrian.jpg','./assets/photos/konyaalti.jpg','./assets/photos/duden.png','./assets/photos/perge.jpg','./assets/photos/kursunlu.jpg','./assets/photos/phaselis.jpg',
