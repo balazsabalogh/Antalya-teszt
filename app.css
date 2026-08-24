@@ -47,3 +47,64 @@ html,body,#app,button,.main-nav,.main-tab,.hold-menu,.day-carousel,.day-card{-we
 .photo-wrap img{transition:opacity .2s}.photo-wrap.loading:after{content:'Kép betöltése…';position:absolute;inset:0;display:grid;place-items:center;font-size:9px;color:var(--muted);background:linear-gradient(135deg,var(--panel3),var(--panel2))}.photo-wrap>img{position:relative;z-index:1}
 .notif-card{touch-action:pan-y;transition:transform .18s,opacity .18s}.notif-card.swiping{transition:none}.notif-card .swipe-hint{position:absolute;inset:0;z-index:-1;display:flex;align-items:center;justify-content:space-between;padding:0 15px;font-size:11px;font-weight:700;color:white;border-radius:15px;background:linear-gradient(90deg,#b7343d,#27313b 44%,#2b875c)}
 @media(min-width:720px){.main-nav{width:390px}.days-mode .day-card{min-width:350px}.days-mode .day-carousel{padding-left:40px;padding-right:40px}}
+
+
+/* 0.7.3 — unified instrument dock + panel navigation */
+:root{--compact-nav-h:52px;--compact-nav-w:min(390px,calc(100vw - 20px))}
+.main-nav{
+  left:50%;right:auto;width:var(--compact-nav-w);height:var(--compact-nav-h);
+  bottom:calc(var(--safe-bottom) + 10px);transform:translateX(-50%);
+  grid-template-columns:1fr 1fr 82px 1fr 1fr;padding:0 7px;
+  background:rgba(16,22,28,.94);border:1px solid var(--line);border-radius:22px;
+  box-shadow:var(--shadow);backdrop-filter:blur(20px);overflow:visible;
+}
+.main-nav:before,.main-nav:after{display:none!important}
+.theme-light .main-nav{background:rgba(238,242,244,.95)}
+.main-tab{height:48px;gap:0}
+.main-tab b{display:none!important}
+.main-tab .ico{font-size:21px}
+.logo-gap{height:100%}
+.companion-logo{
+  width:76px;height:76px;bottom:max(4px,calc(var(--safe-bottom) - 3px));
+  filter:drop-shadow(0 8px 14px rgba(0,0,0,.38));
+}
+/* subtle cradle around the emblem while staying one continuous dock */
+.main-nav .logo-gap:before{
+  content:"";position:absolute;left:50%;top:50%;width:82px;height:82px;
+  transform:translate(-50%,-50%);border-radius:50%;pointer-events:none;
+  border:1px solid rgba(255,255,255,.11);box-shadow:inset 0 0 0 5px rgba(255,255,255,.018);
+}
+.theme-light .main-nav .logo-gap:before{border-color:rgba(15,22,29,.10)}
+.main-nav.above-mini{bottom:calc(var(--safe-bottom) + 10px)}
+
+/* any non-navigation panel uses the six-button panel bar immediately */
+.sheet.state-mini .expanded-nav{display:grid}
+.sheet.state-mini .sheet-body{bottom:61px}
+.expanded-nav{height:58px}
+
+/* Day carousel: floating over map, no header, standard small handle only. */
+.days-mode .day-carousel-wrap{position:relative;display:flex;flex-direction:column;min-height:0}
+.days-handle{width:42px;height:4px;border-radius:4px;background:rgba(255,255,255,.34);margin:2px auto 5px;flex:0 0 auto}
+.theme-light .days-handle{background:rgba(0,0,0,.22)}
+.days-mode .day-card{min-width:82vw;max-height:68vh}
+.days-mode .day-carousel{padding:4px 9vw 2px;gap:10px}
+.days-mode .day-card .hero{height:min(27vh,205px)}
+.days-mode .day-indicator{height:22px}
+
+/* same six-button control bar under full day carousel */
+.overlay-nav{
+  position:fixed;z-index:2250;left:0;right:0;bottom:0;height:58px;
+  padding:3px 8px calc(var(--safe-bottom) + 3px);display:grid;
+  grid-template-columns:repeat(6,1fr);border-top:1px solid var(--line);
+  background:rgba(15,20,25,.98);backdrop-filter:blur(18px)
+}
+.theme-light .overlay-nav{background:rgba(237,241,243,.98)}
+.overlay-nav .exp-tab{font-size:19px}
+.overlay-nav .exp-tab small{display:none!important}
+.overlay-nav .exp-tab svg{width:23px;height:23px}
+.full-overlay.days-mode{padding-bottom:calc(var(--safe-bottom) + 58px)}
+
+@media(min-width:720px){
+ .main-nav{width:390px}
+ .days-mode .day-card{min-width:350px}
+}

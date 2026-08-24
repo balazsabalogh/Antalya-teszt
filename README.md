@@ -28,3 +28,11 @@ A teljes turn-by-turn routing továbbra sem kész; a navigáció Companion köve
 - Napok valódi térképre lebegő carousel, pozícióindikátorral
 - világosabb, kartografikusabb dark map megjelenés
 - online úthálózat-követő útvonal geometria (OSRM fallbackkel)
+
+
+## 0.7.3 – designfinomítás
+- Egybefüggő, keskeny alsó instrument-dock; a Companion logó mérete marad, a dock középvonalában ül.
+- Bármely nem-navigációs panel már Mini állapotban is a 6 gombos panel-menüre vált. A kompakt logos dock csak csukott térképnél vagy aktív navigációnál marad.
+- Értesítések gomb toggle: újabb nyomásra bezárja a panelt.
+- Napok: a nagy képes carousel marad a térkép előtt, egyszerű vízszintes fogantyúval, indikátorral és a 6 gombos alsó menüvel.
+- Sonar PING: 60 másodperces megőrzés, kijelölt találatnál szünetel az időzítő.
