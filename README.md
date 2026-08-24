@@ -1,26 +1,22 @@
-# Travel Companion · Antalya Beta 0.7.6
+# Travel Companion · Antalya Beta 0.7.5
 
-Polish + Antalya content build based on the 2026-08-24 iPhone field-test feedback.
+Field-test refinement build based on the locked Antalya UX.
 
-## Ebben a buildben
-- navigáció: rövid Navigáció-tap aktív navigációnál ténylegesen befejezi; bal swipe = navigáció vége, jobb swipe = következő cél
-- navigációs swipe: a teljes kártya mögötti felület piros/zöld, a külön béta-pill nem marad a navigáció alatt
-- aktív menüpont: finom, egyértelmű kiemelés; a Beállítások ikon már nem külön kék
-- markerek: klasszikus, nap-színű keretezett pin; a következő cél mindig nagyobb, de áll; csak a kijelölt marker kap finom mozgást
-- Napok kompakt: teljesen lekerekített panel, nagyobb húzófelület, egy tapos napválasztás
-- Napok nagy: minden kártya azonos méretű, fix keretben csak vízszintes carousel; lefelé húzva teljesen bezár
-- Napok nagy: majdnem a teljes rendelkezésre álló képernyőmagasságot használja, az alsó CTA a kártyán belül marad
-- Értesítések: felső fogópont eltávolítva
-- teljes útvonaltervező: csak egy bezáró X
-- környékszűrők: ismét vízszintesen görgethetők, egy tapos ki/be kapcsolás, kategóriaszínű aktív állapot
-- több közeli Antalya POI: Yivli Minare, Saat Kulesi, Kesik Minare, Cumhuriyet Meydanı, Tophane Parkı, Antalya Oyuncak Müzesi, Mermerli Plajı, Antalya Aquarium, 5M Migros
-- fotók: a biztos helyi képek továbbra is a csomag részei; online első használatkor a fő Antalya POI-khoz Wikipedia/Wikimedia Commons thumbnail kerül betöltésre és runtime cache-be
-- Antalya Archaeology Museum státusz: a jelenlegi hivatalos zárt státusz külön figyelmeztetésként szerepel a POI-ban
+## This build focuses on
+- marker selection: only the active marker subtly floats/pulses; darker navy marker interiors
+- POI sheet: compact → detailed → fullscreen Guide, with a horizontal action carousel
+- working nearby category filters
+- itinerary: quick 2×2 menu on short press, large sheet on long press, then fullscreen planner
+- planner backup: up to 10 local snapshots + manual save / latest restore
+- navigation: no bottom sheet, persistent state, show/hide toggle, swipe next/hide on the top card
+- notifications: Messenger-style swipe (right contextual action, left dismiss), close hides the top strip
+- days: compact photo carousel in a real panel, working position dots, pull-up to large photo carousel
+- Sonar: 60-second result persistence; selected Sonar POI pauses expiry
+- fullscreen panels: no map strip at top and a one-tap close button
+- richer offline presentation: local photos for known POIs and redesigned SVG category fallbacks without missing-glyph icons
+- blue/navy Companion visual skin retained; Turkey remains a subtle accent rather than recoloring the whole UI
 
-## Offline fotóviselkedés
-A csomagban lévő biztos fotók azonnal offline elérhetők. A további valós helyszínfotókat az app online első használatkor próbálja letölteni nyílt Wikimedia-forrásból, majd a service worker cache-eli őket. Ha egy helyhez nincs biztonságosan azonosítható kép, kategória-placeholder marad; nem mutatunk másik helyről félrevezető fotót.
-
-## Továbbra is beta
-- élő Antalya tömegközlekedési feed nincs integrálva
-- online road routing hálózatfüggő
-- a Wikimedia-fotók első betöltéséhez internet kell; utána a böngésző cache-éből elérhetők lehetnek
+## Still beta / not complete
+- live Antalya public-transport feeds are not yet integrated
+- online road routing depends on network availability; offline route geometry falls back to cached/preloaded state
+- only the POIs with bundled source photos have exact offline photos; other POIs use explicit category artwork rather than a misleading photo
