@@ -28,3 +28,14 @@ Ez a fájl a build fejlesztési referenciája. A köztes mockupok nem írják fe
 
 ## Antalya Beta scope
 Egy projekt, egy ország (Törökország), egy utazás (Antalya). Nincs projekt- vagy országváltó ebben a bétában.
+
+## 0.7.4 finomítások
+- Vizuális alap: mély navy/kékes Companion skin, nem fekete; török piros csak accent.
+- A középső török embléma a jóváhagyott teljes fémkör + felső iránytűnyíl változat.
+- App ikon: teljes fémkör + felső iránytűnyíl + színes földgömb, felhők nélkül.
+- Rövid tap = gyors/kompakt funkció; hosszú tap = kibővített választó, ahol az adott funkciónál értelmes.
+- Navigáció közben nincs alsó sheet; felső cél/manőver kártya + kompakt dock marad.
+- Napok: rövid tap kompakt képes napválasztó; hosszú tap nagy fotós carousel.
+- Sonar PING: találatok 60 mp-ig élnek; kijelölt találat nem jár le; kijelölés megszüntetése után új 60 mp indul.
+- Értesítésből megnyitott tartalom mindig részletesebb/nagyobb állapotban nyílik.
+- Messenger-szerű swipe: a kártya mozog, a művelet mögötte jelenik meg; nincs állandó fele piros/fele zöld háttér.

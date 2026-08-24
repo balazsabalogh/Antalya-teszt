@@ -1,38 +1,24 @@
-# Travel Companion · Antalya Beta 0.7.2
+# Travel Companion · Antalya Beta 0.7.4
 
-Telefonos teszt alapján javított build.
+Ez a build a 0.7.3 telefonos tesztje és a 2026-08-24-i UX/design finomítások alapján készült.
 
-Fő változások:
-- megszüntetve a térképet kettévágó offline overlay
-- Info Mini nem ütközik a főmenüvel; a logó és főmenü panelnyitáskor eltűnik
-- kisebb Info Mini, egységes bottom-sheet shell
-- Budapest / Antalya teszt esetén nincs 1500 km-es gyalogos navigáció: automatikus Antalya-szimuláció
-- Sonar PING státusz rendbetéve
-- hosszú nyomásnál iOS szövegkijelölés tiltva
-- Napok tipográfia és kártyamagasság javítva
-- egységesebb vonalas fő/expanded menüikonok
-- online Wikipedia/Wikimedia kisképek, ahol biztosan azonosítható a POI
-- offline minden POI-hoz helyi fotó vagy kategória-placeholder
-- Wikipedia képek és térképcsempék cache-elhetők a service workerrel
+## Fő változások
+- kékes/navy Companion vizuális rendszer, finom török piros accenttel
+- jóváhagyott fémes török Companion embléma a dockban
+- új, színes földgömbös app ikon
+- finoman lebegő markerek, kijelölt marker nagyobb és pulzál
+- rövid nyomás = kompakt művelet, hosszú nyomás = kibővített kezelőfelület
+- navigáció: nincs alsó panel; csak felső navigációs kártya + kompakt dock
+- hosszú Navigáció: 6 választható gyorsművelet
+- Napok: rövid nyomás kompakt fotós választó, hosszú nyomás nagy fotós carousel
+- Sonar: nincs duplikált PING doboz; 60 mp-es találat-megőrzés, kijelöléskor időzítő szünetel
+- Sonar nagy nézet: egymás alatti kártyák Messenger-szerű swipe kezeléssel
+- értesítések: balra eltüntetés, jobbra kapcsolódó tartalom; értesítésből mindig nagyobb nézet nyílik
+- útvonal online állapotban OSM-alapú routing szolgáltatással próbál utcákat követni
+- POI-képek: a csomagban lévő valódi fotó azonnal; egyébként helyi kategória-fallback, online pedig Wikipedia/Wikimedia thumbnail, ha elérhető
 
-A teljes turn-by-turn routing továbbra sem kész; a navigáció Companion követő mód.
+## Offline
+Az útiterv, POI-adatok, Guide-szöveg, helyi fotók/fallbackek offline elérhetők. A korábban megnyitott térképcsempéket a service worker cache-eli. Új online POI-k, friss nyitvatartások és online routing internetet igényelnek.
 
-
-## 0.7.2 frissítés
-- kompakt ikon-only fő dock; a Companion logó megtartott mérettel középvonalra igazítva
-- a logo rövid nyomásra Sonar PING, hosszan teljes Sonar mód
-- Sonar találatok 60 mp-ig élnek; kijelölt találatnál az időzítő megáll, lekattintás után újraindul
-- értesítések kerültek a korábbi Sonar főgomb helyére, badge-dzsel; swipe kezelés
-- Info Mini mellett a kompakt dock megmarad, a logo eltűnik; 1/3 felett a fő dock és térképgombok eltűnnek
-- kijelölt marker nagyobb és pulzál
-- Napok valódi térképre lebegő carousel, pozícióindikátorral
-- világosabb, kartografikusabb dark map megjelenés
-- online úthálózat-követő útvonal geometria (OSRM fallbackkel)
-
-
-## 0.7.3 – designfinomítás
-- Egybefüggő, keskeny alsó instrument-dock; a Companion logó mérete marad, a dock középvonalában ül.
-- Bármely nem-navigációs panel már Mini állapotban is a 6 gombos panel-menüre vált. A kompakt logos dock csak csukott térképnél vagy aktív navigációnál marad.
-- Értesítések gomb toggle: újabb nyomásra bezárja a panelt.
-- Napok: a nagy képes carousel marad a térkép előtt, egyszerű vízszintes fogantyúval, indikátorral és a 6 gombos alsó menüvel.
-- Sonar PING: 60 másodperces megőrzés, kijelölt találatnál szünetel az időzítő.
+## Ismert béta-korlát
+A tömegközlekedési UI már szakaszos közlekedést jelez, de Antalya élő GTFS/GTFS-RT szolgáltatása még nincs teljesen bekötve; ezért ne tekintsd élő járatinformációnak.

@@ -1,6 +1,6 @@
-const CACHE='tc-antalya-073-unified-dock';
+const CACHE='tc-antalya-074-blue-country-skin';
 const CORE=[
-'./','./index.html','./app.css','./app.js','./manifest.webmanifest','./apple-touch-icon.png','./icon-192.png','./icon-512.png','./assets/logo-tr.png','./assets/offline-map.svg',
+'./','./index.html','./app.css','./app.js','./manifest.webmanifest','./apple-touch-icon.png','./icon-192.png','./icon-512.png','./assets/logo-tr.png','./assets/app-icon-day.png','./assets/offline-map.svg',
 './assets/photos/hadrian.jpg','./assets/photos/konyaalti.jpg','./assets/photos/duden.png','./assets/photos/perge.jpg','./assets/photos/kursunlu.jpg','./assets/photos/phaselis.jpg',
 './assets/placeholders/historic.svg','./assets/placeholders/museum.svg','./assets/placeholders/beach.svg','./assets/placeholders/park.svg','./assets/placeholders/waterfall.svg','./assets/placeholders/ancient.svg','./assets/placeholders/food.svg','./assets/placeholders/coffee.svg','./assets/placeholders/bar.svg','./assets/placeholders/shop.svg','./assets/placeholders/wc.svg','./assets/placeholders/hotel.svg','./assets/placeholders/attraction.svg','./assets/placeholders/marina.svg'
 ];
@@ -9,7 +9,7 @@ self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise
 self.addEventListener('fetch',e=>{
  if(e.request.method!=='GET') return;
  const u=new URL(e.request.url);
- const dynamic=u.hostname.includes('basemaps.cartocdn.com')||u.hostname.includes('unpkg.com')||u.hostname.includes('wikipedia.org')||u.hostname.includes('wikimedia.org');
+ const dynamic=u.hostname.includes('basemaps.cartocdn.com')||u.hostname.includes('unpkg.com')||u.hostname.includes('wikipedia.org')||u.hostname.includes('wikimedia.org')||u.hostname.includes('routing.openstreetmap.de');
  if(dynamic){
    e.respondWith(caches.open(CACHE).then(async c=>{
      const hit=await c.match(e.request); if(hit) return hit;

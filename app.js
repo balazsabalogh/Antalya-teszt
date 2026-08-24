@@ -1,4 +1,4 @@
-const APP_VERSION='0.7.2-compact-dock';
+const APP_VERSION='0.7.4-blue-country-skin';
 const dayColors=['#d43b43','#2e8b68','#e1a12f','#3e81d5','#9c6b45','#6d58a8','#2e9aa0','#c95b88'];
 const CAT={historic:{icon:'⌂',color:'#edcf85',label:'Látnivaló'},museum:{icon:'▣',color:'#edcf85',label:'Látnivaló'},beach:{icon:'≈',color:'#68aee5',label:'Strand'},park:{icon:'♧',color:'#81bc88',label:'Park'},waterfall:{icon:'≋',color:'#68b7d7',label:'Természet'},ancient:{icon:'⌘',color:'#edcf85',label:'Látnivaló'},food:{icon:'⋔',color:'#e69250',label:'Étterem'},coffee:{icon:'◒',color:'#82b89b',label:'Kávézó'},bar:{icon:'▽',color:'#aa83cb',label:'Bár'},shop:{icon:'▤',color:'#83a2c3',label:'Bolt'},wc:{icon:'WC',color:'#8ab0c6',label:'WC'},hotel:{icon:'⌂',color:'#9c8dc0',label:'Szállás'},attraction:{icon:'◇',color:'#efbf58',label:'Program'},marina:{icon:'≈',color:'#6bb6c6',label:'Kikötő'}};
 const IMG={hadrian:'./assets/photos/hadrian.jpg',konyaalti:'./assets/photos/konyaalti.jpg',duden:'./assets/photos/duden.png',perge:'./assets/photos/perge.jpg',kursunlu:'./assets/photos/kursunlu.jpg',phaselis:'./assets/photos/phaselis.jpg'};
@@ -90,13 +90,23 @@ function initMap(){
   tileLight=L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{maxZoom:19,subdomains:'abcd',attribution:'© OpenStreetMap © CARTO'});
   (state.theme==='light'?tileLight:tileDark).addTo(map);
   markerLayer=L.layerGroup().addTo(map);sonarLayer=L.layerGroup().addTo(map);
-  map.on('click',()=>{closeNotifications();const wasSonar=state.selected&&state.sonarPins.includes(state.selected);state.selected=null;if(wasSonar)scheduleSonarExpiry();if(state.sheet!=='closed'&&!state.adding)setSheet('closed');renderDayMap(false)});
+  map.on('click',()=>{closeNotifications();closeCompactIfOpen();const navTarget=state.nav?state.selected:null;const wasSonar=state.selected&&state.sonarPins.includes(state.selected);if(!state.nav)state.selected=null;if(wasSonar)scheduleSonarExpiry();if(state.sheet!=='closed'&&!state.adding)setSheet('closed');if(state.nav&&navTarget){state.selected=navTarget;renderNavBanner(navTarget);drawNavigationRoute(navTarget)}else renderDayMap(false)});
   renderDayMap(true);
 }
 function switchTiles(){[tileDark,tileLight].forEach(t=>{if(map.hasLayer(t))map.removeLayer(t)});(document.body.classList.contains('theme-light')?tileLight:tileDark).addTo(map)}
 function markerHTML(p,num,next=false,dayColor=currentDay().color){const c=catMeta(p);const sel=state.selected===p.id?' selected':'';return `<div class="tc-marker ${next?'next':''}${sel}" style="--mday:${dayColor};--cat:${c.color}"><div class="body"><div class="num">${num||''}</div></div><div class="cat">${c.icon}</div><div class="tip"></div></div>`}
 function sonarHTML(p){const c=catMeta(p);const sel=state.selected===p.id?' selected':'';return `<div class="sonar-marker${sel}" style="--cat:${c.color}"><i></i><b>${c.icon}</b></div>`}
-async function roadRoute(coords){if(!navigator.onLine||coords.length<2)return coords;try{const q=coords.map(c=>`${c[1]},${c[0]}`).join(';');const r=await fetch(`https://router.project-osrm.org/route/v1/driving/${q}?overview=full&geometries=geojson`);if(!r.ok)return coords;const j=await r.json();return j.routes?.[0]?.geometry?.coordinates?.map(c=>[c[1],c[0]])||coords}catch(e){return coords}}
+async function roadRoute(coords){
+  if(!navigator.onLine||coords.length<2)return coords;
+  try{
+    const q=coords.map(c=>`${c[1]},${c[0]}`).join(';');
+    const t=(state.transport||currentDay().transport||'').toLowerCase();
+    const srv=t.includes('gyalog')?'routed-foot':t.includes('autó')?'routed-car':'routed-car';
+    const r=await fetch(`https://routing.openstreetmap.de/${srv}/route/v1/driving/${q}?overview=full&geometries=geojson&steps=true`);
+    if(!r.ok)return coords; const j=await r.json();
+    return j.routes?.[0]?.geometry?.coordinates?.map(c=>[c[1],c[0]])||coords;
+  }catch(e){return coords}
+}
 function renderDayMap(fit=false){
   markerLayer.clearLayers();sonarLayer.clearLayers();if(routeLayer)map.removeLayer(routeLayer);const d=currentDay();document.documentElement.style.setProperty('--day',d.color);
   const coords=[];d.route.forEach((id,i)=>{const p=POIS[id];coords.push([p.lat,p.lon]);const next=!state.done.has(id)&&d.route.findIndex(x=>!state.done.has(x)&&!state.skipped.has(x))===i;const m=L.marker([p.lat,p.lon],{icon:L.divIcon({className:'',html:markerHTML(p,i+1,next,d.color),iconSize:[52,66],iconAnchor:[26,63]})}).addTo(markerLayer);m.on('click',e=>{L.DomEvent.stopPropagation(e);selectPoi(id)});});
@@ -111,7 +121,7 @@ function checkArrival(){if(!state.userPos||!gpsInTrip())return;const id=currentD
 
 const sheetHeights={closed:0,mini:126,one:()=>Math.round(innerHeight*.37),two:()=>Math.round(innerHeight*.66),full:()=>innerHeight-4};
 function heightFor(s){const v=sheetHeights[s];return typeof v==='function'?v():v}
-function setSheet(s,view){state.sheet=s;if(view)state.view=view;const h=heightFor(s);document.documentElement.style.setProperty('--sheet-h',h+'px');sheet.className='sheet state-'+s+(s==='closed'?'':' open');const navCompact=(state.view==='navigation'&&s!=='closed');const expanded=(s!=='closed'&&!navCompact);expandedNav.classList.toggle('hidden',!expanded);mainNav.classList.toggle('hide',expanded);mainNav.classList.remove('above-mini');logo.classList.toggle('hide',expanded);const ctr=$('#mapControls');const large=['two','full'].includes(s);ctr.classList.toggle('hidden-by-sheet',large);ctr.style.bottom=`calc(${s==='closed'||navCompact?62:h+12}px + var(--safe-bottom) + 14px)`;renderExpandedNav();renderSheet();if(map&&s!=='closed'&&state.selected){const p=POIS[state.selected];setTimeout(()=>map.panTo([p.lat,p.lon],{animate:true}),60)}}
+function setSheet(s,view){if(s!=='closed'&&typeof closeCompactIfOpen==='function')closeCompactIfOpen();state.sheet=s;if(view)state.view=view;const h=heightFor(s);document.documentElement.style.setProperty('--sheet-h',h+'px');sheet.className='sheet state-'+s+(s==='closed'?'':' open');const navCompact=(state.view==='navigation'&&s!=='closed');const expanded=(s!=='closed'&&!navCompact);expandedNav.classList.toggle('hidden',!expanded);mainNav.classList.toggle('hide',expanded);mainNav.classList.remove('above-mini');logo.classList.toggle('hide',expanded);const ctr=$('#mapControls');const large=['two','full'].includes(s);ctr.classList.toggle('hidden-by-sheet',large);ctr.style.bottom=`calc(${s==='closed'||navCompact?62:h+12}px + var(--safe-bottom) + 14px)`;renderExpandedNav();renderSheet();if(map&&s!=='closed'&&state.selected){const p=POIS[state.selected];setTimeout(()=>map.panTo([p.lat,p.lon],{animate:true}),60)}}
 const PANEL_NAV_ITEMS=[['route','Útiterv','route'],['days','Napok','days'],['sonar','Sonar','sonar'],['settings','Beáll.','settings'],['bell','Értes.','notifications'],['heart','Kedvenc','favorites']];function navMarkup(){return PANEL_NAV_ITEMS.map(([i,l,a])=>`<button class="exp-tab ${a==='settings'?'settings':''}" data-exp="${a}"><span>${uiIcon(i)}${a==='notifications'&&unread()?`<sup>${unread()}</sup>`:''}</span><small>${l}</small></button>`).join('')}function bindPanelNav(root=document){root.querySelectorAll('[data-exp]').forEach(b=>b.onclick=()=>{if(b.dataset.exp==='notifications'&&$('#notifDrawer').classList.contains('open')){closeNotifications();return}openFunction(b.dataset.exp)})}function renderExpandedNav(){if(!expandedNav.classList.contains('hidden')){expandedNav.innerHTML=navMarkup();bindPanelNav(expandedNav)}const on=$('#overlayNav');if(on&&!on.classList.contains('hidden')){on.innerHTML=navMarkup();bindPanelNav(on)}}
 function renderSheet(){if(state.sheet==='closed'){sheetBody.innerHTML='';return}if(state.view==='route'){renderRouteSheet();return}if(state.view==='sonar'){renderSonarSheet();return}if(state.view==='navigation'){renderNavSheet();return}if(state.view==='add'){renderAddSheet();return}renderPoiSheet()}
 function imgTag(p,cls=''){const src=offlinePhoto(p);return `<span class="photo-wrap ${cls}"><img data-poi-img="${p.id}" src="${src}" alt="${esc(p.name)}"><span class="photo-badge" hidden>Wikipedia</span></span>`}
@@ -139,25 +149,83 @@ function bindPlannerGestures(){$$('.planner-card').forEach(card=>{let sx=0,dx=0,
 function addAsNext(id){const r=currentDay().route;if(r.includes(id)){toast('Már benne van a napi tervben');return}const nextIndex=r.findIndex(x=>!state.done.has(x));r.splice(Math.max(0,nextIndex+1),0,id);toast('✓ Hozzáadva következő állomásként');renderDayMap()}
 
 let sonarExpiryTimer=null;function pauseSonarExpiry(){if(sonarExpiryTimer){clearTimeout(sonarExpiryTimer);sonarExpiryTimer=null}}function scheduleSonarExpiry(){pauseSonarExpiry();if(!state.sonarPins.length)return;sonarExpiryTimer=setTimeout(()=>{if(state.selected&&state.sonarPins.includes(state.selected))return;state.sonarPins=[];state.sonar=false;renderDayMap(false);toast('Sonar találatok elhalványultak')},60000)}
-function runSonar(){state.sonar=true;pauseSonarExpiry();$('#sonarPulse').classList.add('on');const ss=$('#sonarStatus');ss.textContent='PING · keresés a közelben';ss.classList.add('show');setTimeout(()=>{$('#sonarPulse').classList.remove('on');ss.classList.remove('show')},1600);const origin=effectiveOrigin();const candidates=Object.keys(POIS).filter(id=>!currentDay().route.includes(id)).sort((a,b)=>km(origin,POIS[a])-km(origin,POIS[b])).slice(0,5);state.sonarPins=candidates;renderSonarPins();const names=candidates.slice(0,3).map(id=>POIS[id].name).join(' · ');state.notifications=state.notifications.filter(n=>n.id!=='sonar-latest');state.notifications.unshift({id:'sonar-latest',priority:'useful',title:`${candidates.length} hely van a közelben`,text:names,action:'sonarHistory',pins:[...candidates]});renderNotifications();scheduleSonarExpiry();toast('PING · '+candidates.length+' találat')}
+function runSonar(){
+  closeCompactIfOpen();state.sonar=true;pauseSonarExpiry();
+  $('#sonarPulse').classList.add('on');
+  setTimeout(()=>$('#sonarPulse').classList.remove('on'),1650);
+  const origin=effectiveOrigin();
+  const candidates=Object.keys(POIS).filter(id=>!currentDay().route.includes(id)).sort((a,b)=>km(origin,POIS[a])-km(origin,POIS[b])).slice(0,5);
+  state.sonarPins=candidates;renderSonarPins();
+  const names=candidates.slice(0,3).map(id=>POIS[id].name).join(' · ');
+  state.notifications=state.notifications.filter(n=>n.id!=='sonar-latest');
+  state.notifications.unshift({id:'sonar-latest',priority:'useful',title:`${candidates.length} hely van a közelben`,text:names,action:'sonarHistory',pins:[...candidates]});
+  renderNotifications();scheduleSonarExpiry();
+}
 function renderSonarPins(){sonarLayer.clearLayers();state.sonarPins.forEach(id=>{const p=POIS[id];const m=L.marker([p.lat,p.lon],{icon:L.divIcon({className:'',html:sonarHTML(p),iconSize:[34,42],iconAnchor:[16,39]})}).addTo(sonarLayer);m.on('click',e=>{L.DomEvent.stopPropagation(e);selectPoi(id)})})}
-function openSonarMode(){state.sonar=true;const origin=effectiveOrigin();state.sonarPins=Object.keys(POIS).filter(id=>!currentDay().route.includes(id)&&km(origin,POIS[id])<2);renderDayMap();state.view='sonar';setSheet('one')}
-function renderSonarSheet(){sheetBody.innerHTML=`<div class="planner-head"><div><h2>Sonar · Körülötted</h2><small>Útvonal halványan · POI-k fókuszban</small></div><button class="choice" data-sonar-close>×</button></div><div class="choice-row">${['250 m','500 m','1 km','2 km'].map((x,i)=>`<button class="choice ${i===2?'active':''}">${x}</button>`).join('')}</div><div class="section-title">Mit keressünk?</div><div class="filters">${filterHTML()}<button class="filter"><i>◇</i>Hidden</button></div><button class="add-stop" data-ping-here>◉ PING innen</button>`;$('[data-sonar-close]').onclick=()=>{pauseSonarExpiry();state.sonar=false;state.sonarPins=[];state.selected=null;renderDayMap();setSheet('closed')};$('[data-ping-here]').onclick=runSonar}
+function openSonarMode(){
+  state.sonar=true;pauseSonarExpiry();
+  const origin=effectiveOrigin();
+  if(!state.sonarPins.length)state.sonarPins=Object.keys(POIS).filter(id=>!currentDay().route.includes(id)&&km(origin,POIS[id])<2).sort((a,b)=>km(origin,POIS[a])-km(origin,POIS[b]));
+  renderDayMap();state.view='sonar';setSheet('two');
+}
+function sonarListHTML(){
+  const origin=effectiveOrigin();
+  return state.sonarPins.map(id=>{const p=POIS[id],c=catMeta(p),d=distText(km(origin,p));return `<div class="sonar-result" data-sonar-result="${id}"><div class="sonar-action left">♡ Mentés</div><div class="sonar-action right">＋ Következő</div><div class="sonar-result-card">${imgTag(p)}<div><b>${esc(p.name)}</b><small>${esc(c.label)} · ${d}</small><span>${esc(p.why)}</span></div><i>›</i></div></div>`}).join('')||'<div class="setting-card">Nincs eltárolt találat ezen a környéken.</div>';
+}
+function renderSonarSheet(){
+  sheetBody.innerHTML=`<div class="planner-head"><div><h2>Sonar · Körülötted</h2><small>${state.sonarPins.length} találat · húzd a kártyát jobbra/balra</small></div></div><div class="choice-row sonar-radius">${['250 m','500 m','1 km','2 km'].map((x,i)=>`<button class="choice ${i===2?'active':''}">${x}</button>`).join('')}</div><div class="filters sonar-filters">${filterHTML()}<button class="filter"><i>◇</i>Hidden</button></div><div class="sonar-results">${sonarListHTML()}</div>`;
+  bindSonarSwipes();hydrateOnlineImages(sheetBody);
+}
+function bindSonarSwipes(){
+  $$('.sonar-result').forEach(w=>{const card=w.querySelector('.sonar-result-card');let sx=0,dx=0,moved=false;
+    card.onpointerdown=e=>{sx=e.clientX;dx=0;moved=false;card.setPointerCapture?.(e.pointerId)};
+    card.onpointermove=e=>{if(!sx)return;dx=e.clientX-sx;if(Math.abs(dx)>6)moved=true;card.style.transform=`translateX(${Math.max(-96,Math.min(96,dx))}px)`;w.classList.toggle('to-left',dx<0);w.classList.toggle('to-right',dx>0)};
+    card.onpointerup=()=>{const id=w.dataset.sonarResult;card.style.transform='';w.classList.remove('to-left','to-right');if(dx>70){addAsNext(id);toast('Következő állomásként hozzáadva')}else if(dx<-70){toggleFav(id)}sx=0;dx=0};
+    card.onclick=e=>{if(moved){e.preventDefault();return}const id=w.dataset.sonarResult;state.selected=id;pauseSonarExpiry();state.view='poi';setSheet('two');renderDayMap(false)};
+  })
+}
 
 function enterAddMode(){state.adding=true;state.view='add';setSheet('one');state.sonar=true;state.sonarPins=Object.keys(POIS).filter(id=>!currentDay().route.includes(id));renderDayMap();toast('Új állomás hozzáadása')}
 function renderAddSheet(){sheetBody.innerHTML=`<div class="planner-head"><div><h2>Új állomás hozzáadása</h2><small>${currentDay().id}. nap · ${esc(currentDay().title)}</small></div><button class="choice" data-add-cancel>×</button></div><div class="actions" style="grid-template-columns:repeat(4,1fr)">${iconButton('×','Mégse')}${iconButton('⌕','Keresés')}${iconButton('◉','Sonar')}${iconButton('✓','Kész','green')}</div><div class="section-title">Koppints egy kiemelt POI-ra</div><p style="font-size:12px;color:var(--muted)">A napi útvonal háttérben marad, a választható helyek erősebben látszanak.</p>`;$('[data-add-cancel]').onclick=exitAddMode;$$('[data-act]').forEach(b=>b.onclick=()=>{if(b.dataset.act==='Mégse'||b.dataset.act==='Kész')exitAddMode();else if(b.dataset.act==='Sonar')runSonar();else toast('Offline keresés: POI névre a következő buildben')})}
 function exitAddMode(){pauseSonarExpiry();state.adding=false;state.sonar=false;state.sonarPins=[];renderDayMap();setSheet('full','route')}
 
 function suspendNavBanner(){if(state.nav)$('#navBanner')?.classList.add('hidden')}
-function startNavigation(id){state.nav=true;state.selected=id;state.view='navigation';setSheet('mini');const p=POIS[id];const o=effectiveOrigin();map.fitBounds(L.latLngBounds([[o.lat,o.lon],[p.lat,p.lon]]).pad(.35),{maxZoom:15});renderNavBanner(id);if(!state.userPos)locate()}
-function renderNavBanner(id){let el=$('#navBanner');if(!el){el=document.createElement('div');el.id='navBanner';el.className='nav-banner';document.body.appendChild(el)}const p=POIS[id];const origin=effectiveOrigin();const k=km(origin,p);const test=state.userPos&&!gpsInTrip();el.innerHTML=`<div class="nav-arrow">↑</div><div><b>${distText(k)} · ${esc(p.name)}</b><small>${test?'Béta teszt · Antalya-szimuláció':`Haladj a cél felé · ${walkText(k)}`} · Companion követő mód</small></div><button data-nav-end>×</button>`;el.classList.remove('hidden');el.querySelector('[data-nav-end]').onclick=endNavigation}
-function endNavigation(){state.nav=false;$('#navBanner')?.remove();state.view='poi';setSheet('closed');toast('Navigáció befejezve')}
-function renderNavSheet(){const p=POIS[state.selected];sheetBody.innerHTML=miniPoi(p);hydrateOnlineImages(sheetBody)}
-function navigationMain(){if(state.nav&&state.selected){renderNavBanner(state.selected);setSheet('mini','navigation');return}const next=currentDay().route.find(id=>!state.done.has(id)&&!state.skipped.has(id));if(next)startNavigation(next);else toast('A mai útvonal minden pontja kész')}
+function startNavigation(id){
+  state.nav=true;state.selected=id;state.view='navigation';setSheet('closed');
+  const p=POIS[id],o=effectiveOrigin();map.fitBounds(L.latLngBounds([[o.lat,o.lon],[p.lat,p.lon]]).pad(.30),{maxZoom:16});
+  renderNavBanner(id);drawNavigationRoute(id);if(!state.userPos)locate();
+}
+async function drawNavigationRoute(id){
+  const o=effectiveOrigin(),p=POIS[id];const rc=await roadRoute([[o.lat,o.lon],[p.lat,p.lon]]);
+  if(routeLayer)map.removeLayer(routeLayer);routeLayer=L.polyline(rc,{color:'#2f7fe2',weight:5,opacity:.92,lineCap:'round'}).addTo(map);
+}
+function renderNavBanner(id){
+  let el=$('#navBanner');if(!el){el=document.createElement('div');el.id='navBanner';el.className='nav-banner';document.body.appendChild(el)}
+  const p=POIS[id],origin=effectiveOrigin(),k=km(origin,p),test=state.userPos&&!gpsInTrip();
+  const mode=(state.transport||currentDay().transport||'Vegyes');
+  const transit=mode.toLowerCase().includes('tömeg')?'<span class="nav-legs">🚶 4 perc · 🚌 busz / villamos szakasz · 🚶 cél</span>':'';
+  el.innerHTML=`<div class="nav-arrow">↑</div><div><b>${distText(k)} · ${esc(p.name)}</b><small>${test?'Béta teszt · Antalya-szimuláció':`Haladj a cél felé · ${walkText(k)}`} · ${esc(mode)}</small>${transit}</div>`;
+  el.classList.remove('hidden');
+}
+function endNavigation(){state.nav=false;$('#navBanner')?.remove();state.view='poi';setSheet('closed');renderDayMap(false);toast('Navigáció befejezve')}
+function renderNavSheet(){}
+function navigationMain(){
+  closeCompactIfOpen();closeNotifications();if(state.nav&&state.selected){renderNavBanner(state.selected);setSheet('closed');return}
+  const next=currentDay().route.find(id=>!state.done.has(id)&&!state.skipped.has(id));if(next)startNavigation(next);else toast('A mai útvonal minden pontja kész')
+}
 
 function showDays(){suspendNavBanner();setSheet('closed');logo.classList.add('hide');mainNav.classList.add('hide');$('#mapControls').classList.add('hidden-by-sheet');const on=$('#overlayNav');on.classList.remove('hidden');renderExpandedNav();$('#overlayTitle').textContent='';$('#overlaySubtitle').textContent='';overlayBody.innerHTML=`<div class="day-carousel-wrap"><div id="daysHandle" class="days-handle"></div><div class="day-carousel">${DAYS.map((d,i)=>dayCard(d,i)).join('')}</div><div class="day-indicator">${DAYS.map((_,i)=>`<i class="${i===state.day?'active':''}" data-daydot="${i}"></i>`).join('')}</div></div>`;overlay.classList.add('days-mode');overlay.classList.remove('hidden');hydrateOnlineImages(overlayBody);const car=$('.day-carousel');const updateDots=()=>{const cards=[...$$('[data-daycard]')];let best=state.day,bestD=1e9;cards.forEach((c,i)=>{const d=Math.abs(c.getBoundingClientRect().left-innerWidth*.08);if(d<bestD){bestD=d;best=i}});$$('[data-daydot]').forEach((d,i)=>d.classList.toggle('active',i===best))};car.addEventListener('scroll',()=>requestAnimationFrame(updateDots));$$('[data-daychoose]').forEach(b=>b.onclick=()=>{state.day=+b.dataset.daychoose;renderDayMap(true);closeOverlay();toast((state.day+1)+'. nap aktív')});requestAnimationFrame(()=>{const c=$(`[data-daycard="${state.day}"]`);c?.scrollIntoView({inline:'center'});updateDots()});const dh=$('#daysHandle');if(dh){let sy=0;dh.onpointerdown=e=>{sy=e.clientY;dh.setPointerCapture?.(e.pointerId)};dh.onpointerup=e=>{if(sy-e.clientY>18){car.querySelector(`[data-daycard="${state.day}"]`)?.scrollIntoView({inline:'center',behavior:'smooth'})}sy=0}}}
 function dayCard(d,i){const hero=POIS[d.hero];return `<article class="day-card" data-daycard="${i}" style="--day:${d.color}"><div class="hero">${imgTag(hero)}<div class="hero-copy"><b>${d.id}. nap · ${esc(d.title)}</b><small>${d.date} · ${d.route.length} állomás · ${esc(d.transport)}</small></div></div><div class="day-content"><div class="day-meta"><span class="tag">Tempó ${d.pace}/5</span><span class="tag">${d.route.length} állomás</span>${i===state.day?'<span class="tag good">Aktív nap</span>':''}</div><div class="day-route-mini">${d.route.map((id,j)=>`<div class="row"><span>${state.done.has(id)?'✓':j+1}</span><div><b>${esc(POIS[id].name)}</b><small>${esc(POIS[id].sub)}</small></div><small>${POIS[id].duration}</small></div>`).join('')}</div>${d.optional.length?`<div class="section-title">Még belefér</div>${d.optional.map(id=>`<span class="tag">＋ ${esc(POIS[id].name)}</span>`).join(' ')}`:''}<button class="day-choose" data-daychoose="${i}">Ezt a napot mutasd</button></div></article>`}
-function showDayQuickMenu(){showHold(DAYS.map((d,i)=>({label:String(d.id),act:()=>{state.day=i;renderDayMap(true);toast(d.id+'. nap')} })))}
+function closeCompactIfOpen(){if(!overlay.classList.contains('hidden')&&overlay.classList.contains('days-compact'))closeOverlay()}
+function showDaysCompact(){
+  if(!overlay.classList.contains('hidden')&&overlay.classList.contains('days-compact')){closeOverlay();return}
+  suspendNavBanner();setSheet('closed');
+  $('#overlayTitle').textContent='';$('#overlaySubtitle').textContent='';
+  overlayBody.innerHTML=`<div class="days-compact-wrap"><div class="days-compact-track">${DAYS.map((d,i)=>{const p=POIS[d.hero];return `<button class="day-compact-card ${i===state.day?'active':''}" data-daycompact="${i}">${imgTag(p)}<span><b>${d.id}. nap</b><small>${esc(d.title)}</small></span></button>`}).join('')}</div><div class="day-indicator">${DAYS.map((_,i)=>`<i class="${i===state.day?'active':''}"></i>`).join('')}</div></div>`;
+  overlay.classList.add('days-compact');overlay.classList.remove('hidden');mainNav.classList.remove('hide');logo.classList.remove('hide');hydrateOnlineImages(overlayBody);
+  $$('[data-daycompact]').forEach(b=>b.onclick=()=>{state.day=+b.dataset.daycompact;renderDayMap(true);closeOverlay();toast((state.day+1)+'. nap aktív')});
+}
+function showDayQuickMenu(){showDays()}
 
 function openFunction(name){if(name==='notifications'){toggleNotifications();return}closeNotifications();if(!overlay.classList.contains('hidden'))closeOverlay();if(name!=='navigation')suspendNavBanner();if(name==='route'){state.view='route';setSheet('two')}else if(name==='days')showDays();else if(name==='sonar')openSonarMode();else if(name==='settings')showSettings();else if(name==='favorites')showFavorites()}
 function showSettings(){openOverlay('Beállítások','Antalya · utazás + Companion',settingsHTML());bindSettings()}
@@ -175,23 +243,26 @@ function unread(){return state.notifications.length}
 function renderNotifications(){const n=state.notifications;$('#logoBadge').classList.add('hidden');const mb=$('#mainNotifBadge');if(mb){mb.classList.toggle('hidden',!n.length);mb.textContent=n.length}$('#notifStrip').classList.toggle('hidden',!n.length);if(n.length){$('#notifStripTitle').textContent=n[0].title;$('#notifStripText').textContent=n[0].text}$('#notifCountText').textContent=n.length?n.length+' aktív':'Nincs új';$('#notifList').innerHTML=n.map(x=>`<div class="notif-card" data-notif="${x.id}" style="--ncolor:${x.priority==='important'?'#df404a':x.priority==='useful'?'#e0ad45':'#87949e'}"><span class="swipe-hint"><span>Eltüntetés</span><span>Megnyitás</span></span><b>${esc(x.title)}</b><p>${esc(x.text)}</p><small>${x.priority==='important'?'Fontos':x.priority==='useful'?'Hasznos':'Háttér'}</small></div>`).join('');bindNotificationSwipes();renderExpandedNav()}
 function openNotifications(){suspendNavBanner();$('#notifDrawer').classList.add('open')}function toggleNotifications(){const d=$('#notifDrawer');if(d.classList.contains('open'))closeNotifications();else openNotifications()}
 function closeNotifications(){$('#notifDrawer').classList.remove('open')}
-function handleNotification(id){const n=state.notifications.find(x=>x.id===id);if(!n)return;closeNotifications();if(n.action==='settings')showSettings();else if(n.action==='fit')openSonarMode();else if(n.action==='sonarHistory'){state.sonar=true;state.sonarPins=[...(n.pins||[])];renderDayMap(false);openSonarMode()}else if(n.action==='arrival'&&n.poi){selectPoi(n.poi);setSheet('one')}}
+function handleNotification(id){const n=state.notifications.find(x=>x.id===id);if(!n)return;closeNotifications();if(n.action==='settings')showSettings();else if(n.action==='fit')openSonarMode();else if(n.action==='sonarHistory'){state.sonar=true;state.sonarPins=[...(n.pins||[])];renderDayMap(false);openSonarMode();setSheet('two','sonar')}else if(n.action==='arrival'&&n.poi){state.selected=n.poi;state.view='poi';setSheet('two');renderDayMap(false)}}
 function dismissNotification(id){state.notifications=state.notifications.filter(x=>x.id!==id);renderNotifications()}
 function bindNotificationSwipes(){$$('[data-notif]').forEach(c=>{let sx=0,dx=0,moved=false;c.onpointerdown=e=>{sx=e.clientX;dx=0;moved=false;c.classList.add('swiping');c.setPointerCapture?.(e.pointerId)};c.onpointermove=e=>{if(!sx)return;dx=e.clientX-sx;if(Math.abs(dx)>5)moved=true;c.style.transform=`translateX(${Math.max(-110,Math.min(110,dx))}px)`};c.onpointerup=()=>{c.classList.remove('swiping');c.style.transform='';const id=c.dataset.notif;if(dx<-70)dismissNotification(id);else if(dx>70)handleNotification(id);sx=0;dx=0};c.onclick=e=>{if(moved){e.preventDefault();e.stopPropagation()}}})}
 
 function openOverlay(title,sub,html){suspendNavBanner();$('#overlayTitle').textContent=title;$('#overlaySubtitle').textContent=sub||'';overlayBody.innerHTML=html;overlay.classList.remove('hidden');hydrateOnlineImages(overlayBody)}
-function closeOverlay(){overlay.classList.add('hidden');overlay.classList.remove('days-mode');overlayBody.innerHTML='';const on=$('#overlayNav');if(on)on.classList.add('hidden');if(state.sheet==='closed'){mainNav.classList.remove('hide');logo.classList.remove('hide');$('#mapControls').classList.remove('hidden-by-sheet')}else{setSheet(state.sheet,state.view)}}
-function showHold(items){const el=$('#holdMenu');el.innerHTML=items.map((x,i)=>`<button data-hold="${i}">${esc(x.label)}</button>`).join('');el.classList.remove('hidden');$$('[data-hold]').forEach(b=>b.onpointerup=()=>{items[+b.dataset.hold].act();el.classList.add('hidden')});setTimeout(()=>document.addEventListener('pointerup',()=>el.classList.add('hidden'),{once:true}),20)}
+function closeOverlay(){overlay.classList.add('hidden');overlay.classList.remove('days-mode','days-compact');overlayBody.innerHTML='';const on=$('#overlayNav');if(on)on.classList.add('hidden');if(state.sheet==='closed'){mainNav.classList.remove('hide');logo.classList.remove('hide');$('#mapControls').classList.remove('hidden-by-sheet')}else{setSheet(state.sheet,state.view)}}
+function showHold(items,wide=false){const el=$('#holdMenu');el.classList.toggle('wide',wide);el.innerHTML=items.map((x,i)=>`<button data-hold="${i}">${x.icon?`<span>${x.icon}</span>`:''}<b>${esc(x.label)}</b></button>`).join('');el.classList.remove('hidden');$$('[data-hold]').forEach(b=>b.onpointerup=()=>{items[+b.dataset.hold].act();el.classList.add('hidden');el.classList.remove('wide')});setTimeout(()=>document.addEventListener('pointerup',()=>{el.classList.add('hidden');el.classList.remove('wide')},{once:true}),20)}
 function longPress(el,onTap,onHold){let t,held=false;el.addEventListener('pointerdown',e=>{held=false;t=setTimeout(()=>{held=true;onHold(e)},520)});['pointerup','pointercancel','pointerleave'].forEach(ev=>el.addEventListener(ev,e=>{clearTimeout(t);if(ev==='pointerup'&&!held)onTap(e)}))}
 
 function applyMainIcons(){const mapI={mainItinerary:'route',mainDays:'days',mainNotifications:'bell',mainNavigation:'nav'};Object.entries(mapI).forEach(([id,n])=>{const el=$('#'+id+' .ico');if(el)el.innerHTML=uiIcon(n)})}
 function bindUI(){
  applyMainIcons();
  $('#locateBtn').onclick=locate;$('#fitRouteBtn').onclick=fitRoute;$('#notifStrip').onclick=toggleNotifications;$('#notifClose').onclick=closeNotifications;$('#overlayClose').onclick=closeOverlay;$('#overlayBack').onclick=closeOverlay;
- $('#mainNotifications').onclick=toggleNotifications;
- longPress($('#mainDays'),()=>{if(!overlay.classList.contains('hidden')&&overlay.classList.contains('days-mode'))closeOverlay();else showDays()},showDayQuickMenu);
- longPress($('#mainItinerary'),()=>{state.view='route';setSheet('two')},()=>showHold([{label:'Következő',act:()=>{const n=currentDay().route.find(x=>!state.done.has(x));if(n)selectPoi(n)}},{label:'+ Állomás',act:enterAddMode},{label:'Teljes terv',act:()=>setSheet('full','route')},{label:'Mai állapot',act:()=>toast(`${[...state.done].filter(x=>currentDay().route.includes(x)).length}/${currentDay().route.length} kész`) }]));
- longPress($('#mainNavigation'),navigationMain,()=>showHold([{label:'Következő',act:navigationMain},{label:'Szállás',act:()=>startNavigation('hotel')},{label:'Mai útvonal',act:fitRoute},{label:'Vissza',act:()=>toast('Vissza az eredeti útvonalhoz')} ]));
+ $('#mainNotifications').onclick=()=>{closeCompactIfOpen();toggleNotifications()};
+ longPress($('#mainDays'),showDaysCompact,showDays);
+ longPress($('#mainItinerary'),()=>{closeCompactIfOpen();state.view='route';setSheet('one')},()=>showHold([{label:'Következő',icon:'➜',act:()=>{const n=currentDay().route.find(x=>!state.done.has(x));if(n)selectPoi(n)}},{label:'+ Állomás',icon:'＋',act:enterAddMode},{label:'Teljes terv',icon:'≡',act:()=>setSheet('full','route')},{label:'Mai állapot',icon:'✓',act:()=>toast(`${[...state.done].filter(x=>currentDay().route.includes(x)).length}/${currentDay().route.length} kész`)}],true));
+ longPress($('#mainNavigation'),navigationMain,()=>showHold([
+   {label:'Következő',icon:'➜',act:navigationMain},{label:'Szállás',icon:'⌂',act:()=>startNavigation('hotel')},{label:'Mai útvonal',icon:'⌁',act:fitRoute},
+   {label:'Saját pozíció',icon:'◎',act:locate},{label:'Útvonal középre',icon:'⌖',act:fitRoute},{label:'Navigáció vége',icon:'×',act:endNavigation}
+ ],true));
  longPress(logo,runSonar,()=>openSonarMode());
  let sy=0,sh=0,dragging=false;$('#sheetDrag').addEventListener('pointerdown',e=>{if(state.sheet==='closed')return;dragging=true;sy=e.clientY;sh=heightFor(state.sheet);sheet.classList.add('dragging');sheet.setPointerCapture?.(e.pointerId)});window.addEventListener('pointermove',e=>{if(!dragging)return;const h=Math.max(110,Math.min(innerHeight-4,sh+(sy-e.clientY)));document.documentElement.style.setProperty('--sheet-h',h+'px')});window.addEventListener('pointerup',()=>{if(!dragging)return;dragging=false;sheet.classList.remove('dragging');const h=parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--sheet-h'));const snaps=[['mini',164],['one',heightFor('one')],['two',heightFor('two')],['full',heightFor('full')]];let best=snaps.reduce((a,b)=>Math.abs(b[1]-h)<Math.abs(a[1]-h)?b:a);if(best[0]==='full'){state.view='route'}setSheet(best[0])});
  window.addEventListener('online',()=>toast('Online kapcsolat helyreállt'));window.addEventListener('offline',()=>toast('Offline mód · GPS + letöltött tartalom'));

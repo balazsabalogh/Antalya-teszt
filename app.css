@@ -108,3 +108,84 @@ html,body,#app,button,.main-nav,.main-tab,.hold-menu,.day-carousel,.day-card{-we
  .main-nav{width:390px}
  .days-mode .day-card{min-width:350px}
 }
+
+/* 0.7.4 — Blue country skin + refined interactions */
+:root{
+  --panel:#0b2034;--panel2:#102a43;--panel3:#173853;
+  --line:rgba(184,211,232,.15);--text:#f5f8fb;--muted:#9fb2c4;
+  --accent:#d93643;--green:#2f9064;--blue:#3f88e8;
+  --shadow:0 16px 38px rgba(2,12,22,.34);--nav-h:56px;
+}
+body.theme-dark{background:#071827;color:var(--text)}
+.theme-dark{--panel:#0b2034;--panel2:#102a43;--panel3:#173853;--text:#f5f8fb;--muted:#9fb2c4;--line:rgba(184,211,232,.15)}
+.theme-dark #map .leaflet-tile{filter:brightness(.94) saturate(.78) contrast(.91) sepia(.04)!important}
+#map,.leaflet-container{background:#d9e2e5}
+.offline-map{background-color:#d8e2e7}
+
+/* unified instrument dock — no white/animated halo */
+.main-nav{
+  width:min(398px,calc(100vw - 20px));height:54px;
+  background:rgba(8,28,46,.93)!important;border-color:rgba(180,211,235,.16);
+  border-radius:22px;grid-template-columns:1fr 1fr 88px 1fr 1fr;
+  box-shadow:0 12px 28px rgba(4,17,29,.30);backdrop-filter:blur(20px);
+}
+.main-nav .logo-gap:before{display:none!important}
+.main-tab{color:#aabac8}.main-tab.active{color:#fff}.main-tab svg{width:25px!important;height:25px!important}
+.companion-logo{width:86px;height:86px;bottom:max(0px,calc(var(--safe-bottom) - 6px));filter:drop-shadow(0 8px 13px rgba(2,12,22,.42))!important}
+.companion-logo img{background:transparent!important;filter:none!important}
+
+/* panels: navy rather than black, image-led */
+.sheet{background:rgba(9,31,50,.975)!important;border-top-color:rgba(184,211,232,.15)}
+.sheet-card,.route-row,.planner-card,.setting-card,.fav-card{background:var(--panel2)}
+.sheet.state-mini{height:158px!important;border-radius:22px 22px 0 0}
+.sheet.state-mini .sheet-body{top:24px;bottom:59px!important;padding:0 12px 7px}
+.sheet.state-mini .expanded-nav{display:grid!important;height:59px}
+.expanded-nav,.overlay-nav{background:rgba(7,25,41,.985)!important;border-color:rgba(184,211,232,.13)}
+.exp-tab{color:#a8bac9}.exp-tab.settings{color:#8ab9ef}.exp-tab svg{width:24px;height:24px}
+.mini-card{min-height:68px;padding:7px 9px!important;grid-template-columns:56px minmax(0,1fr) 32px!important}
+.sheet.state-mini .mini-card .photo-wrap{width:56px!important;height:56px!important}.mini-card .title{font-size:15px}.mini-card .sub{font-size:10px}
+.poi-detail-hero{height:205px!important;border-radius:18px}.poi-detail-head h2{font-size:22px}
+.guide-page .guide-hero,.guide-hero.photo-wrap{height:260px!important}
+
+/* markers are subtly alive; selected is bigger + pulsing */
+.tc-marker{translate:0 0;animation:markerFloat 3.4s ease-in-out infinite;will-change:translate}
+@keyframes markerFloat{0%,100%{translate:0 0}50%{translate:0 -2.5px}}
+.tc-marker.selected{transform:scale(1.12)!important;transform-origin:50% 70%;z-index:30}
+.tc-marker.selected .body{animation:selectedHalo074 1.55s ease-in-out infinite!important}
+@keyframes selectedHalo074{0%,100%{box-shadow:0 0 0 3px color-mix(in srgb,var(--mday) 22%,transparent),0 8px 18px rgba(0,0,0,.28)}50%{box-shadow:0 0 0 10px color-mix(in srgb,var(--mday) 3%,transparent),0 8px 18px rgba(0,0,0,.28)}}
+.sonar-marker{animation:markerFloat 3.2s ease-in-out infinite}
+
+/* navigation: clean map + upper information only */
+.nav-banner{top:calc(var(--safe-top) + 58px);left:14px;right:14px;grid-template-columns:42px 1fr!important;background:rgba(8,28,46,.95)!important;border-color:rgba(184,211,232,.16);padding:10px 12px;border-radius:16px}
+.nav-banner .nav-arrow{font-size:31px}.nav-banner b{font-size:16px}.nav-banner small{font-size:11px}.nav-legs{display:block;color:#bfd0df;font-size:10px;margin-top:5px}
+
+/* wide long-press action palette */
+.hold-menu.wide{left:10px;right:10px;bottom:calc(var(--safe-bottom) + 72px);transform:none;width:auto;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:10px;background:rgba(8,28,46,.97);border-radius:20px}
+.hold-menu.wide button{min-height:66px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:#112f49;border-color:rgba(184,211,232,.14)}
+.hold-menu.wide button span{font-size:22px}.hold-menu.wide button b{font-size:10px}
+
+/* Sonar: no duplicate black status bubble. Results are real swipe cards. */
+.sonar-status{display:none!important}
+.sonar-results{display:grid;gap:8px;margin-top:12px;padding-bottom:8px}.sonar-result{position:relative;overflow:hidden;border-radius:15px;background:#0b2034;border:1px solid var(--line)}
+.sonar-result-card{position:relative;z-index:2;display:grid;grid-template-columns:64px 1fr 18px;gap:10px;align-items:center;padding:9px;background:var(--panel2);transition:transform .18s;touch-action:pan-y}
+.sonar-result-card .photo-wrap{width:64px;height:58px;border-radius:11px}.sonar-result-card b{display:block;font-size:13px}.sonar-result-card small{display:block;color:var(--muted);font-size:10px;margin-top:2px}.sonar-result-card span{display:block;color:#bed0dd;font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:4px}.sonar-result-card>i{font-style:normal;color:var(--muted);font-size:18px}
+.sonar-action{position:absolute;top:0;bottom:0;display:flex;align-items:center;font-size:10px;font-weight:750;color:white;padding:0 12px;opacity:.25;transition:opacity .12s}.sonar-action.left{left:0;background:#334b64}.sonar-action.right{right:0;background:#24724e}.sonar-result.to-left .sonar-action.left,.sonar-result.to-right .sonar-action.right{opacity:1}
+.sonar-radius{margin-bottom:6px}.sonar-filters{margin-bottom:4px}
+
+/* Messenger-style swipe reveal: one card moves, action lives behind it */
+.planner-card .swipe-reveal,.notif-card .swipe-hint{background:#0b2034!important;color:#fff!important;padding:0 10px!important}
+.planner-card .swipe-reveal span,.notif-card .swipe-hint span{padding:7px 10px;border-radius:999px;font-size:10px}
+.planner-card .swipe-reveal span:first-child,.notif-card .swipe-hint span:first-child{background:#81323a}
+.planner-card .swipe-reveal span:last-child,.notif-card .swipe-hint span:last-child{background:#276d50}
+.notif-drawer,.notif-strip{background:rgba(8,28,46,.95)!important}.notif-card{background:#102a43}
+
+/* Full photo day carousel */
+.full-overlay.days-mode{padding-top:calc(var(--safe-top) + 58px);background:transparent}.days-mode .day-card{background:rgba(9,31,50,.97)!important;border:1px solid rgba(184,211,232,.16);min-width:82vw;max-height:72vh;border-radius:22px;overflow:auto}.days-mode .day-card .hero{height:min(31vh,245px)!important}.days-mode .day-card .hero .photo-wrap,.days-mode .day-card .hero img{border-radius:0!important;width:100%;height:100%;object-fit:cover}.days-mode .day-carousel{padding:3px 9vw 2px;gap:12px;scroll-snap-type:x mandatory}.days-mode .day-card{scroll-snap-align:center}.days-handle{background:rgba(206,220,230,.45)!important}.days-mode .day-indicator i.active{background:#d93643}
+
+/* compact day picker = short tap */
+.full-overlay.days-compact{z-index:930;background:transparent;padding:0;pointer-events:none}.full-overlay.days-compact .overlay-head{display:none}.full-overlay.days-compact .overlay-body{position:absolute;left:0;right:0;bottom:calc(var(--safe-bottom) + 76px);padding:0;pointer-events:auto;overflow:visible}.days-compact-wrap{display:flex;flex-direction:column;gap:7px}.days-compact-track{display:flex;gap:8px;overflow-x:auto;padding:0 14vw;scroll-snap-type:x mandatory;scrollbar-width:none}.days-compact-track::-webkit-scrollbar{display:none}.day-compact-card{position:relative;flex:0 0 68vw;height:132px;border:1px solid rgba(184,211,232,.16);border-radius:19px;overflow:hidden;background:#0b2034;color:white;padding:0;scroll-snap-align:center;box-shadow:var(--shadow)}.day-compact-card .photo-wrap,.day-compact-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.day-compact-card:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 25%,rgba(4,17,28,.86) 100%)}.day-compact-card>span{position:absolute;z-index:3;left:14px;right:12px;bottom:12px;text-align:left}.day-compact-card b{display:block;font-size:18px}.day-compact-card small{font-size:11px;color:#d9e5ed}.day-compact-card.active{outline:2px solid #d93643;outline-offset:-2px}.days-compact-wrap .day-indicator{display:flex;justify-content:center;gap:5px}.days-compact-wrap .day-indicator i{width:6px;height:6px;border-radius:50%;background:rgba(180,200,214,.45)}.days-compact-wrap .day-indicator i.active{width:16px;border-radius:5px;background:#d93643}
+
+/* richer photos and graceful fallback */
+.photo-wrap{background:linear-gradient(135deg,#173853,#0e2941);overflow:hidden}.photo-wrap img{object-fit:cover}.photo-badge{background:rgba(8,28,46,.78)!important}
+
+@media(min-width:720px){.day-compact-card{flex-basis:310px}.days-compact-track{padding-left:calc((100vw - 310px)/2);padding-right:calc((100vw - 310px)/2)}}
