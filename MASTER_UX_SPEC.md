@@ -52,3 +52,16 @@ Egy projekt, egy ország (Törökország), egy utazás (Antalya). Nincs projekt-
 - Days compact carousel has its own panel, working position indicator and pull-up transition to large photo cards.
 - Fullscreen panels touch the display top and include a direct close action.
 - Itinerary snapshots: max 10 local versions; automatic before destructive/structural changes plus manual save.
+
+## 0.7.6 field-test override — a 0.7.5 pontokat ez írja felül
+- Navigáció: aktív navigációnál a Navigáció főgomb rövid tapja **befejezi** a navigációt. A felső kártyán bal swipe = navigáció vége; jobb swipe = következő úti cél. Nem marad rejtett, aktív navigációs állapot.
+- Navigációs swipe: a kártya mögötti teljes felület kapja a piros/zöld műveleti színt.
+- Aktív menüpont kap finom vizuális kiemelést; a Beállítások inaktív színe egységes a többi ikonnal.
+- Route marker: klasszikus teardrop pin, nap színével. Következő cél mindig nagyobb és álló. Kijelölt marker nagyobb + finom animáció. Más marker nem mozog.
+- Napok kompakt: teljesen lekerekített panel; nagyobb fogóterület; egy tap = nap kiválasztása.
+- Napok nagy: fix, azonos méretű kártyák; carousel csak vízszintesen mozog. A kártyán belüli hosszabb tartalom külön görgethető, de maga a kártyasor nem mozdul fel/le.
+- Napok nagy: lefelé swipe a felső fogózónán az egész Napok nézetet zárja be; nem tér vissza automatikusan kompakt állapotba.
+- Értesítések: nincs felső drag-handle.
+- Teljes útvonaltervező: egyetlen bezáró X.
+- Környékszűrők: egy tapos toggle, azonnali markerfrissítés, egyértelmű kategóriaszínű aktív állapot, vízszintes scroll.
+- Tartalom: a környék érdekes és praktikus POI-jai is legyenek a Sonar/szűrők adatbázisában; a fő helyekhez valós fotó online betöltéssel + runtime cache-sel.

@@ -303,3 +303,115 @@ body.theme-dark{background:#071827;color:var(--text)}
 .guide-full .guide-hero>.photo-wrap{display:block;width:100%;height:100%;border-radius:0}.guide-full .guide-hero>.photo-wrap img{width:100%;height:100%;object-fit:cover}
 .sonar-marker.selected{transform:scale(1.08);animation:selectedFloat075 3.2s ease-in-out infinite!important;transform-origin:50% 70%}
 .sheet-close-all{position:absolute;right:12px;top:calc(var(--safe-top) + 8px);z-index:60;width:40px;height:40px;border-radius:14px;border:1px solid rgba(255,255,255,.14);background:rgba(8,28,46,.90);font-size:22px;color:#fff;box-shadow:var(--shadow)}
+
+/* 0.7.6 — polish + Antalya content pass */
+
+/* Notifications no longer look draggable: close with the arrow only. */
+.drawer-handle{display:none!important}
+
+/* Active navigation item: subtle but instantly legible. Settings uses the same inactive color as peers. */
+.main-tab,.exp-tab{position:relative;isolation:isolate}
+.exp-tab.settings{color:#a8bac9!important}
+.main-tab .ico,.main-tab b,.exp-tab>span,.exp-tab>small{position:relative;z-index:2}
+.main-tab.active,.exp-tab.active{color:#f8fbff!important}
+.main-tab.active:before,.exp-tab.active:before{
+  content:"";position:absolute;z-index:1;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:46px;height:42px;border-radius:15px;
+  background:linear-gradient(180deg,rgba(84,157,213,.20),rgba(62,126,181,.10));
+  border:1px solid rgba(145,201,239,.18);
+  box-shadow:0 0 0 1px rgba(6,21,34,.12),0 5px 16px rgba(11,54,86,.18),inset 0 1px rgba(255,255,255,.06)
+}
+.exp-tab.active:before{width:48px;height:44px;border-radius:14px}
+.main-tab.active svg,.exp-tab.active svg{filter:drop-shadow(0 0 4px rgba(144,204,245,.22))}
+
+/* Route markers: classic teardrop pin, day-colour body, fixed next target, animated selection only. */
+.tc-marker{width:52px;height:66px!important;animation:none!important;translate:0 0!important;transform-origin:50% 82%;will-change:transform,translate}
+.tc-marker .body{
+  left:9px!important;top:14px!important;width:36px!important;height:36px!important;
+  border-radius:50% 50% 50% 7px!important;
+  transform:rotate(-45deg);
+  background:var(--mday)!important;
+  border:3px solid rgba(247,250,252,.92)!important;
+  box-shadow:0 7px 14px rgba(4,19,31,.30)!important
+}
+.tc-marker .num{transform:rotate(45deg);font-size:16px!important;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.32)}
+.tc-marker .cat{
+  top:0!important;width:22px!important;height:22px!important;
+  background:#edf4f7!important;color:#10263a!important;
+  border:2px solid var(--mday)!important;box-shadow:0 3px 8px rgba(3,20,32,.20)
+}
+.tc-marker .tip{display:none!important}
+.tc-marker.next:not(.selected){transform:scale(1.14)!important;z-index:28;animation:none!important}
+.tc-marker.next:not(.selected) .body{animation:none!important;box-shadow:0 8px 18px rgba(4,19,31,.34)!important}
+.tc-marker.selected{transform:scale(1.18)!important;z-index:45;animation:selectedMarker076 2.2s ease-in-out infinite!important}
+.tc-marker.selected .body{background:var(--mday)!important;animation:selectedHalo076 1.65s ease-in-out infinite!important}
+@keyframes selectedMarker076{0%,100%{translate:0 0}50%{translate:0 -4px}}
+@keyframes selectedHalo076{0%,100%{box-shadow:0 0 0 3px color-mix(in srgb,var(--mday) 24%,transparent),0 8px 18px rgba(4,19,31,.30)}50%{box-shadow:0 0 0 9px color-mix(in srgb,var(--mday) 4%,transparent),0 10px 20px rgba(4,19,31,.33)}}
+
+/* Navigation swipe: the entire revealed surface turns red/green. */
+.nav-banner{isolation:isolate;background:transparent!important}
+.nav-banner-card{border-radius:inherit;background:rgba(8,28,46,.97)!important;will-change:transform}
+.nav-swipe-action{
+  inset:0!important;width:100%!important;height:100%!important;
+  z-index:1;opacity:0!important;visibility:hidden;
+  padding:0 18px!important;border-radius:inherit;
+  transition:opacity .10s ease!important
+}
+.nav-swipe-action.nav-dismiss{justify-content:flex-start;background:#a9343e!important}
+.nav-swipe-action.nav-next{justify-content:flex-end;background:#268257!important}
+.nav-banner.swipe-left .nav-dismiss,.nav-banner.swipe-right .nav-next{opacity:1!important;visibility:visible}
+.nav-banner.swipe-left .nav-next,.nav-banner.swipe-right .nav-dismiss{opacity:0!important;visibility:hidden}
+
+/* Compact day picker: rounded as one object and easier upward swipe target. */
+.days-compact-panel{border-radius:22px!important;padding-top:0!important;overflow:hidden}
+.days-compact-handle{height:44px!important;cursor:grab;touch-action:none}
+.days-compact-handle span{width:52px!important;height:5px!important}
+.days-compact-track{overscroll-behavior-x:contain;overscroll-behavior-y:none}
+.day-compact-card{touch-action:pan-x}
+
+/* Expanded day picker: every card has exactly the same viewport-sized frame. */
+.full-overlay.days-mode{padding-top:calc(var(--safe-top) + 58px)!important;padding-bottom:calc(var(--safe-bottom) + 58px)!important}
+.days-mode .overlay-body{overflow:hidden!important}
+.days-mode .day-carousel-wrap{
+  width:100%;height:calc(100dvh - var(--safe-top) - var(--safe-bottom) - 116px);
+  min-height:0;display:flex;flex-direction:column;justify-content:stretch;overflow:hidden
+}
+.days-handle-zone{height:44px;flex:0 0 44px;display:grid;place-items:center;touch-action:none;cursor:grab}
+.days-handle-zone .days-handle{display:block;width:52px;height:5px;border-radius:6px;background:rgba(206,220,230,.48)}
+.days-mode .day-carousel{
+  flex:1;min-height:0;align-items:stretch;overflow-x:auto!important;overflow-y:hidden!important;
+  padding:0 9vw 2px!important;gap:12px;scroll-snap-type:x mandatory;overscroll-behavior-x:contain;overscroll-behavior-y:none
+}
+.days-mode .day-card{
+  flex:0 0 82vw;min-width:82vw!important;height:100%!important;max-height:none!important;
+  align-self:stretch;display:flex;flex-direction:column;overflow:hidden!important;
+  border-radius:22px!important;scroll-snap-align:center;scroll-snap-stop:always
+}
+.days-mode .day-card .hero{flex:0 0 min(31vh,245px);height:auto!important}
+.days-mode .day-card .day-content{
+  flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;
+  padding-bottom:10px!important
+}
+.days-mode .day-choose{position:sticky;bottom:0;z-index:5;box-shadow:0 -8px 18px rgba(9,31,50,.62)}
+.days-mode .day-indicator{flex:0 0 24px;height:24px!important}
+
+/* Filters: horizontal again, one tap, category-colour state. */
+.filters{justify-content:flex-start!important;overflow-x:auto!important;overflow-y:hidden!important;gap:12px!important;padding:1px 6px 12px!important;scroll-snap-type:x proximity;overscroll-behavior-x:contain}
+.filter{flex:0 0 auto!important;min-width:54px!important;transform:none!important;color:#9db2c2;scroll-snap-align:start}
+.filter i{width:42px!important;height:42px!important;border:2px solid rgba(184,211,232,.15)!important;background:#173853!important;transition:.14s ease}
+.filter.active{color:#fff!important;font-weight:700}
+.filter.active i{
+  outline:none!important;background:color-mix(in srgb,var(--filter-color) 32%,#173853)!important;
+  border-color:var(--filter-color)!important;
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--filter-color) 16%,transparent),0 5px 12px rgba(4,18,29,.18)
+}
+
+/* New guide gallery uses image wrappers so online real photos can hydrate + cache. */
+.guide-gallery>.photo-wrap{display:block;width:100%;height:100%;border-radius:13px;overflow:hidden;min-width:0;min-height:0}
+.guide-gallery>.photo-wrap:first-child{grid-row:1/3}
+.guide-gallery>.photo-wrap img{width:100%;height:100%;object-fit:cover;border-radius:0!important}
+.guide-gallery>.photo-wrap .photo-badge{font-size:8px}
+
+@media(min-width:720px){
+ .days-mode .day-card{flex-basis:350px!important;min-width:350px!important}
+}
