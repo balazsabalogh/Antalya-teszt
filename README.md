@@ -1,4 +1,4 @@
-# Travel Companion · Antalya Beta 0.7.7
+# Travel Companion · Antalya Beta 0.7.8
 
 Polish + Antalya content build based on the 2026-08-24 iPhone field-test feedback.
 
