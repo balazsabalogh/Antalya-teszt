@@ -1,4 +1,4 @@
-# Travel Companion Antalya Beta 0.7.8 — Final Test RC
+# Travel Companion Antalya Beta 0.7.8 — Final Test RC1
 
 - 6 állandó kompakt menüpont: Útiterv, Napok, Sonar, Beállítások, Értesítések, Navigáció.
 - A középső Companion logó minden menüben látható; aktív funkcióból a főtérképre visz, főtérképről Sonart nyit.

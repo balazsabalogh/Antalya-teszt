@@ -1,4 +1,4 @@
-const APP_VERSION='0.7.8-rc1';
+const APP_VERSION='0.7.8-rc2';
 const dayColors=['#d43b43','#2e8b68','#e1a12f','#3e81d5','#9c6b45','#6d58a8','#2e9aa0','#c95b88'];
 const CAT={historic:{icon:'⌂',color:'#edcf85',label:'Látnivaló'},museum:{icon:'▣',color:'#edcf85',label:'Látnivaló'},beach:{icon:'≈',color:'#68aee5',label:'Strand'},park:{icon:'♧',color:'#81bc88',label:'Park'},waterfall:{icon:'≋',color:'#68b7d7',label:'Természet'},ancient:{icon:'⌘',color:'#edcf85',label:'Látnivaló'},food:{icon:'⋔',color:'#e69250',label:'Étterem'},coffee:{icon:'◒',color:'#82b89b',label:'Kávézó'},bar:{icon:'▽',color:'#aa83cb',label:'Bár'},shop:{icon:'▤',color:'#83a2c3',label:'Bolt'},wc:{icon:'WC',color:'#8ab0c6',label:'WC'},hotel:{icon:'⌂',color:'#9c8dc0',label:'Szállás'},attraction:{icon:'◇',color:'#efbf58',label:'Program'},marina:{icon:'≈',color:'#6bb6c6',label:'Kikötő'}};
 const IMG={hadrian:'./assets/photos/hadrian.jpg',konyaalti:'./assets/photos/konyaalti.jpg',duden:'./assets/photos/duden.png',perge:'./assets/photos/perge.jpg',kursunlu:'./assets/photos/kursunlu.jpg',phaselis:'./assets/photos/phaselis.jpg'};
@@ -129,7 +129,7 @@ function activeMenuKey(){
 }
 function syncActiveMenus(){
  const a=activeMenuKey();
- const mainMap={itinerary:'route',days:'days',settings:'settings',notifications:'notifications',navigation:'navigation'};
+ const mainMap={itinerary:'route',days:'days',sonar:'sonar',settings:'settings',notifications:'notifications',navigation:'navigation'};
  $$('.main-tab[data-main]').forEach(b=>b.classList.toggle('active',mainMap[b.dataset.main]===a));
  $$('.exp-tab[data-exp]').forEach(b=>b.classList.toggle('active',b.dataset.exp===a));
  logo.classList.toggle('active',a==='sonar');

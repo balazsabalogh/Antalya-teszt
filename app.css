@@ -534,7 +534,7 @@ body.theme-dark{background:#071827;color:var(--text)}
 .trip-test-badge{display:none!important}
 .expanded-nav,.overlay-nav{display:none!important}
 
-/* One persistent compact dock on every screen. Five tabs + the centered Companion/Sonar logo = six functions. */
+/* One persistent compact dock on every screen. Six function tabs + the centered Companion logo/home control. */
 .main-nav{
   left:10px!important;right:10px!important;bottom:calc(var(--safe-bottom) + var(--dock-gap))!important;height:var(--compact-nav-h)!important;
   display:grid!important;grid-template-columns:repeat(7,1fr)!important;align-items:center!important;padding:4px 5px!important;
@@ -542,8 +542,8 @@ body.theme-dark{background:#071827;color:var(--text)}
   box-shadow:0 12px 30px rgba(2,12,22,.28)!important;backdrop-filter:blur(20px);z-index:1300!important
 }
 .main-nav:before,.main-nav:after{display:none!important}
-.logo-gap{grid-column:3/5!important;height:100%!important}
-#mainItinerary{grid-column:1}#mainDays{grid-column:2}#mainSettings{grid-column:5}#mainNotifications{grid-column:6}#mainNavigation{grid-column:7}
+.logo-gap{grid-column:4!important;height:100%!important}
+#mainItinerary{grid-column:1}#mainDays{grid-column:2}#mainSonar{grid-column:3}#mainSettings{grid-column:5}#mainNotifications{grid-column:6}#mainNavigation{grid-column:7}
 .main-tab{height:48px!important;min-width:0!important;padding:0!important;color:#a9bac8!important}
 .main-tab svg{width:23px!important;height:23px!important}.main-tab.active{color:#fff!important}
 .main-tab.active:before{width:44px!important;height:42px!important;border-radius:14px!important;background:rgba(56,128,181,.30)!important;border:1px solid rgba(133,197,239,.32)!important}
@@ -720,3 +720,4 @@ body.theme-dark{background:#071827;color:var(--text)}
  .main-nav{left:8px!important;right:8px!important;grid-template-columns:repeat(3,minmax(0,1fr)) 72px repeat(3,minmax(0,1fr))!important;padding-left:3px!important;padding-right:3px!important}
  .companion-logo{width:70px!important;height:70px!important}.main-tab .ico{font-size:18px!important}
 }
+\n\n/* 0.7.8 RC2 hotfix — dock geometry + opaque fullscreen surfaces */\n:root{--dock-gap:0px!important}\n.main-nav{\n  left:12px!important;right:12px!important;bottom:max(4px,calc(var(--safe-bottom) - 18px))!important;\n  grid-template-columns:repeat(3,minmax(0,1fr)) 82px repeat(3,minmax(0,1fr))!important;\n  overflow:visible!important;\n}\n#mainItinerary{grid-column:1!important}#mainDays{grid-column:2!important}#mainSonar{grid-column:3!important}.logo-gap{grid-column:4!important}#mainSettings{grid-column:5!important}#mainNotifications{grid-column:6!important}#mainNavigation{grid-column:7!important}\n.companion-logo{bottom:max(0px,calc(var(--safe-bottom) - 19px))!important}\n/* Sheets join directly to the top edge of the dock. */\n.sheet{bottom:calc(max(4px,calc(var(--safe-bottom) - 18px)) + 57px)!important}\n.hold-menu.wide,.hold-menu.quick{bottom:calc(max(4px,calc(var(--safe-bottom) - 18px)) + 57px)!important}\n/* Fullscreen content is genuinely opaque all the way to the physical bottom; dock may sit above it, never map/attribution. */\n.full-overlay.standard-full,.full-overlay.days-mode{inset:0!important;bottom:0!important;height:100dvh!important;background:#071827!important;z-index:2300!important}\n.full-overlay.standard-full .overlay-body,.full-overlay.days-mode .overlay-body{padding-bottom:calc(var(--safe-bottom) + 76px)!important;background:#071827!important}\n/* Never allow a closed/old sheet to visually survive under another function. */\n.sheet.state-closed{display:none!important}\n
