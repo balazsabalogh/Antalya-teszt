@@ -7,12 +7,12 @@ Fix sorrend, minden térképes főnézetben ugyanott:
 1. Útiterv
 2. Napok
 3. Kedvencek
-4. középen Companion ország-embléma = Sonar
+4. középen Companion ország-embléma: rövid tap = fő/térkép, hosszú nyomás = Sonar
 5. Beállítások
 6. Értesítések
 7. Navigáció
 
-A Sonarnak nincs külön tab ikonja. Az aktív funkció vizuálisan kiemelt. A dock az iPhone home indicator fölött, stabil safe-area távolsággal marad. A középső logót egy sheet sem takarhatja.
+A Sonarnak nincs külön tab ikonja; a középső logó hosszú nyomásra indítja. Az aktív funkció vizuálisan kiemelt. A dock az iPhone home indicator fölött, stabil safe-area távolsággal marad. A középső logót egy sheet sem takarhatja.
 
 ## 2. Közös sheet engine
 Rétegsorrend: térkép → térképes markerek/gombok → sheet → főmenü → középső embléma. Egy időben egy sheet/overlay lehet aktív; tabváltás mindig kitakarítja az előző átmeneti állapotot.
@@ -89,3 +89,11 @@ Minden build két külön körön megy át:
 2. független audit — teljes rendszer, állapotkezelés, persistence, hibás/ál-funkciók, csomag és mobil edge case-ek
 
 Build csak mindkét kör után adható át tesztre.
+
+
+## RC5 navigációs kiegészítés
+- Companion navigáció térképes módban fut tovább.
+- A navigációs banner tapra teljes képernyős **Navigáció · Lépések** nézet nyílik.
+- A lépések a routing szolgáltatás step adataiból származnak, nem kitalált instrukciók.
+- **Térképnézet** gombbal ugyanabba az aktív navigációba térünk vissza.
+- Tömegközlekedéshez Apple Maps / Google Maps transit handoff marad.

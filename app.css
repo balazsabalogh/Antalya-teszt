@@ -887,3 +887,60 @@ body.theme-dark{background:#071827;color:var(--text)}
 .is-offline #map{background:transparent!important}
 .is-offline #map .leaflet-tile-pane{opacity:.18!important}
 .is-offline #map .leaflet-control-attribution{opacity:.7!important}
+
+
+/* 0.7.9 RC5 — release stabilization: mini POI, reorder, route handle, navigation steps */
+/* The app uses a dark Companion surface even when device/theme resolves light; force mini POI legibility and isolation. */
+.sheet.view-poi.state-mini{background:#091f32!important;isolation:isolate!important}
+.sheet.view-poi.state-mini .sheet-body{background:#091f32!important;z-index:2!important;overflow:hidden!important}
+.sheet.view-poi.state-mini .mini-card{position:relative!important;z-index:3!important;background:#102a43!important;color:#f5f7f8!important;border-color:rgba(184,211,232,.16)!important;overflow:hidden!important}
+.sheet.view-poi.state-mini .mini-card>div{position:relative!important;z-index:4!important;min-width:0!important;color:#f5f7f8!important}
+.sheet.view-poi.state-mini .mini-card .title{color:#f5f7f8!important}.sheet.view-poi.state-mini .mini-card .sub{color:#9fb4c5!important}
+.sheet.view-poi.state-mini .mini-card .photo-wrap,.sheet.view-poi.state-mini .mini-card .expand{position:relative!important;z-index:5!important}
+.sheet.view-poi.state-mini .planner-action-layer,.sheet.view-poi.state-mini .swipe-reveal{display:none!important}
+
+/* POI priority: Guide → route → Navigation. Secondary actions remain available but visually quieter. */
+.poi-primary-actions{display:grid!important;grid-template-columns:1fr 1.15fr 1.15fr .72fr .72fr!important;gap:7px!important;overflow-x:auto!important}
+.poi-primary-actions .action{min-width:72px!important}.poi-primary-actions .action:nth-child(-n+3){font-weight:800!important}
+
+/* Route reorder: only the ≡ handle owns vertical drag; list itself may autoscroll while reordering. */
+.planner-card .drag{touch-action:none!important;user-select:none!important;-webkit-user-select:none!important;cursor:grab!important}
+.planner-reorder-active,.planner-reorder-active *{overscroll-behavior:contain!important}
+.planner-reorder-active .full-planner{touch-action:none!important;scroll-behavior:auto!important}
+.planner-swipe.reordering{position:relative!important;z-index:60!important;opacity:.96!important;transform:scale(1.012)!important}
+.planner-swipe.reordering .planner-card{border-color:#69a8da!important;box-shadow:0 12px 30px rgba(0,0,0,.42)!important}
+
+/* Route sheet handle: much larger invisible hit area, same discreet visual handle. */
+.sheet.view-route .sheet-drag{height:58px!important;touch-action:none!important}
+.sheet.view-route .sheet-drag span{top:10px!important}
+.sheet.view-route.state-two .sheet-body{top:40px!important}
+.sheet.fullscreen.view-route .sheet-body{top:calc(var(--safe-top) + 58px)!important}
+
+/* True fullscreen means no map or Leaflet strip can bleed through at any edge. */
+body.sheet-fullscreen #map,body.sheet-fullscreen #offlineMap,body.overlay-fullscreen #map,body.overlay-fullscreen #offlineMap{visibility:hidden!important}
+body.sheet-fullscreen .leaflet-control-attribution,body.overlay-fullscreen .leaflet-control-attribution{display:none!important}
+body.sheet-fullscreen #app,body.overlay-fullscreen #app{background:#071827!important}
+.sheet.fullscreen{inset:0!important;width:100vw!important;height:100dvh!important;bottom:0!important;background:#071827!important}
+
+/* Companion navigation step view. Map route keeps running underneath and returns with one tap. */
+.full-overlay.nav-steps-mode{background:#071827!important}
+.full-overlay.nav-steps-mode .overlay-body{background:#071827!important;padding-bottom:calc(var(--dock-top) + 18px)!important}
+.nav-steps-summary{display:grid;grid-template-columns:1.4fr .8fr .8fr;gap:8px;margin-bottom:10px}
+.nav-steps-summary>div{background:#102a43;border:1px solid rgba(184,211,232,.15);border-radius:14px;padding:10px;min-width:0}
+.nav-steps-summary small{display:block;color:#9fb4c5;font-size:10px;margin-bottom:3px}.nav-steps-summary b{display:block;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nav-map-return{position:sticky;top:0;z-index:8;width:100%;min-height:48px;border:1px solid #2d7ee8;border-radius:14px;background:#286fd1;color:white;font-weight:800;margin:0 0 10px}
+.nav-step-list{display:grid;gap:8px;padding-bottom:14px}.nav-step{display:grid;grid-template-columns:34px minmax(0,1fr);gap:10px;align-items:center;background:#102a43;border:1px solid rgba(184,211,232,.13);border-radius:14px;padding:10px}
+.nav-step>span{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:#173853;color:#dce9f2;font-weight:800;font-size:11px}.nav-step b{display:block;font-size:13px}.nav-step small{display:block;color:#9fb4c5;font-size:10px;margin-top:3px}
+.nav-banner-card{cursor:pointer!important}.nav-banner-card:after{content:'Lépések';position:absolute;right:10px;bottom:5px;font-size:8px;color:#8fb3cf;opacity:.8}
+
+@media(max-width:390px){
+ .poi-primary-actions{grid-template-columns:1fr 1.08fr 1.08fr .68fr .68fr!important}.poi-primary-actions .action{min-width:66px!important;font-size:9.5px!important}
+ .nav-steps-summary{grid-template-columns:1fr 1fr}.nav-steps-summary>div:first-child{grid-column:1/-1}
+}
+/* RC5 audit fix: fullscreen surfaces hide all map chrome, not only the map tiles. */
+body.sheet-fullscreen .map-controls,body.overlay-fullscreen .map-controls{opacity:0!important;visibility:hidden!important;pointer-events:none!important}
+body.sheet-fullscreen #navBanner,body.overlay-fullscreen #navBanner{visibility:hidden!important}
+/* RC5 independent audit: keep Companion chrome consistently dark in Light/Auto map mode.
+   The theme choice changes the basemap; legacy mixed light/dark panels are not allowed to lose contrast. */
+.theme-light{--panel:#151b22;--panel2:#1b232c;--panel3:#232d37;--line:rgba(255,255,255,.11);--text:#f5f7f8;--muted:#a8b0b7;--shadow:0 16px 38px rgba(0,0,0,.36)}
+.theme-light .notif-strip{background:rgba(18,24,30,.94)!important}.theme-light .notif-drawer{background:rgba(16,22,28,.98)!important}.theme-light .iconbtn{background:rgba(255,255,255,.08)!important}.theme-light .expanded-nav{background:rgba(15,20,25,.98)!important}.theme-light .sheet-drag span{background:rgba(255,255,255,.30)!important}
