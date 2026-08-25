@@ -969,3 +969,21 @@ body.sheet-fullscreen #navBanner,body.overlay-fullscreen #navBanner{visibility:h
 /* Full-screen modes always paint through the home-indicator area. */
 body.sheet-fullscreen,body.overlay-fullscreen,body.sheet-fullscreen #app,body.overlay-fullscreen #app{background:#071827!important}
 .sheet.fullscreen,.full-overlay.standard-full,.full-overlay.days-mode{min-height:100dvh!important;background:#071827!important}
+
+
+/* 0.7.9 RC7 — last-mile iPhone hardening */
+/* iOS can still paint its horizontal scroll indicator even when ::-webkit-scrollbar is hidden.
+   The opaque dot strip intentionally covers that redundant native indicator. */
+.full-overlay.days-mode .day-indicator{
+  position:relative!important;z-index:20!important;background:#071827!important;
+  margin-top:-12px!important;padding-top:12px!important;height:36px!important;flex-basis:36px!important;
+}
+.full-overlay.days-mode .day-carousel{padding-bottom:12px!important;-webkit-overflow-scrolling:auto!important}
+.full-overlay.days-mode .day-carousel::-webkit-scrollbar{display:none!important;-webkit-appearance:none!important;background:transparent!important}
+
+/* Half route list can always scroll its final card completely above the fixed add row. */
+.sheet.view-route.state-two .full-planner{padding-bottom:18px!important;scroll-padding-bottom:18px!important}
+
+/* Swipe action paint must be impossible without a live is-swiping state. */
+.planner-swipe:not(.is-swiping) .planner-action-layer{opacity:0!important;visibility:hidden!important}
+.planner-swipe.is-swiping .planner-action-layer{visibility:visible!important}
