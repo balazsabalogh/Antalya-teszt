@@ -1,30 +1,26 @@
-# Travel Companion Antalya Beta 0.7.9 RC2
+# Travel Companion · Antalya 0.7.9 RC4
 
-Stabilitási + tömegközlekedési release candidate. A részletes változások: `RELEASE_NOTES_0.7.9.md`.
+Ez a build a teljes, kétlépcsős stabilitási audit utáni release candidate.
 
-# Travel Companion · Antalya Beta 0.7.7
+## Fő funkciók
+- stabil közös bottom-sheet rendszer és fix alsó dock
+- Útiterv: fél/full nézet, nap swipe, reorder, Megnéztem/Kihagyás swipe, hozzáadás térképről/mentettekből
+- Napok: kompakt és full carousel
+- Kedvencek fix főmenüpont
+- középső Companion logó = Sonar
+- Sonar: szűrők, 4 távolság egy sorban, adaptív panel, találati előzmény
+- POI mini/half/full Guide állapotok
+- Beállítások, Értesítések, Navigáció
+- Companion belső GPS navigáció folyamatos pozíciófrissítéssel
+- Apple Maps és Google Maps tömegközlekedési handoff
+- útiterv/aktív nap/sorrend tartós mentése
+- offline helyi tartalom + fotó/category fallback + runtime cache
+- külön iOS/normal és Android maskable ikon
 
-Polish + Antalya content build based on the 2026-08-24 iPhone field-test feedback.
+## Fontos live megjegyzés
+A valós iPhone GPS-engedélyt, PWA safe-area viselkedést és az Apple/Google Maps appátadást a célkészüléken még egyszer ellenőrizni kell. A statikus és logikai QA mindkét körben átment.
 
-## Ebben a buildben
-- navigáció: rövid Navigáció-tap aktív navigációnál ténylegesen befejezi; bal swipe = navigáció vége, jobb swipe = következő cél
-- navigációs swipe: a teljes kártya mögötti felület piros/zöld, a külön béta-pill nem marad a navigáció alatt
-- aktív menüpont: finom, egyértelmű kiemelés; a Beállítások ikon már nem külön kék
-- markerek: klasszikus, nap-színű keretezett pin; a következő cél mindig nagyobb, de áll; csak a kijelölt marker kap finom mozgást
-- Napok kompakt: teljesen lekerekített panel, nagyobb húzófelület, egy tapos napválasztás
-- Napok nagy: minden kártya azonos méretű, fix keretben csak vízszintes carousel; lefelé húzva teljesen bezár
-- Napok nagy: majdnem a teljes rendelkezésre álló képernyőmagasságot használja, az alsó CTA a kártyán belül marad
-- Értesítések: felső fogópont eltávolítva
-- teljes útvonaltervező: csak egy bezáró X
-- környékszűrők: ismét vízszintesen görgethetők, egy tapos ki/be kapcsolás, kategóriaszínű aktív állapot
-- több közeli Antalya POI: Yivli Minare, Saat Kulesi, Kesik Minare, Cumhuriyet Meydanı, Tophane Parkı, Antalya Oyuncak Müzesi, Mermerli Plajı, Antalya Aquarium, 5M Migros
-- fotók: a biztos helyi képek továbbra is a csomag részei; online első használatkor a fő Antalya POI-khoz Wikipedia/Wikimedia Commons thumbnail kerül betöltésre és runtime cache-be
-- Antalya Archaeology Museum státusz: a jelenlegi hivatalos zárt státusz külön figyelmeztetésként szerepel a POI-ban
-
-## Offline fotóviselkedés
-A csomagban lévő biztos fotók azonnal offline elérhetők. A további valós helyszínfotókat az app online első használatkor próbálja letölteni nyílt Wikimedia-forrásból, majd a service worker cache-eli őket. Ha egy helyhez nincs biztonságosan azonosítható kép, kategória-placeholder marad; nem mutatunk másik helyről félrevezető fotót.
-
-## Továbbra is beta
-- élő Antalya tömegközlekedési feed nincs integrálva
-- online road routing hálózatfüggő
-- a Wikimedia-fotók első betöltéséhez internet kell; utána a böngésző cache-éből elérhetők lehetnek
+Lásd:
+- `MASTER_UX_SPEC.md`
+- `QA_INDEPENDENT_RC4.md`
+- `LIVE_TEST_CHECKLIST.md`

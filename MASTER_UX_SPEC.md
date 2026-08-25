@@ -1,67 +1,91 @@
-# Travel Companion Antalya — Master UX Spec v1 (rögzített)
+# Travel Companion · Antalya — master UX spec (RC4)
 
-Ez a fájl a build fejlesztési referenciája. A köztes mockupok nem írják felül.
+Ez a dokumentum a 2026-08-25-i véglegesített működési alap. Korábbi, ezzel ellentétes specifikáció nem irányadó.
 
-## Rögzített flow
-1. Alapnézet: térkép + Útiterv / Napok / lebegő Companion logó / Sonar / Navigáció; jobb oldalon saját pozíció és útvonal középre.
-2. Markerek: számozott napi pont + felső kategóriajel; Sonar POI kisebb, számozatlan.
-3. Marker tap → Info Mini.
-4. Felhúzás → 1/3: gyorsműveletek + környékszűrők.
-5. Felhúzás → 2/3: hely részletei + útvonal-kontextus; még nem szerkesztő.
-6. Teljes felhúzás / drag → teljes útvonaltervező.
-7. Tervező: jobbra swipe Megnéztem; balra Kihagyás; drag handle sorrend; + Állomás.
-8. + Állomás: térképes kiválasztó mód, útvonal halvány, POI-k előtérben.
-9. Sonar: rövid nyomás PING; hosszú nyomás teljes Sonar mód.
-10. Napok: rövid nyomás képes carousel; hosszú nyomás gyors napválasztó.
-11. Még belefér: mentett helyek, majd Sonar javaslatok; értesítésből is elérhető.
-12. Navigáció: Companionon belül; gyorsválasztó: Következő / Szállás / Mai útvonal / Vissza.
-13. Megérkezés: GPS jelzés, kézi Megnéztük / Még maradunk.
-14. Útiterv főgomb: rövid 2/3 gyorsnézet; hosszú gyorsműveletek.
-15. Értesítések: felső Companion sáv csak aktív értesítésnél; lehúzható panel; logón csak badge.
-16. Felnyitott panel: logo eltűnik, 6 gombos kezelősor (Útiterv, Napok, Sonar, Beállítások, Értesítések, Kedvencek).
-17. Beállítások: Antalya utazás + Companion általános; tempó 5 fokozat, közlekedés, téma, Sonar, navigáció, offline.
-18. Guide: POI részletek / praktikus / Traveler Intel / közlekedés / közelben; offline.
-19. Kedvencek: Mentés nem azonos útitervhez adással.
-20. Utazás előtt → utazás alatt Közelgő.
-21. Térkép: OSM-alapú Companion Dark/Light; nem ugrik vissza automatikusan; panelhez igazítja a fókuszt.
-22. Offline: helyi POI, Guide, itinerary és fotók; megnyitott térképcsempék runtime cache; helyi offline Antalya-háttér.
+## 1. Alsó főmenü
+Fix sorrend, minden térképes főnézetben ugyanott:
+1. Útiterv
+2. Napok
+3. Kedvencek
+4. középen Companion ország-embléma = Sonar
+5. Beállítások
+6. Értesítések
+7. Navigáció
 
-## Antalya Beta scope
-Egy projekt, egy ország (Törökország), egy utazás (Antalya). Nincs projekt- vagy országváltó ebben a bétában.
+A Sonarnak nincs külön tab ikonja. Az aktív funkció vizuálisan kiemelt. A dock az iPhone home indicator fölött, stabil safe-area távolsággal marad. A középső logót egy sheet sem takarhatja.
 
-## 0.7.4 finomítások
-- Vizuális alap: mély navy/kékes Companion skin, nem fekete; török piros csak accent.
-- A középső török embléma a jóváhagyott teljes fémkör + felső iránytűnyíl változat.
-- App ikon: teljes fémkör + felső iránytűnyíl + színes földgömb, felhők nélkül.
-- Rövid tap = gyors/kompakt funkció; hosszú tap = kibővített választó, ahol az adott funkciónál értelmes.
-- Navigáció közben nincs alsó sheet; felső cél/manőver kártya + kompakt dock marad.
-- Napok: rövid tap kompakt képes napválasztó; hosszú tap nagy fotós carousel.
-- Sonar PING: találatok 60 mp-ig élnek; kijelölt találat nem jár le; kijelölés megszüntetése után új 60 mp indul.
-- Értesítésből megnyitott tartalom mindig részletesebb/nagyobb állapotban nyílik.
-- Messenger-szerű swipe: a kártya mozog, a művelet mögötte jelenik meg; nincs állandó fele piros/fele zöld háttér.
+## 2. Közös sheet engine
+Rétegsorrend: térkép → térképes markerek/gombok → sheet → főmenü → középső embléma. Egy időben egy sheet/overlay lehet aktív; tabváltás mindig kitakarítja az előző átmeneti állapotot.
 
-## 0.7.5 field-test refinements (locked for this build)
-- Same main-function button toggles its opened view closed where applicable.
-- Itinerary: short press opens persistent 2×2 quick actions; long press opens the large itinerary sheet. Itinerary uses only large + fullscreen snap states.
-- Navigation: short press starts/continues or hides/shows the UI without deleting navigation state. Long press opens persistent navigation choices. Top navigation card: right swipe = next destination, left swipe = hide UI only.
-- Notifications: right swipe = contextual positive action, left swipe = dismiss. Closing the expanded notification drawer hides the compact top strip until a new notification arrives or the bell is opened again.
-- POI: full expansion is the Guide, not an enlarged duplicate info card. Guide is image-led and fullscreen.
-- POI action rail: Guide, Navigation, Seen, Favorite, Add/Remove, Share; horizontal scroll with visible peek.
-- Marker motion only on the selected marker.
-- Sonar results persist 60 seconds; selected result suspends expiry, deselection restarts 60 seconds.
-- Days compact carousel has its own panel, working position indicator and pull-up transition to large photo cards.
-- Fullscreen panels touch the display top and include a direct close action.
-- Itinerary snapshots: max 10 local versions; automatic before destructive/structural changes plus manual save.
+Állapotok:
+- closed: nincs sheet
+- mini: egy POI-kártyányi kompakt állapot
+- two: kb. félképernyős munkanézet
+- full: csak ott, ahol valóban kell
 
-## 0.7.6 field-test override — a 0.7.5 pontokat ez írja felül
-- Navigáció: aktív navigációnál a Navigáció főgomb rövid tapja **befejezi** a navigációt. A felső kártyán bal swipe = navigáció vége; jobb swipe = következő úti cél. Nem marad rejtett, aktív navigációs állapot.
-- Navigációs swipe: a kártya mögötti teljes felület kapja a piros/zöld műveleti színt.
-- Aktív menüpont kap finom vizuális kiemelést; a Beállítások inaktív színe egységes a többi ikonnal.
-- Route marker: klasszikus teardrop pin, nap színével. Következő cél mindig nagyobb és álló. Kijelölt marker nagyobb + finom animáció. Más marker nem mozog.
-- Napok kompakt: teljesen lekerekített panel; nagyobb fogóterület; egy tap = nap kiválasztása.
-- Napok nagy: fix, azonos méretű kártyák; carousel csak vízszintesen mozog. A kártyán belüli hosszabb tartalom külön görgethető, de maga a kártyasor nem mozdul fel/le.
-- Napok nagy: lefelé swipe a felső fogózónán az egész Napok nézetet zárja be; nem tér vissza automatikusan kompakt állapotba.
-- Értesítések: nincs felső drag-handle.
-- Teljes útvonaltervező: egyetlen bezáró X.
-- Környékszűrők: egy tapos toggle, azonnali markerfrissítés, egyértelmű kategóriaszínű aktív állapot, vízszintes scroll.
-- Tartalom: a környék érdekes és praktikus POI-jai is legyenek a Sonar/szűrők adatbázisában; a fő helyekhez valós fotó online betöltéssel + runtime cache-sel.
+A sheet soha nem futhat a dock alá. Hosszú tartalom a sheet belsejében scrollozik. A felső fogópont nagy érintési területű, tapre és dragre reagál.
+
+## 3. POI
+- mini: kis kép + név + típus + távolság/gyaloglás
+- half: kisebb kép, azonnal látható szöveg és műveletek
+- full Guide: nagy hero, részletes tartalom
+- full Guide X → ugyanaz a POI mini állapotban marad
+- broken image, kérdőjel vagy üres képhely nem jelenhet meg; helyi fallback kötelező
+
+## 4. Útiterv
+- rövid tap az Útiterv ikonon → félképernyős szerkesztő
+- hosszú nyomás → teljes képernyős szerkesztő
+- teljes nézetben balra/jobbra swipe → napváltás
+- ≡ fogantyú → állomássorrend átrendezése
+- kártya vízszintes swipe: jobbra Megnéztem, balra Kihagyás
+- swipe action layer pontosan a kártya mérete, nem maradhat piros/zöld toldás
+- Térképről és Mentettekből hozzáadás
+- sok kártyánál csak a lista scrollozik; a hozzáadás gombok hozzáférhetők maradnak
+- módosított sorrend, hozzáadások, kivételek és aktív nap reload után is megmaradnak
+
+## 5. Napok
+- kompakt napválasztó alacsony, térkép-domináns
+- egy tap választ napot
+- teljes napnézet valóban opaque/full, egy jobb felső X-szel
+- teljes nézetben vízszintes carousel
+
+## 6. Sonar
+- középső Companion logó indítja
+- 250 m / 500 m / 1 km / 2 km egy sorban
+- kategóriaszűrők aktívan a marker kategóriaszínét, kikapcsolva sötét állapotot használják
+- sheet magassága a tartalomhoz igazodik, ne maradjon nagy üres navy rész
+- Kedvencek elérhetők a Sonarból
+- találatok idővel lejárnak; értesítési előzményből visszanyithatók
+
+## 7. Navigáció
+A jelenlegi navigációs panel vizuális kialakítása fagyasztott, csak hibajavítás végezhető rajta.
+
+Companion belső navigáció:
+- GPS watchPosition fut navigálás közben
+- távolság/banner frissül
+- útvonal időszakosan újrarajzolható mozgáskor
+- következő cél és navigáció vége swipe működik
+
+Tömegközlekedés MVP:
+- Apple Maps Transit átadás
+- Google Maps Transit átadás
+- a Companion nem állít elő hamis busz/átszállási részleteket
+- külső térképből visszatérve az eredeti POI mini kártyája áll helyre
+
+## 8. Beállítások
+Full-screen, opaque, egy jobb felső X. Csak valóban működő kapcsolók jelenhetnek meg. A béta/tesztkörnyezet információ itt van, a térkép szélén nincs külön béta badge.
+
+## 9. Értesítések
+A kialakítás stabilnak tekintendő. Nincs felső drag handle. Swipe műveletek működnek, badge frissül.
+
+## 10. Offline / PWA
+A POI-k, Guide, útiterv és helyi fallback képek csomagoltak. Leaflet és megnyitott térképcsempék online indítás után cache-elhetők. Offline állapotban az app ne állítsa, hogy nem cache-elt térképcsempék biztosan rendelkezésre állnak.
+
+iOS: normál app icon. Android: külön adaptive/maskable ikon, ugyanazzal a földgömb + iránytű arculattal, safe-zone-ba húzva.
+
+## 11. Build QA kapu
+Minden build két külön körön megy át:
+1. fejlesztői QA — kért változtatások + regressziók
+2. független audit — teljes rendszer, állapotkezelés, persistence, hibás/ál-funkciók, csomag és mobil edge case-ek
+
+Build csak mindkét kör után adható át tesztre.

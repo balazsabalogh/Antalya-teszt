@@ -1,5 +1,5 @@
 {
-  "version": "0.7.9-rc2",
-  "name": "Stability + Transit Release Candidate 2",
+  "version": "0.7.9-rc4",
+  "build": "independent-audit",
   "date": "2026-08-25"
 }

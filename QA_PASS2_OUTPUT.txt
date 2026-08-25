@@ -1,0 +1,46 @@
+PASS HTML IDs unique 
+PASS single definition: save — 1
+PASS single definition: renderDayMap — 1
+PASS single definition: setSheet — 1
+PASS single definition: renderRouteSheet — 1
+PASS single definition: renderSonarSheet — 1
+PASS single definition: showDays — 1
+PASS single definition: showSettings — 1
+PASS single definition: openFunction — 1
+PASS single definition: openExternalTransit — 1
+PASS single definition: startNavigation — 1
+PASS single definition: endNavigation — 1
+PASS single definition: hardCloseSheet — 1
+PASS single definition: hardCloseOverlay — 1
+PASS single definition: clearTransientPanels — 1
+PASS single definition: bindUI — 1
+PASS all itinerary POI refs valid 
+PASS every POI has offline visual fallback 
+PASS no question-mark image placeholder markup 
+PASS sheet stops at dock top 
+PASS dock above sheet in z-index 
+PASS logo above dock 
+PASS full sheet opaque 
+PASS standard overlay opaque 
+PASS route editor flex/scroll isolation 
+PASS route actions fixed outside scroll 
+PASS sheet handle tap has state logic 
+PASS day full handle has tap logic 
+PASS POI full closes to mini 
+PASS route reload persistence save is called after reorder 
+PASS route reload persistence save is called after add 
+PASS route reload persistence save is called after remove 
+PASS transit handoff is external 
+PASS no fabricated transit timing 
+PASS favorites in main active map 
+PASS sonar active belongs to logo 
+PASS notification drawer has no drag handle element 
+PASS settings contain build only 
+PASS arrival switch persists 
+PASS maskable 192 distinct 
+PASS maskable 512 distinct 
+PASS SW caches maskable icons 
+PASS closed museum not restorable into route 
+PASS localStorage arrays hardened 
+
+Independent pass 2: 44/44 passed

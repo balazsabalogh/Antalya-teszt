@@ -1,0 +1,56 @@
+PASS app.js syntax 
+PASS service-worker syntax 
+PASS CSS brace balance — 1016 / 1016
+PASS nav element mainItinerary 
+PASS nav element mainDays 
+PASS nav element mainFavorites 
+PASS nav element mainSettings 
+PASS nav element mainNotifications 
+PASS nav element mainNavigation 
+PASS nav element companionLogo 
+PASS no duplicate Sonar tab 
+PASS logo launches Sonar 
+PASS route short tap 
+PASS route long press full 
+PASS route day swipe 
+PASS route reorder 
+PASS route swipe actions 
+PASS route persistence 
+PASS museum absent from default live routes 
+PASS museum migration 
+PASS handle pointer drag 
+PASS overlay hard close clears return 
+PASS transient add cleanup 
+PASS full overlay opaque CSS 
+PASS Sonar distances all one row 
+PASS Sonar expiry scheduled 
+PASS Sonar history no refresh 
+PASS continuous GPS 
+PASS Apple transit URL 
+PASS Google transit URL 
+PASS no fake fixed transit legs 
+PASS test badge absent map DOM 
+PASS test environment in settings 
+PASS fake setting removed: Hidden Gem prioritás 
+PASS fake setting removed: Útvonalhoz közeli találatok 
+PASS fake setting removed: Térkép forgatása 
+PASS fake setting removed: Automatikus újratervezés 
+PASS arrival setting functional 
+PASS offline fallback css 
+PASS Leaflet prewarm 
+PASS maskable icons exist 
+PASS manifest separate maskable — ['any', 'any', 'maskable', 'maskable']
+PASS all packaged local refs exist 
+PASS version rc4 — 0.7.9-rc4
+PASS service worker rc4 cache 
+PASS safe localStorage JSON parsing 
+PASS route schema migration 
+PASS readNumber null uses fallback 
+PASS renderDayMap offline guard 
+PASS internal navigation offline guard 
+PASS map add offline guard 
+PASS full days handle tap reacts 
+PASS hold outside listener singleton 
+PASS fallback avoids wrong-place photos 
+
+54/54 checks passed

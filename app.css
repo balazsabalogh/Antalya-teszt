@@ -833,3 +833,57 @@ body.theme-dark{background:#071827;color:var(--text)}
   .hold-menu.wide,.hold-menu.quick{left:7px!important;right:7px!important}
   .poi-half-summary{grid-template-columns:82px minmax(0,1fr) 32px!important}.poi-half-photo,.poi-half-photo>img,.poi-half-photo img{width:82px!important;height:74px!important}
 }
+
+
+/* 0.7.9 RC3 — route/sonar final layout stabilization */
+/* Keep Navigation exactly as RC2; only stabilize Route and Sonar sheets. */
+.sheet.view-route .sheet-body,
+.sheet.view-sonar .sheet-body{overflow:hidden!important}
+
+/* Route: fixed header + scrollable cards + always-visible action buttons. */
+.route-editor{height:100%!important;min-height:0!important;display:flex!important;flex-direction:column!important;overflow:hidden!important}
+.route-editor .planner-head{flex:0 0 auto!important;position:relative!important;z-index:20!important;background:#091f32!important;padding-bottom:8px!important}
+.route-editor .full-planner{flex:1 1 auto!important;min-height:0!important;overflow-y:auto!important;overflow-x:hidden!important;-webkit-overflow-scrolling:touch!important;padding:0 0 8px!important;scrollbar-gutter:stable}
+.route-editor .route-add-row{position:static!important;flex:0 0 auto!important;z-index:30!important;margin:0!important;padding:8px 0 4px!important;background:#091f32!important;box-shadow:0 -10px 18px rgba(9,31,50,.94)!important}
+.route-editor .route-add-row .add-stop{min-height:46px!important}
+.sheet.view-route.state-two{height:50dvh!important}
+.sheet.fullscreen.view-route .sheet-body{top:calc(var(--safe-top) + 52px)!important;bottom:var(--dock-top)!important;padding:0 14px 8px!important;overflow:hidden!important;background:#071827!important}
+.sheet.fullscreen.view-route .route-editor .planner-head{background:#071827!important;padding-top:4px!important}
+.sheet.fullscreen.view-route .route-editor .route-add-row{background:#071827!important;box-shadow:0 -10px 18px rgba(7,24,39,.96)!important;padding-bottom:6px!important}
+.sheet.fullscreen.view-route .full-planner{padding-bottom:10px!important}
+
+/* Sonar: one clean vertical layout; all four distance choices stay on one row. */
+.sheet.view-sonar.state-two{height:var(--sonar-sheet-h,380px)!important}
+.sonar-layout{height:100%!important;min-height:0!important;display:flex!important;flex-direction:column!important;overflow:hidden!important}
+.sonar-layout .sonar-heading-row{flex:0 0 auto!important;display:flex!important;align-items:center!important;justify-content:space-between!important;gap:10px!important;margin:0 0 6px!important}
+.sonar-layout .sonar-heading-row>div{min-width:0!important}.sonar-layout .sonar-heading-row h2{margin:0!important;white-space:nowrap!important}.sonar-layout .sonar-heading-row small{display:block!important;margin-top:2px!important}
+.sonar-layout .sonar-saved{flex:0 0 38px!important;width:38px!important;height:38px!important}
+.sonar-radius-row{flex:0 0 auto!important;display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:6px!important;max-width:none!important;width:100%!important;margin:0 0 7px!important;flex-wrap:nowrap!important}
+.sonar-radius-row .choice{min-width:0!important;width:100%!important;padding:7px 2px!important;font-size:10px!important;white-space:nowrap!important}
+.sonar-layout .sonar-filters{flex:0 0 auto!important;margin-bottom:7px!important;padding-bottom:2px!important}
+.sonar-layout .sonar-results{flex:1 1 auto!important;min-height:0!important;overflow-y:auto!important;overflow-x:hidden!important;-webkit-overflow-scrolling:touch!important;padding:0 0 4px!important}
+
+/* The planner card layer always owns its exact footprint; no action-color tail. */
+.planner-swipe{isolation:isolate!important}
+.planner-action-layer{pointer-events:none!important}
+
+@media(max-width:390px){
+ .sonar-radius-row{gap:5px!important}.sonar-radius-row .choice{font-size:9px!important;padding:6px 1px!important}
+ .sheet.view-sonar.state-two{height:var(--sonar-sheet-h,360px)!important}
+}
+
+/* RC3 QA fix — grid rows must never stretch the hidden swipe-action layer. */
+.route-editor .full-planner,
+.sonar-layout .sonar-results{
+  align-content:start!important;
+  grid-auto-rows:max-content!important;
+}
+.planner-swipe{height:auto!important;min-height:0!important}
+.planner-swipe>.planner-card{min-height:84px!important}
+.sonar-result{height:max-content!important;min-height:0!important}
+
+/* 0.7.9 RC4 independent QA — offline fallback and final hardening */
+.is-offline .offline-map{display:block!important;position:absolute!important;inset:0!important;z-index:0!important;background:#dfe5e3 url('./assets/offline-map.svg') center/cover no-repeat!important}
+.is-offline #map{background:transparent!important}
+.is-offline #map .leaflet-tile-pane{opacity:.18!important}
+.is-offline #map .leaflet-control-attribution{opacity:.7!important}
