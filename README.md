@@ -1,15 +1,22 @@
-# Travel Companion · Antalya · 0.7.9 RC7
+# Travel Companion · Antalya · 0.7.9 RC8 Final Candidate
 
-iPhone hotfix based directly on RC6 field screenshots.
+RC8 is a narrow stabilization build based on RC7. Working navigation/transit behavior is intentionally frozen; this round only addresses the remaining layout and gesture issues from the latest iPhone screenshots.
 
-## Fixed in RC7
-- POI generated fallbacks are embedded into the application bundle, so missing `assets/generated` deploys or stale cache cannot produce question-mark/broken-image cards for hotel, bakery, Migros or generic categories.
-- Incomplete route-card swipes are cleared on pointer/touch cancel, lost capture, release, blur and visibility change; the green/red action layer is visible only while the card is actively moving.
-- The full day carousel has only the dot pager; an opaque pager strip covers iOS's native horizontal scroll indicator.
-- Half route view has extra bottom scroll clearance above the fixed add buttons.
+## RC8 changes
+- Compact **Napok** panel uses the exact same outer side geometry as the fixed bottom dock.
+- Compact day-photo captions get a strong lower gradient and text shadow for consistent readability.
+- Full **Napok** cards have a fixed hero-photo height and a separately scrollable content area, so portrait images (especially Day 4 / Düden) cannot stretch the carousel.
+- **Útiterv** day switching no longer competes with card swipes/reordering: explicit `Előző nap` / `Következő nap` controls replace whole-panel horizontal day swipe.
+- **Útiterv** drag handle has an exclusive 64 px touch zone; route content starts below it.
+- Central Companion logo: short tap closes the current transient panel and performs a Sonar ping on the map; long press opens Sonar view without an automatic extra ping.
+- Sonar view has its own explicit Ping, Favorites and Close controls; all four distance buttons remain one row.
+- Notification swipe cleanup now mirrors the itinerary-card swipe cleanup, including pointer/touch cancellation.
+- Existing navigation, navigation steps and Apple/Google transit handoff are intentionally unchanged from RC7.
 
-## Frozen behavior
-Navigation and transit handoff were not modified in this hotfix. Sonar interaction remains: short logo tap = ping without opening the view; long press = open Sonar view without an automatic extra ping.
+## QA gate
+Two separate QA passes are required before handoff.
 
-## QA
-RC7 uses the normal two-pass gate: developer/source regression checks followed by an independent regression audit. Browser-device emulation is environment-blocked in this session, so physical iPhone behavior remains the final check.
+1. Developer regression/static + mobile UI pass.
+2. Independent 390 px stress/audit pass from a fresh test flow.
+
+Physical iPhone Safari/PWA touch, GPS and external Apple/Google Maps handoff remain the final device-only checks.
