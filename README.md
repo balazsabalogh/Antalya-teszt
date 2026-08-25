@@ -1,27 +1,23 @@
-# Travel Companion · Antalya 0.7.9 RC5
+# Travel Companion · Antalya · 0.7.9 RC6
 
-Ez a live release candidate a kért kétlépcsős QA-val készült: fejlesztői regressziós ellenőrzés + külön független audit.
+Live-candidate hotfix after RC5 iPhone feedback.
 
-## Fixált fő funkciók
-- stabil közös bottom-sheet rendszer és fix alsó dock
-- Útiterv: rövid tap = fél nézet, hosszú nyomás = full; nap swipe; valódi ≡ drag & drop; Megnéztem/Kihagyás swipe; hozzáadás térképről/mentettekből
-- Napok: kompakt és full carousel
-- Kedvencek fix főmenüpont
-- középső Companion logó: rövid tap = fő/térkép, hosszú nyomás = Sonar
-- Sonar: szűrők, 4 távolság egy sorban, adaptív panel, találati előzmény
-- POI mini/half/full: mini réteg stabil; fő műveleti sorrend Guide → Útitervhez/Kivétel → Navigáció
-- Beállítások, Értesítések, Navigáció
-- Companion belső GPS navigáció folyamatos pozíciófrissítéssel
-- Companion Navigáció: térképes nézet + teljes képernyős Lépések nézet, egygombos visszatéréssel
-- Apple Maps és Google Maps tömegközlekedési handoff
-- útiterv/aktív nap/sorrend tartós mentése
-- offline helyi tartalom + fotó/category fallback + runtime cache
-- iOS normal + Android maskable ikon
+## Sonar interaction
+- Short tap on the center Companion logo performs a Sonar ping only. It does not open the Sonar sheet.
+- Long press on the center logo opens the Sonar view without automatically starting a new ping.
+- While the Sonar view is open, a short logo tap performs the ping.
+- Sonar has its own close button and any other main-menu selection closes it.
+
+## UI stabilization
+- Joined sheets use the same side inset as the main dock and attach exactly to its top edge.
+- Full-screen views remain opaque through the iPhone home-indicator area.
+- Full day selector uses only the dot page indicator; native horizontal scrollbar is hidden.
+- Planner action colors appear only during active horizontal swipe and always reset on cancel/incomplete swipe.
+
+## Images
+- RC6 bundles generated local image fallbacks for every POI category and dedicated fallbacks for the hotel, bakery, Migros/shop, food and service POIs.
+- Location-specific Wikimedia images can replace these when available online.
+- There is a second-level bundled generic fallback, so a broken-image / question-mark slot should not be visible.
 
 ## QA
-- fejlesztői statikus/regressziós QA: PASS
-- 414 px mobil UI QA: PASS
-- független source audit: PASS
-- 390 px stress/UI audit: PASS
-
-A valós iPhone GPS-engedélyt, PWA safe-area viselkedést és Apple/Google Maps appátadást a célkészüléken kell utoljára kipróbálni.
+See `QA_PASS1_RC6.json` and `QA_PASS2_INDEPENDENT_RC6.json`.

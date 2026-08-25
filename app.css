@@ -944,3 +944,28 @@ body.sheet-fullscreen #navBanner,body.overlay-fullscreen #navBanner{visibility:h
    The theme choice changes the basemap; legacy mixed light/dark panels are not allowed to lose contrast. */
 .theme-light{--panel:#151b22;--panel2:#1b232c;--panel3:#232d37;--line:rgba(255,255,255,.11);--text:#f5f7f8;--muted:#a8b0b7;--shadow:0 16px 38px rgba(0,0,0,.36)}
 .theme-light .notif-strip{background:rgba(18,24,30,.94)!important}.theme-light .notif-drawer{background:rgba(16,22,28,.98)!important}.theme-light .iconbtn{background:rgba(255,255,255,.08)!important}.theme-light .expanded-nav{background:rgba(15,20,25,.98)!important}.theme-light .sheet-drag span{background:rgba(255,255,255,.30)!important}
+
+
+/* 0.7.9 RC6 — final iPhone polish */
+/* Joined sheets align exactly with the inset dock instead of spanning edge-to-edge. */
+.sheet.open:not(.fullscreen){left:10px!important;right:10px!important;width:auto!important}
+@media(max-width:390px){.sheet.open:not(.fullscreen){left:7px!important;right:7px!important}}
+
+/* Sonar is a view, not a second automatic ping: explicit close + saved controls. */
+.sonar-head-actions{display:flex!important;align-items:center!important;gap:7px!important;flex:0 0 auto!important}
+.sonar-close,.sonar-saved{width:38px!important;height:38px!important;min-width:38px!important;border-radius:12px!important;border:1px solid rgba(184,211,232,.18)!important;background:#12324d!important;color:#fff!important;font-size:20px!important;display:grid!important;place-items:center!important;padding:0!important}
+.sonar-close{font-size:22px!important}
+
+/* Native horizontal scrollbar in the full day carousel is redundant: dots are the indicator. */
+.day-carousel{scrollbar-width:none!important;-ms-overflow-style:none!important}
+.day-carousel::-webkit-scrollbar,.days-compact-track::-webkit-scrollbar{display:none!important;width:0!important;height:0!important}
+.days-compact-track{scrollbar-width:none!important;-ms-overflow-style:none!important}
+
+/* Swipe actions exist only during an active horizontal gesture, never as a stuck state. */
+.planner-action-layer{opacity:0!important;transition:opacity .08s ease!important;pointer-events:none!important}
+.planner-swipe.is-swiping .planner-action-layer{opacity:1!important}
+.planner-swipe:not(.is-swiping)>.planner-card{transform:none!important}
+
+/* Full-screen modes always paint through the home-indicator area. */
+body.sheet-fullscreen,body.overlay-fullscreen,body.sheet-fullscreen #app,body.overlay-fullscreen #app{background:#071827!important}
+.sheet.fullscreen,.full-overlay.standard-full,.full-overlay.days-mode{min-height:100dvh!important;background:#071827!important}

@@ -1,12 +1,12 @@
-# Fotók és fallbackek · RC4
+# Photo behavior · RC6
 
-## Csomagolt helyszínfotók
-A buildben helyi, konkrét helyszínkép van: Hadrianus Kapısı, Konyaaltı, Lower Düden, Perge, Kurşunlu és Phaselis.
+## Bundled real location photos
+Hadrianus Kapısı, Konyaaltı, Lower Düden, Perge, Kurşunlu and Phaselis have bundled location photographs from the existing Travel Companion package.
 
-## Online helyspecifikus fotók
-Internetkapcsolatnál az app az azonosítható Antalya POI-khoz Wikipedia/Wikimedia Commons képet próbál lekérni, majd helyben cache-elni. Ilyen többek között Kaleiçi, Old City Marina, Karaalioğlu Park, Hıdırlık Tower, Yivli Minare, Saat Kulesi, Kesik Minare, Mermerli, Aquarium és több további városi pont.
+## Online location-specific photos
+When internet is available, supported POIs may be upgraded to location-specific Wikipedia/Wikimedia Commons thumbnails. Failed remote images are discarded and the local fallback is restored.
 
-## Offline / hibás online kép
-Ha nincs konkrét csomagolt kép vagy az online kép nem tölthető be, **nem használunk másik helyről származó félrevezető fotót**. A POI saját kategóriájának egységes, helyi illusztratív fallbackje jelenik meg (szállás, bolt, kávé, park, WC stb.). Broken-image ikon, kérdőjel vagy üres képhely nem maradhat.
+## Local generated fallback imagery
+RC6 includes locally generated, non-documentary fallback artwork for hotel, bakery/coffee, shop, food, service/WC, attraction, marina, park, historic, museum, beach, waterfall, ancient and bar categories. These exist specifically so the interface never shows a broken image, question-mark image slot, or unrelated location photo while offline.
 
-Ez szándékos live-stabilitási döntés: pontos kategóriaillusztráció jobb, mint egy másik hely téves fotója. Későbbi content buildben ezek egyedi, helyspecifikus fotóval vagy generált hangulatképpel bővíthetők.
+Where a generated fallback is used, it is a visual category/location mood image, not a claim that the illustration is a literal photograph of the business.
