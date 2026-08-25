@@ -1,3 +1,7 @@
+# Travel Companion Antalya Beta 0.7.9 RC2
+
+Stabilitási + tömegközlekedési release candidate. A részletes változások: `RELEASE_NOTES_0.7.9.md`.
+
 # Travel Companion · Antalya Beta 0.7.7
 
 Polish + Antalya content build based on the 2026-08-24 iPhone field-test feedback.

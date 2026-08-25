@@ -9,11 +9,11 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Travel Companion">
 <meta name="format-detection" content="telephone=no">
-<title>Travel Companion · Antalya Beta 0.7.8 RC</title>
+<title>Travel Companion · Antalya Beta 0.7.9 RC2</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="apple-touch-icon" href="./apple-touch-icon.png">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<link rel="stylesheet" href="./app.css?v=078-rc">
+<link rel="stylesheet" href="./app.css?v=079-rc2">
 </head>
 <body class="theme-dark">
 <div id="app">
@@ -37,7 +37,6 @@
 
   <div id="sonarPulse" class="sonar-pulse"><i></i><i></i><i></i></div>
   <div id="sonarStatus" class="sonar-status">PING</div>
-  <div id="tripTestBadge" class="trip-test-badge">Béta teszt · Antalya-szimuláció</div>
 
   <section id="sheet" class="sheet state-closed" aria-live="polite">
     <div id="sheetDrag" class="sheet-drag"><span></span></div>
@@ -48,7 +47,7 @@
   <nav id="mainNav" class="main-nav">
     <button class="main-tab" data-main="itinerary" id="mainItinerary" aria-label="Útiterv"><span class="ico">⌁</span><b>Útiterv</b></button>
     <button class="main-tab" data-main="days" id="mainDays" aria-label="Napok"><span class="ico">▦</span><b>Napok</b></button>
-    <button class="main-tab" data-main="sonar" id="mainSonar" aria-label="Sonar"><span class="ico">◉</span><b>Sonar</b></button>
+    <button class="main-tab" data-main="favorites" id="mainFavorites" aria-label="Kedvencek"><span class="ico">♡</span><b>Kedvencek</b></button>
     <div class="logo-gap" aria-hidden="true"></div>
     <button class="main-tab" data-main="settings" id="mainSettings" aria-label="Beállítások"><span class="ico">⚙</span><b>Beállítások</b></button>
     <button class="main-tab main-notif" data-main="notifications" id="mainNotifications" aria-label="Értesítések"><span class="ico">♢</span><span id="mainNotifBadge" class="main-notif-badge hidden">0</span><b>Értesítések</b></button>
@@ -67,6 +66,6 @@
   </section>
 </div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="./app.js?v=078-rc"></script>
+<script src="./app.js?v=079-rc2"></script>
 </body>
 </html>

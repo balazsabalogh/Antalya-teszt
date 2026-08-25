@@ -1,4 +1,4 @@
-const APP_VERSION='0.7.8-rc2';
+const APP_VERSION='0.7.9-rc2';
 const dayColors=['#d43b43','#2e8b68','#e1a12f','#3e81d5','#9c6b45','#6d58a8','#2e9aa0','#c95b88'];
 const CAT={historic:{icon:'⌂',color:'#edcf85',label:'Látnivaló'},museum:{icon:'▣',color:'#edcf85',label:'Látnivaló'},beach:{icon:'≈',color:'#68aee5',label:'Strand'},park:{icon:'♧',color:'#81bc88',label:'Park'},waterfall:{icon:'≋',color:'#68b7d7',label:'Természet'},ancient:{icon:'⌘',color:'#edcf85',label:'Látnivaló'},food:{icon:'⋔',color:'#e69250',label:'Étterem'},coffee:{icon:'◒',color:'#82b89b',label:'Kávézó'},bar:{icon:'▽',color:'#aa83cb',label:'Bár'},shop:{icon:'▤',color:'#83a2c3',label:'Bolt'},wc:{icon:'WC',color:'#8ab0c6',label:'WC'},hotel:{icon:'⌂',color:'#9c8dc0',label:'Szállás'},attraction:{icon:'◇',color:'#efbf58',label:'Program'},marina:{icon:'≈',color:'#6bb6c6',label:'Kikötő'}};
 const IMG={hadrian:'./assets/photos/hadrian.jpg',konyaalti:'./assets/photos/konyaalti.jpg',duden:'./assets/photos/duden.png',perge:'./assets/photos/perge.jpg',kursunlu:'./assets/photos/kursunlu.jpg',phaselis:'./assets/photos/phaselis.jpg'};
@@ -129,7 +129,7 @@ function activeMenuKey(){
 }
 function syncActiveMenus(){
  const a=activeMenuKey();
- const mainMap={itinerary:'route',days:'days',sonar:'sonar',settings:'settings',notifications:'notifications',navigation:'navigation'};
+ const mainMap={itinerary:'route',days:'days',favorites:'favorites',settings:'settings',notifications:'notifications',navigation:'navigation'};
  $$('.main-tab[data-main]').forEach(b=>b.classList.toggle('active',mainMap[b.dataset.main]===a));
  $$('.exp-tab[data-exp]').forEach(b=>b.classList.toggle('active',b.dataset.exp===a));
  logo.classList.toggle('active',a==='sonar');
@@ -179,26 +179,27 @@ function fitRoute(){const pts=currentDay().route.map(id=>[POIS[id].lat,POIS[id].
 function locate(){if(!navigator.geolocation){toast('A GPS nem elérhető');return}navigator.geolocation.getCurrentPosition(pos=>{state.userPos={lat:pos.coords.latitude,lon:pos.coords.longitude};updateTestBadge();if(userMarker)map.removeLayer(userMarker);const o=effectiveOrigin();userMarker=L.circleMarker([o.lat,o.lon],{radius:8,color:'#fff',weight:3,fillColor:'#357ee9',fillOpacity:1}).addTo(map);map.setView([o.lat,o.lon],15);if(!gpsInTrip())toast('Antalya-szimuláció aktív a trip funkciókhoz');else checkArrival()},()=>toast('A helyzethez engedélyezd a GPS-t'),{enableHighAccuracy:true,timeout:8000})}
 function checkArrival(){if(!state.userPos||!gpsInTrip())return;const id=currentDay().route.find(x=>!state.done.has(x)&&!state.skipped.has(x));if(!id)return;const d=km(state.userPos,POIS[id]);if(d<.1&&!state.notifications.some(n=>n.id==='arrive-'+id)){state.notifStripDismissed=false;state.notifications.unshift({id:'arrive-'+id,priority:'important',title:'Megérkeztetek',text:POIS[id].name+' · Megnéztük?',action:'arrival',poi:id});renderNotifications()}}
 
-const sheetHeights={closed:0,mini:198,one:()=>Math.round(innerHeight*.50),two:()=>Math.round(innerHeight*.52),full:()=>innerHeight};
+const sheetHeights={closed:0,mini:132,one:()=>Math.round(innerHeight*.34),two:()=>Math.round(innerHeight*.50),full:()=>innerHeight};
 function heightFor(s){
- if(s==='two'&&state.view==='sonar')return Math.round(innerHeight*.49);
- if(s==='two'&&state.view==='route')return Math.round(innerHeight*.52);
- if(s==='two'&&state.view==='poi')return Math.round(innerHeight*.52);
+ if(s==='two'&&['sonar','route','poi','add','savedadd'].includes(state.view))return Math.round(innerHeight*.50);
  const v=sheetHeights[s];return typeof v==='function'?v():v
 }
 function setSheet(s,view){
  if(view)state.view=view;
  if(state.view==='route'&&(s==='one'||s==='full'))s='two';
+ if(state.view==='sonar'&&(s==='one'||s==='full'))s='two';
  if(state.view==='poi'&&s==='one')s='two';
  if(s!=='closed'&&typeof closeCompactIfOpen==='function')closeCompactIfOpen();
  state.sheet=s;
  if(s!=='closed'&&state.view==='route')state.activeMenu='route';
  else if(s!=='closed'&&state.view==='sonar')state.activeMenu='sonar';
- const h=s==='mini'?198:heightFor(s);document.documentElement.style.setProperty('--sheet-h',h+'px');
+ else if(s==='closed'&&['route','sonar'].includes(state.activeMenu)&&!state.nav)state.activeMenu=null;
+ const h=heightFor(s);document.documentElement.style.setProperty('--sheet-h',h+'px');
  sheet.className='sheet state-'+s+(s==='closed'?'':' open')+(s==='full'?' fullscreen':'')+' view-'+state.view;
  expandedNav.classList.add('hidden');
  mainNav.classList.remove('hide');logo.classList.remove('hide');
- const ctr=$('#mapControls');const large=['two','full'].includes(s);ctr.classList.toggle('hidden-by-sheet',large);ctr.style.bottom=`calc(${s==='closed'?60:h+2}px + var(--safe-bottom) + 8px)`;
+ mainNav.classList.toggle('joined-panel',s!=='closed'&&s!=='full');
+ const ctr=$('#mapControls');const large=['two','full'].includes(s);ctr.classList.toggle('hidden-by-sheet',large);ctr.style.bottom='';
  renderSheet();
  sheet.querySelectorAll('.sheet-close-all,.guide-close').forEach(x=>x.remove());
  if(s==='full'){
@@ -208,7 +209,7 @@ function setSheet(s,view){
  if(map&&s!=='closed'&&state.selected&&state.view!=='guide'){const p=POIS[state.selected];setTimeout(()=>map.panTo([p.lat,p.lon],{animate:true}),60)}
  syncActiveMenus();
 }
-const PANEL_NAV_ITEMS=[['route','Útiterv','route'],['days','Napok','days'],['sonar','Sonar','sonar'],['settings','Beáll.','settings'],['bell','Értes.','notifications'],['nav','Navigáció','navigation']];
+const PANEL_NAV_ITEMS=[['route','Útiterv','route'],['days','Napok','days'],['heart','Kedvencek','favorites'],['settings','Beáll.','settings'],['bell','Értes.','notifications'],['nav','Navigáció','navigation']];
 function navMarkup(){return PANEL_NAV_ITEMS.map(([i,l,a])=>`<button class="exp-tab" data-exp="${a}"><span>${uiIcon(i)}${a==='notifications'&&unread()?`<sup>${unread()}</sup>`:''}</span><small>${l}</small></button>`).join('')}
 function bindPanelNav(root=document){root.querySelectorAll('[data-exp]').forEach(b=>b.onclick=()=>openFunction(b.dataset.exp))}
 function renderExpandedNav(){expandedNav.classList.add('hidden');const on=$('#overlayNav');if(on)on.classList.add('hidden');syncActiveMenus()}
@@ -230,7 +231,7 @@ const FILTER_TYPES={historic:'Látnivaló',museum:'Látnivaló',ancient:'Látniv
 function filterHTML(){const defs=[['historic','Látnivaló'],['food','Étterem'],['coffee','Kávé'],['bar','Bár'],['park','Park'],['beach','Strand'],['shop','Bolt'],['wc','WC']];return defs.map(([t,l])=>{const c=CAT[t]||CAT.historic;return `<button class="filter ${state.filters.has(t)?'active':''}" style="--filter-color:${c.color}" data-filter="${t}"><i>${c.icon}</i><span>${l}</span></button>`}).join('')}
 function bindFilters(){$$('[data-filter]').forEach(b=>b.onclick=()=>{const t=b.dataset.filter;if(state.filters.has(t))state.filters.delete(t);else state.filters.add(t);localStorage.setItem('tc_filters',JSON.stringify([...state.filters]));if(state.view==='sonar'){refreshSonarPins();renderSonarSheet()}else renderFilterPins();$$(`[data-filter="${t}"]`).forEach(x=>x.classList.toggle('active',state.filters.has(t)))})}
 function renderFilterPins(){if(!filterLayer)return;filterLayer.clearLayers();if(!state.filters.size)return;const origin=effectiveOrigin();Object.values(POIS).filter(p=>!currentDay().route.includes(p.id)&&km(origin,p)<4).forEach(p=>{const match=[...state.filters].some(t=>t==='historic'?['historic','museum','ancient','attraction'].includes(p.type):p.type===t);if(!match)return;const m=L.marker([p.lat,p.lon],{icon:L.divIcon({className:'',html:sonarHTML(p),iconSize:[34,42],iconAnchor:[16,39]})}).addTo(filterLayer);m.on('click',e=>{L.DomEvent.stopPropagation(e);selectPoi(p.id)})})}
-function bindPoiActions(id){$$('[data-act]').forEach(b=>b.onclick=()=>{const a=b.dataset.act;if(a==='Guide'){state.view='guide';setSheet('full')}else if(a==='Navigáció')startNavigation(id);else if(a==='Megnéztem'){state.done.add(id);save();toast('✓ Megnézve');renderDayMap();renderSheet()}else if(a==='Kedvenc'){toggleFav(id);renderSheet()}else if(a==='Útitervhez'){addAsNext(id)}else if(a==='Kivétel'){removeFromRoute(id)}else if(a==='Megosztás'){navigator.share?.({title:POIS[id].name,text:POIS[id].why}).catch(()=>{});toast('Megosztás')}else toast(a)})}
+function bindPoiActions(id){$$('[data-act]').forEach(b=>b.onclick=()=>{const a=b.dataset.act;if(a==='Guide'){state.view='guide';setSheet('full')}else if(a==='Navigáció')showNavigationChoice(id);else if(a==='Megnéztem'){state.done.add(id);save();toast('✓ Megnézve');renderDayMap();renderSheet()}else if(a==='Kedvenc'){toggleFav(id);renderSheet()}else if(a==='Útitervhez'){addAsNext(id)}else if(a==='Kivétel'){removeFromRoute(id)}else if(a==='Megosztás'){navigator.share?.({title:POIS[id].name,text:POIS[id].why}).catch(()=>{});toast('Megosztás')}else toast(a)})}
 function toggleFav(id){if(state.favorites.has(id)){state.favorites.delete(id);toast('Eltávolítva a mentettekből')}else{state.favorites.add(id);toast('♥ Mentve')}save()}
 function routeRows(selected){return currentDay().route.map((id,i)=>{const p=POIS[id];return `<div class="route-row ${id===selected?'selected':''} ${state.done.has(id)?'done':''}" data-route-id="${id}"><div class="route-num">${state.done.has(id)?'✓':i+1}</div>${imgTag(p)}<div><b>${esc(p.name)}</b><small>${i===currentDay().route.length-1?'utolsó pont':walkText(km(p,POIS[currentDay().route[i+1]]))+' a következőig'}</small></div><span class="drag">≡</span></div>`}).join('')}
 function bindRouteRows(){$$('.route-row').forEach(r=>{r.onclick=()=>{state.selected=r.dataset.routeId;renderSheet()};let t;r.addEventListener('pointerdown',()=>{t=setTimeout(()=>{state.view='route';setSheet('full');toast('Átrendezés mód')},480)});['pointerup','pointercancel','pointerleave'].forEach(e=>r.addEventListener(e,()=>clearTimeout(t)))})}
@@ -276,6 +277,31 @@ function showSavedAddSheet(){state.adding=false;state.view='savedadd';setSheet('
 function renderSavedAddSheet(){const ids=[...state.favorites].filter(id=>POIS[id]&&!currentDay().route.includes(id));sheetBody.innerHTML=`<div class="planner-head"><div><h2>Mentett hely hozzáadása</h2><small>${currentDay().id}. nap</small></div><button class="choice" data-saved-cancel>×</button></div><div class="saved-add-list">${ids.length?ids.map(id=>{const p=POIS[id];return `<button class="saved-add-card" data-saved-add="${id}">${imgTag(p)}<span><b>${esc(p.name)}</b><small>${esc(p.sub)}</small></span><i>＋</i></button>`}).join(''):'<div class="setting-card">Nincs olyan mentett hely, ami még nincs benne ebben a napban.</div>'}</div>`;$('[data-saved-cancel]').onclick=()=>{state.view='route';setSheet('two')};$$('[data-saved-add]').forEach(b=>b.onclick=()=>{addAsNext(b.dataset.savedAdd);state.view='route';setSheet('two')});hydrateOnlineImages(sheetBody)}
 function exitAddMode(){pauseSonarExpiry();state.adding=false;state.sonar=false;state.sonarPins=[];state.view='route';renderDayMap();setSheet('two','route')}
 
+function transitUrl(id,provider='apple'){
+ const p=POIS[id];if(!p)return '';
+ const dest=`${p.lat},${p.lon}`;
+ if(provider==='google')return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(dest)}&travelmode=transit`;
+ return `https://maps.apple.com/?daddr=${encodeURIComponent(dest)}&dirflg=r`;
+}
+function openExternalTransit(id,provider='apple'){
+ const p=POIS[id];if(!p)return;
+ state.selected=id;sessionStorage.setItem('tc_resume_poi',id);
+ state.view='poi';setSheet('mini','poi');renderDayMap(false);
+ const url=transitUrl(id,provider);toast(provider==='google'?'Google Maps · tömegközlekedés':'Apple Maps · tömegközlekedés');
+ setTimeout(()=>{window.location.href=url},120);
+}
+function showNavigationChoice(id){
+ const p=POIS[id];if(!p)return;
+ clearTransientPanels();state.selected=id;state.activeMenu='navigation';syncActiveMenus();
+ showHold([
+  {label:'Companion',icon:'➜',act:()=>startNavigation(id)},
+  {label:'Apple · Tömegköz.',icon:'',act:()=>openExternalTransit(id,'apple')},
+  {label:'Google · Tömegköz.',icon:'G',act:()=>openExternalTransit(id,'google')},
+  {label:'Saját pozíció',icon:'◎',act:locate},
+  {label:'Útvonal középre',icon:'⌖',act:()=>{state.selected=id;renderDayMap(false);const o=effectiveOrigin();map.fitBounds(L.latLngBounds([[o.lat,o.lon],[p.lat,p.lon]]).pad(.3),{maxZoom:15})}},
+  {label:'Mégse',icon:'×',act:returnHome}
+ ],'wide');
+}
 function suspendNavBanner(){if(state.nav)hideNavigationUI()}
 function startNavigation(id){state.nav=true;state.navVisible=true;state.activeMenu='navigation';state.selected=id;state.view='navigation';setSheet('closed');updateTestBadge();const p=POIS[id],o=effectiveOrigin();map.fitBounds(L.latLngBounds([[o.lat,o.lon],[p.lat,p.lon]]).pad(.30),{maxZoom:16});renderNavBanner(id);drawNavigationRoute(id);syncActiveMenus();if(!state.userPos)locate()}
 async function drawNavigationRoute(id){const o=effectiveOrigin(),p=POIS[id];const rc=await roadRoute([[o.lat,o.lon],[p.lat,p.lon]]);if(routeLayer)map.removeLayer(routeLayer);routeLayer=L.polyline(rc,{color:'#2f7fe2',weight:5,opacity:.92,lineCap:'round'}).addTo(map)}
@@ -309,11 +335,11 @@ function showDaysCompact(){
  const track=$('.days-compact-track');const update=()=>{const cards=[...$$('[data-daycompact]')];let best=0,bestD=1e9;const cx=innerWidth/2;cards.forEach((c,i)=>{const r=c.getBoundingClientRect();const d=Math.abs((r.left+r.right)/2-cx);if(d<bestD){bestD=d;best=i}});$$('[data-compact-dot]').forEach((d,i)=>d.classList.toggle('active',i===best))};track.addEventListener('scroll',()=>requestAnimationFrame(update),{passive:true});
  $$('[data-daycompact]').forEach(b=>{let sx=0,sy=0;b.onpointerdown=e=>{sx=e.clientX;sy=e.clientY};b.onpointerup=e=>{if(Math.abs(e.clientX-sx)>9||Math.abs(e.clientY-sy)>9)return;state.day=+b.dataset.daycompact;renderDayMap(true);closeOverlay();toast((state.day+1)+'. nap aktív')};b.onclick=e=>e.preventDefault()});
  requestAnimationFrame(()=>{const c=$(`[data-daycompact="${state.day}"]`);c?.scrollIntoView({inline:'center',block:'nearest'});update()});
- const h=$('#daysCompactHandle');let sy=0;h.onpointerdown=e=>{sy=e.clientY;h.setPointerCapture?.(e.pointerId)};h.onpointerup=e=>{const dy=sy-e.clientY;sy=0;if(dy>24){closeOverlay();showDays()}}
+ const h=$('#daysCompactHandle');let sy=0;h.onpointerdown=e=>{sy=e.clientY;h.setPointerCapture?.(e.pointerId)};h.onpointerup=e=>{const dy=sy-e.clientY;sy=0;if(dy>18||Math.abs(dy)<7){closeOverlay();showDays()}else if(dy<-18){closeOverlay()}}
 }
 function showDayQuickMenu(){showDays()}
 
-function hardCloseSheet(){state.sheet='closed';document.documentElement.style.setProperty('--sheet-h','0px');sheet.className='sheet state-closed view-'+state.view;sheetBody.innerHTML='';expandedNav.classList.add('hidden');$('#mapControls').classList.remove('hidden-by-sheet')}
+function hardCloseSheet(){state.sheet='closed';document.documentElement.style.setProperty('--sheet-h','0px');sheet.className='sheet state-closed view-'+state.view;sheetBody.innerHTML='';expandedNav.classList.add('hidden');mainNav.classList.remove('joined-panel');$('#mapControls').classList.remove('hidden-by-sheet')}
 function hardCloseOverlay(){overlay.classList.add('hidden');overlay.classList.remove('days-mode','days-compact','standard-full');overlayBody.innerHTML='';$('#overlayNav')?.classList.add('hidden')}
 function clearTransientPanels(){hardCloseSheet();hardCloseOverlay();const hm=$('#holdMenu');hm.classList.add('hidden');hm.classList.remove('wide','quick');mainNav.classList.remove('joined-panel');$('#notifDrawer').classList.remove('open');mainNav.classList.remove('hide');logo.classList.remove('hide')}
 function returnHome(){clearTransientPanels();state.activeMenu=state.nav?'navigation':null;if(state.nav&&state.selected){state.navVisible=true;renderNavBanner(state.selected)}syncActiveMenus()}
@@ -322,10 +348,11 @@ function openFunction(name){
  if(name==='notifications'){
    const wasOpen=$('#notifDrawer').classList.contains('open');clearTransientPanels();if(wasOpen){state.activeMenu=null;syncActiveMenus();return}state.activeMenu='notifications';openNotifications();return
  }
- if(current===name&&name!=='settings'){returnHome();return}
+ if(current===name){returnHome();return}
  clearTransientPanels();closeNotifications(true);if(name!=='navigation')suspendNavBanner();state.activeMenu=name;syncActiveMenus();
  if(name==='route'){state.view='route';setSheet('two')}
  else if(name==='days')showDaysCompact();
+ else if(name==='favorites')showFavorites('favorites');
  else if(name==='sonar')openSonarMode();
  else if(name==='settings')showSettings();
  else if(name==='navigation')showNavigationMenu();
@@ -342,7 +369,7 @@ function renderGuideSheet(){const id=state.selected||currentDay().route[0],p=POI
 function openGuide(id){state.selected=id;state.view='guide';setSheet('full')}
 
 function accordion(t,c,o=false){return `<div class="accordion ${o?'open':''}"><button>${esc(t)} <span>⌄</span></button><div class="acc-body">${esc(c)}</div></div>`}
-function showFavorites(source=state.activeMenu){const ids=[...state.favorites];state.overlayReturn={menu:source,view:source==='route'?'route':'sonar',sheet:'two'};state.activeMenu=source;openOverlay('Mentett helyek','Útitervhez vagy Sonarhoz',`<div class="favorites favorites-stable">${ids.length?ids.map(id=>{const p=POIS[id];return `<button class="fav-card" data-fav="${id}">${imgTag(p)}<span><b>${esc(p.name)}</b><small>${esc(p.sub)}</small></span><i>›</i></button>`}).join(''):'<div class="setting-card">Még nincs mentett hely. Egy POI adatlapján a ♡ gombbal tudsz menteni.</div>'}</div>`);$$('[data-fav]').forEach(x=>x.onclick=()=>{const id=x.dataset.fav;state.overlayReturn=null;hardCloseOverlay();state.selected=id;state.activeMenu=source;state.view='poi';setSheet('mini');renderDayMap(false)})}
+function showFavorites(source='favorites'){const ids=[...state.favorites];state.overlayReturn=['route','sonar'].includes(source)?{menu:source,view:source==='route'?'route':'sonar',sheet:'two'}:null;state.activeMenu=source==='favorites'?'favorites':source;openOverlay('Mentett helyek','Kedvencek · útitervhez vagy Sonarhoz',`<div class="favorites favorites-stable">${ids.length?ids.map(id=>{const p=POIS[id];return `<button class="fav-card" data-fav="${id}">${imgTag(p)}<span><b>${esc(p.name)}</b><small>${esc(p.sub)}</small></span><i>›</i></button>`}).join(''):'<div class="setting-card">Még nincs mentett hely. Egy POI adatlapján a ♡ gombbal tudsz menteni.</div>'}</div>`);$$('[data-fav]').forEach(x=>x.onclick=()=>{const id=x.dataset.fav;const origin=source;state.overlayReturn=null;hardCloseOverlay();state.selected=id;state.activeMenu=origin==='favorites'?'favorites':origin;state.view='poi';setSheet('mini');renderDayMap(false)})}
 function unread(){return state.notifications.length}
 function notificationActionLabel(n){return n.action==='sonarHistory'?'＋ Megnyitás':n.action==='arrival'?'✓ Részletek':n.action==='settings'?'⚙ Megnyitás':'＋ Megnyitás'}
 function renderNotifications(){const n=state.notifications;$('#logoBadge').classList.add('hidden');const mb=$('#mainNotifBadge');if(mb){mb.classList.toggle('hidden',!n.length);mb.textContent=n.length}$('#notifStrip').classList.toggle('hidden',!n.length||state.notifStripDismissed);if(n.length){$('#notifStripTitle').textContent=n[0].title;$('#notifStripText').textContent=n[0].text}$('#notifCountText').textContent=n.length?n.length+' aktív':'Nincs új';$('#notifList').innerHTML=n.map(x=>`<div class="notif-swipe" data-notif="${x.id}"><div class="notif-action dismiss">✕ Elvetés</div><div class="notif-action context">${notificationActionLabel(x)}</div><div class="notif-card" style="--ncolor:${x.priority==='important'?'#df404a':x.priority==='useful'?'#e0ad45':'#87949e'}"><b>${esc(x.title)}</b><p>${esc(x.text)}</p><small>${x.priority==='important'?'Fontos':x.priority==='useful'?'Hasznos':'Háttér'}</small></div></div>`).join('');bindNotificationSwipes();renderExpandedNav();if(state.nav&&state.navVisible&&state.selected)renderNavBanner(state.selected)}
@@ -353,29 +380,43 @@ function handleNotification(id){const n=state.notifications.find(x=>x.id===id);i
 function dismissNotification(id){state.notifications=state.notifications.filter(x=>x.id!==id);renderNotifications()}
 function bindNotificationSwipes(){$$('[data-notif]').forEach(w=>{const c=w.querySelector('.notif-card');let sx=0,dx=0,moved=false;c.onpointerdown=e=>{sx=e.clientX;dx=0;moved=false;c.setPointerCapture?.(e.pointerId)};c.onpointermove=e=>{if(!sx)return;dx=e.clientX-sx;if(Math.abs(dx)>5)moved=true;c.style.transform=`translateX(${Math.max(-120,Math.min(120,dx))}px)`;w.classList.toggle('to-left',dx<0);w.classList.toggle('to-right',dx>0)};c.onpointerup=()=>{c.style.transform='';w.classList.remove('to-left','to-right');const id=w.dataset.notif;if(dx<-75)dismissNotification(id);else if(dx>75)handleNotification(id);sx=0;dx=0};c.onclick=e=>{if(moved){e.preventDefault();e.stopPropagation()}}})}
 
-function openOverlay(title,sub,html){suspendNavBanner();$('#overlayTitle').textContent=title;$('#overlaySubtitle').textContent=sub||'';overlayBody.innerHTML=html;overlay.classList.remove('hidden');overlay.classList.add('standard-full');mainNav.classList.remove('hide','joined-panel');logo.classList.remove('hide');$('#overlayNav')?.classList.add('hidden');hydrateOnlineImages(overlayBody);syncActiveMenus()}
+function openOverlay(title,sub,html){suspendNavBanner();hardCloseSheet();$('#overlayTitle').textContent=title;$('#overlaySubtitle').textContent=sub||'';overlayBody.innerHTML=html;overlay.classList.remove('hidden');overlay.classList.add('standard-full');mainNav.classList.remove('hide','joined-panel');logo.classList.remove('hide');$('#overlayNav')?.classList.add('hidden');hydrateOnlineImages(overlayBody);syncActiveMenus()}
 function closeOverlay(){const ret=state.overlayReturn;state.overlayReturn=null;hardCloseOverlay();mainNav.classList.remove('hide','joined-panel');logo.classList.remove('hide');if(ret&&['route','sonar'].includes(ret.menu)){state.activeMenu=ret.menu;state.view=ret.view;setSheet(ret.sheet,ret.view)}else{state.activeMenu=state.nav?'navigation':null;$('#mapControls').classList.remove('hidden-by-sheet')}syncActiveMenus()}
 function hideHold(){const el=$('#holdMenu');if(!el)return;el.classList.add('hidden');el.classList.remove('wide','quick');mainNav.classList.remove('joined-panel')}
-function showNavigationMenu(){clearTransientPanels();state.activeMenu='navigation';syncActiveMenus();showHold([
- {label:'Következő',icon:'➜',act:navigationMain},{label:'Szállás',icon:'⌂',act:()=>startNavigation('hotel')},{label:'Mai útvonal',icon:'⌁',act:fitRoute},
- {label:'Saját pozíció',icon:'◎',act:locate},{label:'Útvonal középre',icon:'⌖',act:fitRoute},{label:'Navigáció vége',icon:'×',act:()=>{if(state.nav)endNavigation();else returnHome()}}
+function showNavigationMenu(){clearTransientPanels();state.activeMenu='navigation';syncActiveMenus();const next=currentDay().route.find(id=>!state.done.has(id)&&!state.skipped.has(id))||currentDay().route[0];showHold([
+ {label:'Companion',icon:'➜',act:navigationMain},{label:'Apple · Tömegköz.',icon:'',act:()=>next&&openExternalTransit(next,'apple')},{label:'Google · Tömegköz.',icon:'G',act:()=>next&&openExternalTransit(next,'google')},
+ {label:'Szállás',icon:'⌂',act:()=>showNavigationChoice('hotel')},{label:'Saját pozíció',icon:'◎',act:locate},{label:state.nav?'Navigáció vége':'Mai útvonal',icon:state.nav?'×':'⌁',act:()=>state.nav?endNavigation():fitRoute()}
 ],'wide')}
-function showHold(items,mode='wide'){const el=$('#holdMenu');hideHold();mainNav.classList.add('joined-panel');el.classList.add(mode);el.innerHTML=items.map((x,i)=>`<button data-hold="${i}">${x.icon?`<span>${x.icon}</span>`:''}<b>${esc(x.label)}</b></button>`).join('');el.classList.remove('hidden');$$('[data-hold]').forEach(b=>b.onclick=e=>{e.stopPropagation();items[+b.dataset.hold].act();hideHold()});setTimeout(()=>document.addEventListener('pointerdown',function outside(e){if(!el.contains(e.target)&&!e.target.closest('.main-tab')){hideHold();document.removeEventListener('pointerdown',outside)}},true),30)}
+function showHold(items,mode='wide'){const el=$('#holdMenu');hideHold();mainNav.classList.add('joined-panel');el.classList.add(mode);el.innerHTML=items.map((x,i)=>`<button data-hold="${i}">${x.icon?`<span>${x.icon}</span>`:''}<b>${esc(x.label)}</b></button>`).join('');el.classList.remove('hidden');$$('[data-hold]').forEach(b=>b.onclick=e=>{e.stopPropagation();const act=items[+b.dataset.hold].act;hideHold();act()});setTimeout(()=>document.addEventListener('pointerdown',function outside(e){if(!el.contains(e.target)&&!e.target.closest('.main-tab')){hideHold();document.removeEventListener('pointerdown',outside)}},true),30)}
 function longPress(el,onTap,onHold){let t,held=false;el.addEventListener('pointerdown',e=>{held=false;t=setTimeout(()=>{held=true;onHold(e)},520)});['pointerup','pointercancel','pointerleave'].forEach(ev=>el.addEventListener(ev,e=>{clearTimeout(t);if(ev==='pointerup'&&!held)onTap(e)}))}
 
-function applyMainIcons(){const mapI={mainItinerary:'route',mainDays:'days',mainSonar:'sonar',mainSettings:'settings',mainNotifications:'bell',mainNavigation:'nav'};Object.entries(mapI).forEach(([id,n])=>{const el=$('#'+id+' .ico');if(el)el.innerHTML=uiIcon(n)});logo.querySelector('.logo-dual-hint')?.remove()}
+function applyMainIcons(){const mapI={mainItinerary:'route',mainDays:'days',mainFavorites:'heart',mainSettings:'settings',mainNotifications:'bell',mainNavigation:'nav'};Object.entries(mapI).forEach(([id,n])=>{const el=$('#'+id+' .ico');if(el)el.innerHTML=uiIcon(n)});logo.querySelector('.logo-dual-hint')?.remove()}
 function bindUI(){
  applyMainIcons();
  $('#locateBtn').onclick=locate;$('#fitRouteBtn').onclick=fitRoute;$('#notifStrip').onclick=toggleNotifications;$('#notifClose').onclick=()=>closeNotifications(true);$('#overlayClose').onclick=closeOverlay;$('#overlayBack').onclick=closeOverlay;
  $('#mainItinerary').onclick=()=>openFunction('route');
  longPress($('#mainDays'),()=>openFunction('days'),()=>{clearTransientPanels();showDays()});
- $('#mainSonar').onclick=()=>{if(activeMenuKey()==='sonar'){runSonar();openSonarMode()}else openFunction('sonar')};
+ $('#mainFavorites').onclick=()=>openFunction('favorites');
  $('#mainSettings').onclick=()=>openFunction('settings');
  $('#mainNotifications').onclick=()=>openFunction('notifications');
  $('#mainNavigation').onclick=()=>{if(!$('#holdMenu').classList.contains('hidden')&&state.activeMenu==='navigation'){returnHome()}else showNavigationMenu()};
- logo.onclick=()=>{const a=activeMenuKey();if(a==='sonar'){runSonar();openSonarMode();return}if(a){returnHome();return}runSonar();openSonarMode()};
- let sy=0,sh=0,dragging=false;$('#sheetDrag').addEventListener('pointerdown',e=>{if(state.sheet==='closed')return;dragging=true;sy=e.clientY;sh=heightFor(state.sheet);sheet.classList.add('dragging');sheet.setPointerCapture?.(e.pointerId)});window.addEventListener('pointermove',e=>{if(!dragging)return;const h=Math.max(120,Math.min(innerHeight,sh+(sy-e.clientY)));document.documentElement.style.setProperty('--sheet-h',h+'px')});window.addEventListener('pointerup',()=>{if(!dragging)return;dragging=false;sheet.classList.remove('dragging');const h=parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--sheet-h'));let snaps=state.view==='route'?[['closed',0],['two',heightFor('two')]]:state.view==='sonar'?[['closed',0],['two',heightFor('two')]]:[['closed',0],['mini',heightFor('mini')],['two',heightFor('two')],['full',heightFor('full')]];let best=snaps.reduce((a,b)=>Math.abs(b[1]-h)<Math.abs(a[1]-h)?b:a);if(best[0]==='full'&&state.view==='poi')state.view='guide';setSheet(best[0])});
+ logo.onclick=()=>{clearTransientPanels();closeNotifications(true);suspendNavBanner();state.activeMenu='sonar';runSonar();openSonarMode()};
+ let sy=0,sh=0,dragging=false,moved=false;
+ const sheetDrag=$('#sheetDrag');
+ sheetDrag.addEventListener('pointerdown',e=>{if(state.sheet==='closed')return;dragging=true;moved=false;sy=e.clientY;sh=heightFor(state.sheet);sheet.classList.add('dragging');sheetDrag.setPointerCapture?.(e.pointerId)});
+ window.addEventListener('pointermove',e=>{if(!dragging)return;const dy=sy-e.clientY;if(Math.abs(dy)>4)moved=true;const h=Math.max(90,Math.min(innerHeight,sh+dy));document.documentElement.style.setProperty('--sheet-h',h+'px')});
+ window.addEventListener('pointerup',()=>{if(!dragging)return;dragging=false;sheet.classList.remove('dragging');
+   if(!moved){
+     if(state.view==='guide'){state.view='poi';setSheet('mini');return}
+     if(['route','sonar','add','savedadd'].includes(state.view)){setSheet('closed');return}
+     if(state.view==='poi'){setSheet(state.sheet==='mini'?'two':'mini','poi');return}
+   }
+   const h=parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--sheet-h'))||heightFor(state.sheet);
+   let snaps=['route','sonar','add','savedadd'].includes(state.view)?[['closed',0],['two',heightFor('two')]]:[['closed',0],['mini',heightFor('mini')],['two',heightFor('two')],['full',heightFor('full')]];
+   const best=snaps.reduce((a,b)=>Math.abs(b[1]-h)<Math.abs(a[1]-h)?b:a);
+   if(best[0]==='full'&&state.view==='poi')state.view='guide';setSheet(best[0]);
+ });
  window.addEventListener('online',()=>toast('Online kapcsolat helyreállt'));window.addEventListener('offline',()=>toast('Offline mód · GPS + letöltött tartalom'));
 }
-function init(){applyTheme();initMap();bindUI();renderNotifications();updateTestBadge();setSheet('closed');syncActiveMenus();if('serviceWorker'in navigator)navigator.serviceWorker.register('./service-worker.js').catch(()=>{});setTimeout(()=>prewarmPoiPhotos(),1400);}
+function init(){applyTheme();initMap();bindUI();renderNotifications();updateTestBadge();setSheet('closed');syncActiveMenus();window.addEventListener('pageshow',()=>{const id=sessionStorage.getItem('tc_resume_poi');if(id&&POIS[id]){state.selected=id;state.view='poi';setSheet('mini','poi');renderDayMap(false)}});if('serviceWorker'in navigator)navigator.serviceWorker.register('./service-worker.js').catch(()=>{});setTimeout(()=>prewarmPoiPhotos(),1400);}
 init();

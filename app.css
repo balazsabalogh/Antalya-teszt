@@ -720,4 +720,116 @@ body.theme-dark{background:#071827;color:var(--text)}
  .main-nav{left:8px!important;right:8px!important;grid-template-columns:repeat(3,minmax(0,1fr)) 72px repeat(3,minmax(0,1fr))!important;padding-left:3px!important;padding-right:3px!important}
  .companion-logo{width:70px!important;height:70px!important}.main-tab .ico{font-size:18px!important}
 }
-\n\n/* 0.7.8 RC2 hotfix — dock geometry + opaque fullscreen surfaces */\n:root{--dock-gap:0px!important}\n.main-nav{\n  left:12px!important;right:12px!important;bottom:max(4px,calc(var(--safe-bottom) - 18px))!important;\n  grid-template-columns:repeat(3,minmax(0,1fr)) 82px repeat(3,minmax(0,1fr))!important;\n  overflow:visible!important;\n}\n#mainItinerary{grid-column:1!important}#mainDays{grid-column:2!important}#mainSonar{grid-column:3!important}.logo-gap{grid-column:4!important}#mainSettings{grid-column:5!important}#mainNotifications{grid-column:6!important}#mainNavigation{grid-column:7!important}\n.companion-logo{bottom:max(0px,calc(var(--safe-bottom) - 19px))!important}\n/* Sheets join directly to the top edge of the dock. */\n.sheet{bottom:calc(max(4px,calc(var(--safe-bottom) - 18px)) + 57px)!important}\n.hold-menu.wide,.hold-menu.quick{bottom:calc(max(4px,calc(var(--safe-bottom) - 18px)) + 57px)!important}\n/* Fullscreen content is genuinely opaque all the way to the physical bottom; dock may sit above it, never map/attribution. */\n.full-overlay.standard-full,.full-overlay.days-mode{inset:0!important;bottom:0!important;height:100dvh!important;background:#071827!important;z-index:2300!important}\n.full-overlay.standard-full .overlay-body,.full-overlay.days-mode .overlay-body{padding-bottom:calc(var(--safe-bottom) + 76px)!important;background:#071827!important}\n/* Never allow a closed/old sheet to visually survive under another function. */\n.sheet.state-closed{display:none!important}\n
+/* 0.7.9 RC1 — stability layout engine + Favorites dock + transit handoff */
+:root{
+  --dock-h:58px;
+  --dock-bottom:max(10px, calc(var(--safe-bottom) + 2px));
+  --dock-top:calc(var(--dock-bottom) + var(--dock-h));
+}
+
+/* One deterministic dock. Route · Days · Favorites · LOGO/Sonar · Settings · Notifications · Navigation */
+.main-nav{
+  position:fixed!important;
+  left:10px!important;right:10px!important;bottom:var(--dock-bottom)!important;
+  width:auto!important;height:var(--dock-h)!important;
+  display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr)) 80px repeat(3,minmax(0,1fr))!important;
+  align-items:center!important;padding:2px 5px!important;
+  background:#091f32!important;border:1px solid rgba(184,211,232,.16)!important;
+  border-radius:21px!important;box-shadow:0 12px 30px rgba(2,12,22,.30)!important;
+  transform:none!important;overflow:visible!important;z-index:3000!important;
+}
+#mainItinerary{grid-column:1!important}#mainDays{grid-column:2!important}#mainFavorites{grid-column:3!important}
+.logo-gap{grid-column:4!important}#mainSettings{grid-column:5!important}#mainNotifications{grid-column:6!important}#mainNavigation{grid-column:7!important}
+#mainSonar{display:none!important}
+.main-tab{height:50px!important;padding:0!important;min-width:0!important;position:relative!important;color:#a9bac8!important}
+.main-tab b{display:none!important}.main-tab svg{width:21px!important;height:21px!important}.main-tab .ico{line-height:1!important}
+.main-tab.active{color:#fff!important}.main-tab.active:before{content:""!important;position:absolute!important;left:50%!important;top:50%!important;transform:translate(-50%,-50%)!important;width:42px!important;height:42px!important;border-radius:13px!important;background:rgba(56,128,181,.28)!important;border:1px solid rgba(133,197,239,.30)!important;z-index:-1!important}
+.main-nav.joined-panel{border-radius:0 0 21px 21px!important;border-top-color:rgba(184,211,232,.07)!important}
+.companion-logo{
+  position:fixed!important;left:50%!important;bottom:calc(var(--dock-bottom) - 7px)!important;
+  width:74px!important;height:74px!important;transform:translateX(-50%)!important;
+  z-index:3100!important;opacity:1!important;pointer-events:auto!important;background:transparent!important;border:0!important;
+  filter:drop-shadow(0 8px 14px rgba(0,0,0,.38))!important;
+}
+.companion-logo.hide{opacity:1!important;pointer-events:auto!important;transform:translateX(-50%)!important}
+.companion-logo.active{filter:drop-shadow(0 0 11px rgba(79,177,238,.64)) drop-shadow(0 8px 14px rgba(0,0,0,.38))!important}
+
+/* Common sheet engine. The panel always stops exactly at the dock top. */
+.sheet{
+  position:fixed!important;left:0!important;right:0!important;bottom:var(--dock-top)!important;
+  background:#091f32!important;border:1px solid rgba(184,211,232,.14)!important;border-bottom:0!important;
+  border-radius:23px 23px 0 0!important;z-index:2200!important;overflow:hidden!important;
+  box-shadow:0 -12px 34px rgba(2,12,22,.30)!important;backdrop-filter:none!important;
+  transition:height .22s cubic-bezier(.2,.8,.2,1)!important;
+}
+.sheet.state-closed{display:none!important;height:0!important}.sheet.open{display:block!important;pointer-events:auto!important}
+.sheet.state-mini{height:132px!important}.sheet.state-one{height:34dvh!important}.sheet.state-two{height:50dvh!important}
+.sheet.view-sonar.state-two{height:min(42dvh,370px)!important}.sheet.view-route.state-two{height:50dvh!important}.sheet.view-poi.state-two{height:48dvh!important}
+.sheet.dragging{height:var(--sheet-h)!important;transition:none!important}
+.sheet-drag{position:absolute!important;top:0!important;left:0!important;right:0!important;height:42px!important;z-index:40!important;touch-action:none!important;cursor:ns-resize!important}
+.sheet-drag span{top:10px!important;width:44px!important;height:4px!important;background:rgba(190,209,223,.48)!important}
+.sheet-body{position:absolute!important;left:0!important;right:0!important;top:30px!important;bottom:0!important;overflow:auto!important;padding:0 14px 12px!important;-webkit-overflow-scrolling:touch!important}
+.sheet.state-mini .sheet-body{top:27px!important;padding:0 12px 8px!important;overflow:hidden!important}
+.sheet.state-mini .mini-card{height:96px!important;min-height:96px!important;margin:0!important;grid-template-columns:64px minmax(0,1fr) 34px!important;padding:8px!important}
+.sheet.state-mini .mini-card .photo-wrap,.sheet.state-mini .mini-card img{width:64px!important;height:64px!important;border-radius:12px!important}
+.sheet.state-mini .mini-card .title{font-size:15px!important}.sheet.state-mini .mini-card .sub{font-size:10px!important}
+.sheet.fullscreen{
+  display:block!important;position:fixed!important;inset:0!important;height:100dvh!important;bottom:0!important;
+  border:0!important;border-radius:0!important;background:#071827!important;z-index:2450!important;
+}
+.sheet.fullscreen .sheet-body{top:calc(var(--safe-top) + 42px)!important;bottom:0!important;padding:0 14px calc(var(--dock-top) + 16px)!important;background:#071827!important}
+.sheet-close-all{position:fixed!important;top:calc(var(--safe-top) + 10px)!important;right:12px!important;z-index:2700!important;width:42px!important;height:42px!important;border-radius:14px!important}
+
+/* POI half state: text first, large hero only in full Guide. */
+.poi-half-summary{grid-template-columns:94px minmax(0,1fr) 34px!important;gap:10px!important;align-items:center!important}
+.poi-half-photo,.poi-half-photo>img,.poi-half-photo img{width:94px!important;height:82px!important;border-radius:13px!important}
+.poi-half-copy h2{font-size:17px!important;margin:0 0 2px!important}.poi-half-copy p,.poi-half-copy small{font-size:10px!important}.poi-half-copy span{font-size:10px!important;line-height:1.3!important;display:block!important;margin-top:3px!important}
+
+/* Route/Sonar content scrolls inside the sheet instead of changing panel geometry. */
+.route-editor,.sonar-results{min-height:0!important}.route-add-row{position:sticky!important;bottom:0!important;background:linear-gradient(180deg,rgba(9,31,50,0),#091f32 30%)!important;padding-bottom:3px!important}
+.sonar-heading-row{margin-bottom:7px!important}.sonar-results{padding-bottom:6px!important}.sonar-empty{margin-bottom:0!important}
+
+/* Compact days is another joined sheet, not a floating layer. */
+.full-overlay.days-compact{position:fixed!important;inset:0!important;z-index:2100!important;background:transparent!important;pointer-events:none!important}
+.full-overlay.days-compact .overlay-head{display:none!important}
+.full-overlay.days-compact .overlay-body{position:absolute!important;left:0!important;right:0!important;bottom:var(--dock-top)!important;height:178px!important;padding:28px 0 8px!important;overflow:hidden!important;pointer-events:auto!important;background:#091f32!important;border-radius:23px 23px 0 0!important;border:1px solid rgba(184,211,232,.14)!important;border-bottom:0!important}
+.days-compact-handle{position:absolute!important;left:0!important;right:0!important;top:0!important;height:34px!important;display:grid!important;place-items:start center!important;padding-top:9px!important;touch-action:none!important}
+.days-compact-handle span{width:44px!important;height:4px!important;border-radius:4px!important;background:rgba(190,209,223,.48)!important}
+.days-compact-track{height:116px!important;align-items:stretch!important}.day-compact-card{height:116px!important}
+
+/* Full windows are truly opaque; map and Leaflet attribution can never bleed through. */
+.full-overlay.standard-full,.full-overlay.days-mode{
+  position:fixed!important;inset:0!important;bottom:0!important;height:100dvh!important;
+  background:#071827!important;z-index:2400!important;pointer-events:auto!important;padding:0!important;
+}
+.full-overlay.standard-full .overlay-head{position:relative!important;z-index:2!important;min-height:calc(var(--safe-top) + 64px)!important;padding:calc(var(--safe-top) + 10px) 14px 10px!important;background:#0b2034!important;border-bottom:1px solid rgba(184,211,232,.12)!important;display:flex!important;align-items:flex-end!important}
+.full-overlay.standard-full .overlay-body{position:absolute!important;inset:calc(var(--safe-top) + 64px) 0 0 0!important;padding:12px 14px calc(var(--dock-top) + 14px)!important;overflow:auto!important;background:#071827!important}
+.full-overlay.standard-full #overlayBack{display:none!important}.full-overlay.standard-full #overlayClose{margin-left:auto!important;width:42px!important;height:42px!important;border-radius:14px!important;flex:0 0 42px!important}
+.full-overlay.days-mode .overlay-head{display:flex!important;position:absolute!important;top:0!important;left:0!important;right:0!important;z-index:4!important;height:calc(var(--safe-top) + 58px)!important;padding:calc(var(--safe-top) + 8px) 14px 8px!important;background:#071827!important;border:0!important}
+.full-overlay.days-mode .overlay-head>div,#overlayBack{visibility:hidden!important}.full-overlay.days-mode #overlayClose{visibility:visible!important;margin-left:auto!important;width:42px!important;height:42px!important;border-radius:14px!important}
+.full-overlay.days-mode .overlay-body{position:absolute!important;inset:calc(var(--safe-top) + 58px) 0 0!important;padding:0 0 var(--dock-top)!important;background:#071827!important;overflow:hidden!important}
+.full-overlay.days-mode .day-carousel-wrap{height:100%!important}.full-overlay.days-mode .day-carousel{height:calc(100% - 24px)!important;align-items:stretch!important}.full-overlay.days-mode .day-card{height:100%!important;max-height:none!important;overflow:auto!important}
+
+/* Hold/quick menus are a direct extension of the dock. */
+.hold-menu.wide,.hold-menu.quick{position:fixed!important;left:10px!important;right:10px!important;bottom:var(--dock-top)!important;z-index:2950!important;transform:none!important;width:auto!important;background:#091f32!important;border:1px solid rgba(184,211,232,.14)!important;border-bottom:0!important;border-radius:22px 22px 0 0!important;box-shadow:0 -12px 30px rgba(2,12,22,.28)!important}
+.hold-menu.wide{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:8px!important;padding:10px!important}.hold-menu.wide button{min-height:62px!important}
+
+/* Overlay/sheet layering is fixed. */
+#map{z-index:1!important}.map-controls{z-index:900!important;bottom:calc(var(--dock-top) + 18px)!important}.notification-zone{z-index:3300!important}
+.leaflet-control-attribution{z-index:10!important}
+
+/* Planner swipe has one exact-size split action layer underneath; never leaves a red tail. */
+.planner-swipe{position:relative!important;border-radius:16px!important;overflow:hidden!important;min-height:84px!important;background:transparent!important}
+.planner-action-layer{position:absolute!important;inset:0!important;display:grid!important;grid-template-columns:1fr 1fr!important;border-radius:16px!important;overflow:hidden!important;z-index:0!important}
+.planner-action-layer .done{background:#268257!important;justify-content:flex-start!important}.planner-action-layer .skip{background:#a9343e!important;justify-content:flex-end!important}
+.planner-card{position:relative!important;z-index:2!important;margin:0!important;border-radius:16px!important;background:#102a43!important}
+
+/* Transit hand-off menu labels fit comfortably. */
+.hold-menu button b{line-height:1.15!important;text-align:center!important}.hold-menu button span{min-height:22px!important}
+
+@media(max-width:390px){
+  .main-nav{left:7px!important;right:7px!important;grid-template-columns:repeat(3,minmax(0,1fr)) 72px repeat(3,minmax(0,1fr))!important}
+  .companion-logo{width:70px!important;height:70px!important}
+  .hold-menu.wide,.hold-menu.quick{left:7px!important;right:7px!important}
+  .poi-half-summary{grid-template-columns:82px minmax(0,1fr) 32px!important}.poi-half-photo,.poi-half-photo>img,.poi-half-photo img{width:82px!important;height:74px!important}
+}
